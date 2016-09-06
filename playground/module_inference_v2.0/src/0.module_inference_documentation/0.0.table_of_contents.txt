@@ -1,0 +1,24 @@
+Will Gantt
+Fri Jul 15 2016
+
+
+TABLE OF CONTENTS
+-----------------
+
+
+1. 0.captains_log.txt
+
+     This file contains a list of changes I made and thoughts I
+     had as I was writing the program. In all likelihood, this
+     will not prove terribly helpful to anyone else.
+
+2. 0.README.GANTT
+
+     A description of my project, including general descriptions
+     of the source code files, the purpose of the project, and
+     my methodology.
+
+3. 0.improvements_needed.txt
+
+     A list of (strongly) suggested improvements for the code
+     in this directory.

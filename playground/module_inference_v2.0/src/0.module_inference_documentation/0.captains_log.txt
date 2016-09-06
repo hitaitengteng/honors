@@ -1,0 +1,199 @@
+Created Fri Jun 24 08:59 2016
+Will Gantt
+
+
+Notes on development of version 2.0 of the module comparison code.
+
+
+
+6/24/16
+	- In motif2.c, the functions that create random motif and motif array
+	  data types are currently restricted so that each list of occurrences
+	  must contain the same number of location-score pairs and each
+	  sequence must be of the same length. This should be fixed.
+		- Also need to make it so that instances of motifs aren't
+		  created one on top of the other.
+			- I imported a couple functions from motif.c that help
+			  with this. I had originally thought to use them in
+			  the randLocScorePair function, but realized that
+			  they should probably be used only in the
+			  randOccurrences function. I also decided that since
+			  we need to keep track of what indices in a sequence
+			  have been used (when implanting motifs in a
+			  sequence), randLocScorePair is not actually such a
+			  helpful function to have.
+
+6/27/16
+	- Made it so that motifs are not created on top of one another, but
+	  still have not fixed the restriction on the random motif and random
+	  motif array functions mentioned above.
+	- Need to find a way to properly free the "randOcc" and "randMot"
+	  variables in the randMotif and randMotifArray functions, respectively
+	- Need to update comments in motif2.h
+
+6/29/16
+	 - Updated comments in motif2.h.
+	 - Implemented all necessary free functions.
+	 - Have still not fixed the restriction on the random motif and random
+	   motif array functions.
+
+7/5/16
+	- Made changes to variable names to improve clarity.
+	- Implemented a function to find a best candidate module, given a set of
+	  motifs. It was originally part of the eval function, but I made it into
+	  its own separate function.
+	- Will eventually get around to fixing the restriction on the random motif
+	  and random motif array functions, but I don't know when.
+	- Tomorrow, I want to make the part of the evaluation function that generates
+	  all the random data *its* own function. From there, I think I'm going to try
+	  to implement an evaluation function that checks for conservation of motifs
+	  across modules. (I think?)
+	- The description for findBestModule needs to be expanded and improved
+
+7/6/16
+	- Moved randomData and findBestModule functions from Will_v2.0.c to motif2.c.
+	- Expanded description for findBestModule.
+	- A problem that should maybe be solved at some point: When generating random
+	  data, there is nothing preventing instances of two different motifs from
+	  being located on top of one another. The functions have been written such
+	  that two instances of the same motif cannot be in the same position, but
+	  this is not so for instances of different motifs. Of course, this won’t be
+	  an issue when using actual data, which is why I’m hesitant to expend the
+	  effort to change it…
+	- I should next modify the randomData and findBestModule functions to find
+	  the best candidate modules in *several* genomic sequences.
+	  	- Should also eventually make it so that each sequence can be of a
+		  different length.
+
+7/7/16
+	- Made randomData2 function to eliminate some of the excesses of the
+	  original randomData function (I may end up deleting that one entirely).
+	- Tried to adapt the findBestModules function to look for multiple
+	  best modules in a sequence, but realized that the existing function
+	  was not well-suited to being adapted, so I started from scratch.
+	- Also realized that my motif2.h and -.c files have gotten much too
+	  long. These should be broken down.
+
+7/11/16
+	- On Friday, I modularized my code into several .c/.h file pairs. 
+	- Fixed the bugs in the findBestModules function.
+	- Problems:
+		1) The findBestModules function often returns a set of
+		   modules that are all very close to each other. Should the
+		   function be changed so that modules close to "best modules"
+		   that have already been found are penalized?
+		2) Motifs are still getting implanted on top of one another
+		   in sequences. This should really be fixed. The only reason
+		   it's not higher on my priority list is that I know I won't
+		   encounter this problem with real data.
+		3) The randMotif and randMotifArray functions should be
+		   modified to allow for sequences of different lengths.
+		4) I'd like to organize the code so that all of my code has its
+		   own directory (separate from all of the Genesis code), but I
+		   feel like that might require tampering with things that maybe
+		   shouldn't be tampered with...
+	- None of these problems should prevent me from getting a rudimentary
+	  evaluation function working, though.
+
+7/12/16
+
+	- Implemented a rudimentary evaluation function that worked as follows:
+	  	- Each index of the bit string represents one of the motifs
+		  in the library. Only indices of the bit string marked with 
+		  '1's contribute to the score.
+		- For each index in the bit string marked with a '1', all
+		  sequences are checked for the presence of the corresponding
+		  motif. If one of the N_BEST modules in a given sequence
+		  contains the motif, the score of the first such module is
+		  added to the overall score for that motif. If no module
+		  in a given sequence contains the motif, the score of the
+		  last module in the sequence is subtracted from the score
+		  for that motif. Once all sequences have been checked, the
+		  actual motif score is divided by the maximum possible
+		  motif score.
+		- This process is repeated for every index marked with a '1'
+		  in the bit string.
+	- This function performed very poorly. Lots of things need to be
+	  changed:
+		- The score of the last module in a sequence should not
+		  be subtracted from the score of motifs that appear in
+		  none of the modules in the sequence. I need to find
+		  another, less arbitrary way of penalizing motifs that
+		  do not appear in a given sequence.
+		- The score of the *first* module the program finds in
+		  which a motif appears should not be added to the score
+		  for that motif; it should be the score of the highest-
+		  scoring module in which the motif appears.
+		- Should I reward motifs for appearing in multiple best
+		  modules in each sequence? 
+	- Implemented a second, somewhat improved function that made the
+	  following changes to the original:
+		- For motifs that did not appear in any modules in a given
+		  sequence, the score of the highest-scoring module in
+		  the sequence is subtracted from the motif's score.
+		- The score of the *highest-scoring* module in which the
+		  motif appears is added to that motif's score, not simply
+		  the first.
+	- It still seems like I should take into consideration
+	  the number of modules in a sequence in which the motif
+	  appears, but I'm not sure.
+	- Fixed problem (2) from yesterday, but all three of the others remain.
+	- Wrote functions that print out motif and module information.
+	- Tried to determine what the best way would be for me to read in
+	  the information I need from the post-processor -- either by reading
+	  from a file that it outputs already (or that Victoria wrote, perhaps),
+	  or else writing a function of my own to output a file with all the
+	  information I need. Was not successful. Will have to talk to Clare
+	  about this tomorrow.
+
+7/13/16
+
+	- Concerns about the evaluation and findBestModules functions to 
+	  be raised with Clare:
+		1) The user inputs as one of the parameters the number
+		   of best modules to be found and returned. The problem
+		   is that, when that number is low, it returns modules
+		   that are all clumped in the same area. Should I
+		   introduce some sort of penalty to prevent this from
+		   happening?
+		2) When determining best modules, is there a standard
+		   window step to use?
+		3) The evaluation function is overly generous in what it
+		   dubs a "well-conserved motif." This, I think, is the
+		   main shortcoming responsible for its poor performance.
+		   Just need to figure out the best way to fix it.
+		4) Right now, the evaluation function is evolving only a
+		   bit string. Fixing it so that it would evolve the
+		   representation of the motifs as well would not be
+		   difficult, but would take time, since the current
+		   representation schema doesn't even look at the
+		   character strings. 
+	- Another thing to raise with Clare: Presentation.
+	- A description of the evaluation function in its current form:
+		1) Before the evaluation function is called, the n best
+		   modules are determined in each sequence using a
+		   separate function that identifies modules using a
+		   sliding window.
+		2) Once the modules have been determined, the evaluation
+		   function is called.
+		3) The overall fitness of a bit string is determined by
+		   computing the fitness of the motifs corresponding to
+		   indices in the bit string marked with a '1'. For
+		   each such index, the function iterates over the sequences
+		   and, within the sequences, the best modules in that
+		   sequence. For each sequence, the score of the index
+		   is incremented by the score of the highest-scoring
+		   module in which the corresponding motif occurs. If the
+		   motif does not occur in any of the modules in the sequence,
+		   the score of the index is decremented by the score
+		   of the highest-scoring module in the sequence.
+		4) If an index of the bit string is marked with a '0', the
+		   score for that index is 0.
+		5) The fitness of the bit string is the sum of the scores
+		   of its indices.
+	- Another thought: Ideally (probably not this summer, since I likely
+	  won't have time), we would include in the findBestModules and
+	  evaluation function some parameter that would permit the user to
+	  put a "weight" on particular motifs. I.e. to say "I really care
+	  about this one, so give a boost to those modules that contain
+	  this motif." 
