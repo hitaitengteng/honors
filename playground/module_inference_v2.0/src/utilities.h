@@ -5,7 +5,7 @@
  * Date: Mon Jul 11 2016
  *
  * Description: Contains includes, named constants, and basic function
- * 		prototypes for the rest of the module comparison program.
+ * 		prototypes for the rest of the module inference program.
  *
  **************************************************************************/
 
@@ -25,8 +25,7 @@
 
 /* 
  * NOTE: all variables pertaining to motifs, instances of motifs,
- * sequences, and scores, are used primarily for generating random
- * data
+ * sequences, and scores, are used primarily for generating random data
  */
 
 /* The number of motifs to generate */
@@ -37,7 +36,8 @@
 
 /*
  * The maximum number of instances of a given motif that may
- * occur in a single genomic sequence
+ * occur in a single genomic sequence (again, this is for random
+ * data generation only)
  */
 #define MAX_INSTANCES 3
 

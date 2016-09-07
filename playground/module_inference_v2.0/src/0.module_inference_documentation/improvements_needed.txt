@@ -83,8 +83,8 @@ window.c
 
     NOTE 1: seqLength should be expanded into an array.
 
-    NOTE 2: Figure out how you're going to deal with overlapping motifs
-            when evaluating the quality of a module.
+    NOTE 2: Figure out how to deal with overlapping motifs when evaluating
+            the quality of a module.
 
     NOTE 3: Add "buffer zones" to either side of the window to allow you
             to check for motifs in a region of n bases (a parameter

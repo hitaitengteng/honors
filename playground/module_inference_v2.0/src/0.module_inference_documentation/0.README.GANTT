@@ -33,15 +33,16 @@ All of the code that I have added may be found in the following files:
 
 To anyone interested in understanding how the module inference program
 works, the above listing is the order in which I recommend you read
-the documentation. You may also find it helpful to refer back to previous
+the documentation. You may also find it helpful to refer to previous
 files as you go along (utilities.h and utilities.c in particular). 
 
 ---------------------------------------------------------------------------
-GENERAL DESCRIPTION OF FILES AND LINKING STRUCTURE
+LINKING STRUCTURE
 ---------------------------------------------------------------------------
 
-The linking structure for the files is as follows (where the arrow means
-"includes"):
+The linking structure for the files is as follows (where the arrow 
+indicates a dependency relationship)
+
 
 GANTT_eval_v2.0.c
 
@@ -70,7 +71,9 @@ GANTT_eval_v2.0.c
 
   utilities.h
 
-			*		*		*
+---------------------------------------------------------------------------
+GENERAL DESCRIPTION OF FILES 
+---------------------------------------------------------------------------
 
 utilities.h/.c
 
@@ -88,7 +91,7 @@ instance.h/.c
 
 instanceSet.h/.c
 
-    - the type definition for the isntanceSet struct, which stores
+    - the type definition for the instanceSet struct, which stores
       information about all of the instances of a motif on a single
       sequence
     - functions for initializing an instanceSet struct, both
@@ -116,7 +119,7 @@ window.h/.c
       and arrays of window
     - a function that, given a motif and a window, determines the
       number of the motif's base pairs that fall within the window 
-    - a function to determine the best modules in a sequence
+    - a function to determine the best modules in a genetic sequence
     - a function that prints out information about the best modules
       in a sequence
 
@@ -151,7 +154,7 @@ candidate modules for each species, we can identify some subset of the
 motifs GAMI has deemed well-conserved that appear in the candidate
 modules of the greatest number of species. This is done with the Genesis
 genetic algorithm. Relying on the underlying principle that conservation 
-is an indication of functionality, we can then use this subset of motifs 
+suggests potential functionality, we can then use this subset of motifs 
 as a standard by which to judge the candidate modules in each species. 
 The more motifs a given module contains from the standard, the fitter
 that module is as a candidate.

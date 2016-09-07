@@ -69,8 +69,8 @@ void *erealloc(void *ptr, long size) {
 
 /***************************************************************************
  * Function:    ecalloc
- * Inputs:      The number of elements to allocate (num) and the size of each
- * 		element (size).
+ * Inputs:      The number of elements to allocate (num) and the size of 
+ * 		each element (size).
  * Returns:     A pointer to the block of allocated memory.
  * Description: Calls calloc, but checks for failure.
  **************************************************************************/
@@ -101,7 +101,8 @@ void *ecalloc(int num, long size) {
  *              determines whether a motif can be implanted there. If a 
  *              motif has already been implanted at a location that overlaps
  *              with the specified interval, the motif cannot be implanted 
- *              there.
+ *              there. Note that this function is for random data
+ *              generation only
  *
  *              NOTE 1: GAMI runs almost always find instances of motifs
  *                      that overlap with one another. Given the way the
@@ -156,6 +157,8 @@ int isFree(int index, int *sequenceIndices) {
  *		are generated separately and checked for availability using 
  *		the isFree function. findFreeSpace is used merely to 
  *		determine *whether* there is any free space remaining.
+ *		Note that, as with isFree, this function is for random data
+ *		generation only and plays no part in module inference.
  *
  *		NOTE: See comments in description of isFree function
  *		      regarding the use of named constants.
@@ -165,10 +168,7 @@ int findFreeSpace(int *sequenceIndices, int seqLength) {
   /* for counting the number of consecutive free indices */
   int count = 0;
 
-  /* 
-   * a variable for the first free index discovered (set to
-   * a sentinel value initially)
-   */
+  /* the first free index discovered (initially, a sentinel value) */
   int freeIndex = NO_FREE_SPACE;
 
   /* 
