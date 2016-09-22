@@ -1,0 +1,46 @@
+INTRODUCTION
+
+Transcription factors are proteins that regulate the expression of genes by
+binding to particular locations on our DNA. Typically, a single gine will
+be regulated by a *group* of transcription factors. *Cis-regulatory module*
+is the fancy name we use to refer to the set of sites where a group of TFs
+will bind.
+
+My research this summer focused on developing a program to infer the
+location and composition of CRMs using the principle of conservation
+across evolutionary time. In essence, it examines genetic sequences from
+a number of species possessing the same gene of interest and looks for
+similarities in the regions near that gene in each species. The
+idea is that if we see similar groupings of transcription factor binding
+sites in these regions across different species, it could be that they
+have been conserved because those sites work together to perform some
+important regulatory function for that gene.
+
+Determining where and in what
+combination transcription factors are likely to bind is a vital step
+toward improving our understanding of genetic disease and of gene
+regulation more broadly.
+
+MATERIALS & METHODS
+
+Relative to those of the physical sciences, the tools of a computer
+scientist are few; all of the code was written on my laptop in the C
+programming language, and all genetic data was sourced from the National
+Center for Biotechnology Information (NCBI) website.
+
+The program itself uses genetic algorithms --- a problem-solving approach
+from artificial intelligence based loosely on biological evolution.
+
+...
+
+RESULTS
+
+CONCLUSION
+
+ACKNOWLEDGEMENTS
+
+Many thanks are owed to my advisor, Clare Congdon, for her continued
+support and instruction; to Craig Lessard for his help in understanding
+the biology; to the other members of the Congdon lab for their wisdom
+and guidance; and to the INBRE and Surdna foundations for funding this
+research.

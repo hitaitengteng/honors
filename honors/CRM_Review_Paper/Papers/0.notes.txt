@@ -1,0 +1,47 @@
+cis-regulatory module papers
+Jeffrey Thompson
+Thu Jun 20 15:29:09 EDT 2013
+
+Kwon11.pdf
+The paper we used to find validated CRMs.
+
+Su10.pdf
+A review paper of CRM detection methods.
+
+Berman02.pdf
+Discusses how high local density of TFBSs might be used to predict CRMs.
+
+Schroeder04.pdf
+Discusses how CRMs are frequently composed of a cluster of similar binding sites.
+
+Gompel05.pdf
+Shows that the destruction of different regulatory elements in a CRM
+can lead to the same morphological change.
+
+Rajewsky02.pdf
+One of the earlier attempts at a CRM predictor, but I'm not sure why I
+saved this one, perhaps I'll know more when I re-read it.
+
+Blanchette06.pdf
+A genome wide prediction of CRMs.
+
+Li07.pdf
+A study of CRM characteristics.
+
+One thing they report is that clustering, especially homotypic clustering is a
+feature of a subclass of CRMs.
+
+Wagner99.pdf
+Addresses the fact that TFBSs are unlikely to cluster by chance.
+
+Halfon08.pdf
+REDfly, which contains the largest collection of annotated, validated CRMs.
+
+Hardison12.pdf
+Contains review of major methods for CRM prediction, especially epigenetic features, which may have more predictive power than other methods.
+
+Loo09.pdf
+Contains a review of methods for CRM prediction.
+
+Jeziorska09.pdf
+Contains background info on CRMs from a systems biology point of view.
