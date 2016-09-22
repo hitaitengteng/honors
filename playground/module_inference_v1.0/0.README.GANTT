@@ -1,0 +1,52 @@
+--------------------------------------------------------------------------- 
+File: 0.README.GANTT
+Author: William Gantt
+Description: A description of the modifications I have made to the Genesis
+             code for this first, extremely crude version of my project of 
+             writing a program that will identify well-conserved cis-
+             regulatory modules (CRMs) across species.
+--------------------------------------------------------------------------- 
+
+The basis for this code is John Grefenstette's Genesis code (Copyright
+1990). His documentation can be found in most of the files in this
+directory. Clare has also written a couple files outlining and summarizing
+various aspects of Genesis, though the extent to which she has modified the
+code remains unclear to me. I am using Genesis for my project because it is,
+to Clare's knowledge, the only decent, freely available GA code written in 
+C.
+
+--------------------------------------------------------------------------- 
+MODIFICATIONS
+--------------------------------------------------------------------------- 
+
+In this first version of my work, I have not modified very much at all.
+Indeed, I don't anticipate making any heavy revisions to the GA itself,
+but rather to Clare's postprocessor (another story). Below is a
+comprehensive list of my own modifications to the code.
+
+Files Added (excluding this one):
+  Will_v1.0.c       My own evaluation function file. See the file itself
+                    for details. I'm not including ga.Will_v1.0, which
+                    is the executable the compiler makes using the
+                    evaluation function file.
+
+Files modified:
+  makefile          Here, I added a single line of code that sets the
+                    -std=c99 flag, which tells the compiler to use the
+                    1999 ISO C standard, as opposed to the 1990 standard.
+
+  template.ex1      "Genes" do not play much of a role in the current
+                    iteration of the program, but I did modify the file
+                    so that the GA uses 10 genes (one for each character
+                    in the 10-bit bitstring I was using).
+
+  main.c            Added an include for the standard library and wrote
+                    a line at the beginning of the main function that
+                    seeds the random number generator. 
+
+Files deleted:
+  f1.c              Another evaluation function file. I modified this a
+                    fair amount in the beginning and then just ended up
+                    scrapping it. I'm not including on this list the many
+                    output files I have deleted, since they do not contain
+                    code.

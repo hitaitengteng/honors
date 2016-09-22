@@ -1,0 +1,117 @@
+Will Gantt
+Fri Jul 15 2016
+
+
+A list of suggested improvements to the source code in this directory.
+
+***************************************************************************
+FUNCTION-SPECIFIC SUGGESTIONS
+***************************************************************************
+
+All comments can also be found in the corresponding source code file.
+
+
+utilities.c
+-----------
+
+  isFree
+
+    NOTE 1: GAMI runs almost always find instances of motifs
+            that overlap with one another. Given the way the
+            random data generation functions are set up here,
+            however, this will never happen. I have, as yet,
+            given little thought to the problem of overlaps
+            (most importantly, in my design of the evaluation
+            function), which is a significant oversight. This
+            problem will have to be addressed in future
+            iterations of the program.
+
+    NOTE 2: This function should probably be modified to take
+            the motif length as a parameter. Right now, it is
+            given as a named constant. On the whole, I think 
+            I have made gratuitous use of named constants.
+
+  findFreeSpace
+
+    NOTE 1: Here, similarly, motif length should probably be
+            passed as a parameter to the function.
+
+
+instanceSet.c
+-------------
+
+  randInstanceSet
+
+    NOTE 1: Again, the motif length should be passed as a parameter.
+
+
+motif.c
+-------
+
+  randMotif
+
+    NOTE 1: In the current iteration of the program, this function is not 
+            used. Before using this function, it should probably be modified 
+            so that seqLength is an *array* of integers. This would allow the
+            various sequences in which the motif occurs to be of different 
+            lengths.
+
+  randMotifArray
+
+    NOTE 1: Same thing as with randMotf: seqLength should be expanded into
+	    an array.    
+
+  printMotifArrayByMotif
+
+    NOTE 1: Fix formatting of print statements so that they fit 80 columns
+            to a line.
+
+  printMotifArrayBySequence
+
+    NOTE 1: Fix formatting of print statements so that they fit 80 columns
+            to a line.
+
+
+window.c
+--------
+
+  numBasesInWindow
+
+    NOTE 1: Motif length should be passed as a parameter.
+
+  findBestModules
+
+    NOTE 1: seqLength should be expanded into an array.
+
+    NOTE 2: Figure out how to deal with overlapping motifs when evaluating
+            the quality of a module.
+
+    NOTE 3: Add "buffer zones" to either side of the window to allow you
+            to check for motifs in a region of n bases (a parameter
+            specified by the user) outside the window.
+
+    NOTE 4: Fix the "clumping" problem. Right now, the best modules that
+            the function returns tend to be offset from one another by
+            just a single window step.
+
+    NOTE 5: Add a parameter that allows the user to give added weight to
+            particular motifs. That is, a parameter that will allow her
+            to say "I really care about motif x, so give a boost to
+            modules that contain instances of it." 
+
+  printBestModules
+
+    NOTE 1: Fix formatting of print statements so that they fit 80 columns
+	    to a line.
+
+
+***************************************************************************
+GENERAL SUGGESTIONS
+***************************************************************************
+
+  1. Adapt the motif and instance representation schema to include
+     character strings.
+  2. Import some actual data to work with. NOTE TO SELF: In the copy of
+     the post-processor code that you have in your directory, you wrote
+     a function called "writeWillsFile" that writes the information you
+     need from a GAMI run to an output file. Get this working.

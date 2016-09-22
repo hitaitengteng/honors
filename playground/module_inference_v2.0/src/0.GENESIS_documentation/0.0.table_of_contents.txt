@@ -1,0 +1,27 @@
+Will Gantt
+Fri Jul 15 2016
+
+
+TABLE OF CONTENTS
+-----------------
+
+
+1. 0.about_GANTT_eval_v2.0.txt
+
+     A description of the evaluation function contained in GANTT_eval_v2.0.c.
+
+2. 0.GENESIS.TXT
+
+     John Grefenstette's (the author of the Genesis code's) guide to Genesis.
+
+3. 0.OUTLINE.CBC
+
+     Clare's descriptions of the Genesis source files.
+
+4. 0.README.CBC
+
+     Clare's instructions for compiling and running Genesis.
+
+5. 0.README.GENESIS
+
+     The original README file for Genesis. Not particularly helpful. 
