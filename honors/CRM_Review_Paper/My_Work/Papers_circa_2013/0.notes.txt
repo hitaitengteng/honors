@@ -1,0 +1,86 @@
+Notes on Papers Published since 2013
+
+Will Gantt
+9/23/16
+
+Brief descriptions of references for my review paper of computational CRM
+inference techniques published since the time of Jeff Thompson's writing.
+I will not end up using all of the papers described here. Only some of them
+can be found in this directory.
+
+Ren2013.pdf
+
+  Paper Title: Multiple alignment-free sequence comparison
+  Notes:       This paper looks like it could conceivably come in handy
+               down the road when I'm looking at alternatives to multiple
+               alignment, but it doesn't offer a method of *inferring*
+               candidate CRMs. Rather, it proposes a method of sequence
+               comparison that eschews multiple alignment, using CRM data
+               as a test case.
+  Included?:   No.
+
+Lowe2015.pdf
+
+  Paper Title: Genomic approaches for understanding the genetics of
+               complex disease
+  Notes:       This is another paper that looks like it might be helpful
+               down the road, but not for the current project. The author
+               seems to be most interested in the relationship between 
+               regulatory activity and phenotype variation, specifically
+               as it relates to "disease mechanisms." 
+  Included?:   No.
+
+Rouault2014.pdf
+
+  Paper Title: Imogene: identification of motifs and cis-regulatory modules
+               underlying gene co-regulation
+  Notes:       Definitely something to include in the paper. Imogene is an
+               "ensemble of statistical tools" that the authors trained on
+               mammalian and fly CRM data, specifically looking at
+               homologous modules across those species. Once trained, it
+               can then predict CRMs that have a similar regulatory
+               function on a genome-wide scale.
+  Included?:   Yes.
+
+Yang2014.pdf
+
+  Paper Title: cisMEP: an integrated repository of genomic epigenetic
+               profiles and cis-regulatory modules in Drosophilia
+  Notes:       cis-regulatory Module Epigenetic Profile database (cisMEP)
+               provides a means of evaluating the prediction confidence
+               of CRM inference methods. I am not exactly clear how it does
+               this, but their geneeral mission here is to "integrate...
+               computationally identified CRMs with genomic epigenetic
+               profile data." (I take it cisMEP serves as a sort of cross-
+               reference or sanity check for CRM inference tools?). Anyway,
+               it might be worth a mention in the paper. Then again, it
+               might not.
+  Included?:   Yes.
+
+Wang2015.pdf
+
+  Paper Title: Loregic: A Method to Characterize the Cooperative Logic of
+               Regulatory Factors
+  Notes:       Loregic is a tool that uses two-input, one-output logic
+               gates to describe "regulatory circuits" --- that is, groups
+               of regulatory elements that work together to perform some
+               function. Superficially, this sounds relevant, but the
+               trouble is that its focus is genome-wide; it's interested in
+               how *different* TFs regulating *different* genes work in
+               sequence to modify gene expression. Not worth including.
+  Included?    No.
+
+Pundhir2015.pdf [NOT DONE]
+
+  Paper Title: Emerging applications of read profiles towards the
+               functional annotation of the genome
+  Notes:       Probably not relevant to anything I'm doing. The paper is
+               concerned with things called "read profiles"
+  Included?    No.
+
+Roccaro2013.pdf [NOT DONE]
+
+  Paper Title: Identification of functional cis-regulatory elements by
+               sequential enrichment from a randomized synthetic DNA
+               library
+  Notes:       
