@@ -1,0 +1,29 @@
+Week of 10/24/16
+Will Gantt 
+
+This week:
+  
+I continued reading through the resources that Clare gave me last week.
+In our meeting on Wednesday, we discussed next steps and determined these
+to be the following:
+
+	1. Experiment with Weka (decision tree classifier software) and
+	   BioHEL (a GBML classifier) using Erik's data. (We got
+	   permission from him this week to use his data).
+	2. Develop a schedule for the next two months, with the goal of
+	   producing something by the end of December.
+
+So far, I have been doing (1), but have not gotten to (2). I think it
+would be best for me to meet with Clare once more before trying to lay
+out a plan.
+
+Clare also spoke with Steve this week to ask about getting approval for
+changing the focus of my project, and it sounds like Steve said to just
+go ahead with it.
+
+Next week:
+
+I hope to meet with Clare at some point this week to hash out a gameplan
+for the next two months. I also hope to have done some Weka runs on
+Erik's data, and perhaps some runs on BioHEL too (if I can figure it out).
+
