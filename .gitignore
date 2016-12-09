@@ -1,0 +1,10 @@
+#.gitignore
+
+
+# Directories #
+###############
+bioinformatics/
+
+# Files #
+#########
+.DS_Store
