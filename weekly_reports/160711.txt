@@ -1,0 +1,94 @@
+Week of 7/11/16 (Week 7)
+
+Summary:  Early in the week, I finished writing my function to find 
+	  the n best candidate CRMs in a single genomic sequence.
+	  Following that, I wrote an evaluation function that worked
+	  quite poorly. Its primary problem was that it was too
+	  generous in what it was willing to call a "well-conserved
+	  motif." I made several changes to the original function
+	  to produce a second version, but it performed not much
+	  better than the first. I devoted much of the second half
+	  of the week to revising and expanding documentation of
+	  my code, and to organizing the source files. Finally,
+	  I wrote a function in the post-processor to output
+	  all of the data my program needs to a text file (a
+	  second function will have to be written in the program
+	  for reading *from* that text file), but it has yet to be
+	  tested.
+
+Goals:    Most of this week will be dedicated to preparing for my
+	  talk on Thursday. I will use the remainder of the time
+	  to test my post-processor function and, once it's working,
+	  to writing a function in the program to read from the
+	  file that it outputs.
+
+
+Monday
+	- Fixed the problems with the findBestModules function.
+	- Updated documentation for all files.
+	- Worked on the evaluation function.
+
+Tuesday
+	- Finished implementing a preliminary evaluation function.
+	  It performed very poorly. Went back to the drawing board
+	  to come up with something better.
+	- Implemented a second, somewhat more effective evaluation
+	  function. This one still seems to have a lot of problems,
+	  though. The best bit strings output by the GA seem to
+	  contain more motifs than they should...
+	- Looked at the post-processor code and Victoria's code to
+	  try to determine what the best way would be to read in
+	  the information I need for actual data. I saw files
+	  in both places that I *could* use, but which would be
+	  fairly tedious. I'm also considering writing a function
+	  in the post-processor that would output a file with
+	  everything I need, though I would have to understand the
+	  pp code a bit better before doing that. Should talk with
+	  Clare about this (and about the evaluation function)
+	  tomorrow.
+
+Wednesday
+	- Wrote up some points to raise with Clare in our meeting
+	  (hopefully at some point today) about the findBestModules
+	  and evaluation functions.
+	- Updated documentation for various functions.
+	- Ran the evaluation function on random data sets of
+	  various sizes. It still requires significant improvements.
+	- Fixed a bug in the randomData function that was causing
+	  motifs to be implanted in a genomic sequence on top of
+	  one another.
+	- Wrote a couple functions for printing out useful
+	  information about modules.
+	- Started writing an outline for my presentation next week.
+	- Brainstormed improvements for the evaluation function,
+	  but was having a hard time coming up with anything I
+	  thought would be worth implementing.
+	- Wrote a list of the current problems with my program,
+	  a number of which I probably won't be able to fix before
+	  the end of my fellowship. 
+	- Attended bio talks.
+	- Read through the post-processor source code to try to
+	  understand it well enough to write a function that will
+	  output the information I need to run my program.
+	- Listened to Stephen Houser speak.
+
+Thursday
+	- Added a significant amount of documentation to my code,
+	  and organized and deleted superfluous files in the
+	  directory containing the code.
+	- Wrote a function in the post-processor to output a file
+	  containing all of the information I need for my module
+	  inference program in an amenable format.
+	- Caught up with Clare and discussed what should happen
+	  in the remaining week of my fellowship.
+	- Attended bioethics talks.
+	- Attended CS talks.
+	- Tried to do a test-run of the post-processor on the
+	  PDGFRB data to check to make sure my function was
+	  working correctly, but ran into difficulties. Will
+	  do the run tomorrow.
+
+Friday
+	- Wrote up a to-do list of things that need to get done before
+	  the end of next week.
+	- Made extensive additions to the documentation.

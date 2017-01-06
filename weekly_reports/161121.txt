@@ -1,0 +1,22 @@
+Week of 11/14/16
+Will Gantt
+
+This week:
+
+I mostly finished with a rough draft of Chapter 2, but had to get 
+Clare's input on a couple of things in order to finish it up. I
+ended up including more background information that I had originally
+planned and so it's longer than I intended. I know that it will likely
+need considerable revision and that some of it can be cut.
+
+Clare and I have not succeeded in resolving the compilation issues with
+EOlib, but Clare has requested Stephen Houser's help. Hopefully, he will
+be able to work it out so that I can start working with the code later
+this coming week.
+
+Next week:
+
+I hope to get feedback from Clare on Chapter 2 and to talk to her about
+a gameplan for winter break. As mentioned above, I also hope that Stephen
+will be able to figure out the EOlib stuff so that I can get to work on
+implementation.

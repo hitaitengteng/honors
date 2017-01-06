@@ -1,0 +1,44 @@
+Week of 10/31/16
+Will Gantt
+
+This week:
+
+I ran some trial runs on Erik's data using Weka and gained some
+familiarity with the software. In my meeting with Clare on Wednesday,
+we:
+
+  1. Decided that BioHEL is too complicated to be worth trying to
+     learn and do test runs on.
+  2. Discussed, in broad strokes, how Erik's data would be best
+     represented in a GBML system. Specifically, we talked about:
+       - Whether to represent the data in its raw form (that is,
+         crop yields by country by year), or in the form of deltas
+         (that is, the *change* in yields by country from year to
+         year). It seems that the latter may be the more promising
+         route.
+       - Whether to make the class attribute (change in yield or
+         yield/hectare, depending on the above) discrete or continuous.
+       - How a ruleset might be implemented. Considerations included
+         whether to use a Pitt or Michigan approach (though it sounds
+         like all of Clare's experience has been with Michigan), and
+         alternative data structures to a bit string.
+       - How to evaluate the fitness of a rule. Clare advocated
+         strongly for odds ratio.
+  3. Talked about finding an alternative codebase to GENESIS. This is
+     largely motivated by GENESIS's exclusive use of bit strings as
+     the means of representing solutions.
+  4. Came up with a very general outline for writing "Chapter 2" ---
+     the 5-10-page paper that honors folks have to write that
+     describes their project in some detail.
+
+Since our meeting, I have found a possible alternative codebase and
+have been reading Ryan Urbanowicz's paper surveying LCSs. I have also
+begun to compose Chapter 2, but am waiting for input from Clare on
+structure.
+
+Next week:
+
+I intend to finish Ryan's paper, to continue writing Chapter 2, and, if
+Clare decides that the codebase I have found is worth using, to start
+learning how it works.
+

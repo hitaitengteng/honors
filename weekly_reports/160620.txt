@@ -1,0 +1,97 @@
+Week of 6/20/16 (Week 4)
+
+Summary:  This week had two very distinct halves to it: the half before
+	  speaking with Clare, Victoria, and Craig about my project and
+	  the half after it. I don't think I understood how significantly
+	  this lab's approach to CRM inference differs from methods
+	  conceived by other teams. Consequently, I spent a fair amount
+	  of time reading papers on those methods, which was, in
+	  retrospect, not the best way I could have used my time. I feel
+	  now that I have a much clearer idea of what my short-term goals
+	  are. That said, I'm sure I will have lots of questions about
+	  details of implementation as I progress.
+
+Goals:    Next week, I want to accomplish the following:
+	    (1) Finish implementing the alternative motif representation
+	        schema I began developing on Thursday.
+	    (2) Implement an elementary evaluation function that evolves
+	        both a bitstring that represents the set of constituent
+	        motifs that describe the best-conserved CRMs, as well as
+	        the strings of bases of those motifs. (This will involve
+	        merging the two schemata I have now.)
+	    (3) (Contingent on (2), among other things) Use actual PDGFRB
+	        CRM data to test the effectiveness of the evaluation
+	        function.
+Monday
+	- Finished reading "Assessing Computational Methods of
+	  Cis-regulatory Module Prediction." I read the paper in order to
+	  get a better understanding of the work that has been done on CRM
+	  prediction beyond GAMMI and GAMI-CRM.
+	- Up until today, I had been writing all of my functions in the
+	  evaluation function file. I decided that it was time to modularize
+	  a bit and so moved all of the functions I have written *except*
+	  the evaluation function into a separate source and header file. I
+	  then modified the makefile to compile it along with the other
+	  Genesis files.
+	- Attempted to migrate the Genesis files (and the code I have
+	  added to them) to an Eclipse project, but ran into trouble
+	  with the makefile. Will try to resolve this later.
+	- Helped move furniture around for the high school students.
+	- Wrote functions to implant motifs at random locations in a
+	  specified sequence of bases.
+
+Tuesday
+	- Made improvements to functions that implant motifs at random
+	  locations in a specified sequence of bases.
+	- Listened to Clare give a presentation on the goal of our work,
+	  broadly speaking.
+	- Participated in a roundtable discussion in which all of us
+	  fellowship students presented our one-sentence descriptions
+	  of our projects, as well as our "elevator speeches"
+	- Brainstormed about how I am going to implement code to find
+	  CRMs in a single sequence of bases given a set of motifs. 
+
+Wednesday
+	- Continued brainstorming begun at the end of the day yesterday.
+	  Currently looking for ways to really distill the problem to its
+	  essence first, before getting into the hairy details of dealing
+	  with actual data.
+	- Talked with Victoria about the intersection between our projects,
+	  the intersection between them, and how we might help each other
+	- Did a literature review of relevant CRM prediction methods,
+	  including MCAST, MSCAN, and EEL. I also took a second look at
+	  the original GAMI-CRM paper. 
+	- Attended biology department lunch and student research
+	  presentations.
+	- Updated project descriptions
+	- Listened to Stephen Houser speak about Git
+
+Thursday
+	- Briefly brushed up on the uses of and differences between the
+	  stack and the heap in C.
+	- Updated .bashrc file 
+	- After looking at some of the modified postprocessor output files
+	  that Victoria made for her project, I realized that it would
+	  probably make sense to have an alternative, simpler way of
+	  representing motifs than the way I have been using this past week.
+	  Since I'm really just interested in how to assemble motifs into
+	  modules, I realized that I don't have to worry about the bases
+	  themselves (for right now, at least). All I care about is:
+	      1) The occurrences of a motif in a given sequence
+	      2) The score of that motif at that location
+	      3) The set of all sequences where the motif occurs
+	  As far as I can tell, this is the data that will end up being
+	  manipulated when determining modules. Thus, I started implementing
+	  a different representation scheme and corresponding functions
+	  based exclusively on these elements (no strings).
+	- Spoke with Clare, Craig, and Victoria, and got more direction on 
+          my project.
+	- Attended CS talks
+	- Continued work on new representation schema
+
+Friday
+	- Continued work on new representation schema. Specifically,
+	  functions for generating random motifs.
+	- Redid some curations that Craig said needed to be redone.
+	- Participated in team-building exercises
+	- Wrote up summary and goals for next week in weekly report

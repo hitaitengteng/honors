@@ -1,0 +1,53 @@
+Week of 9/19/16
+Will Gantt 
+
+
+This week:
+  
+Read and took detailed notes on Chapter 2 of "Fundamental Concepts 
+in Bioinformatics." This chapter was assigned earlier in the month as part
+of our Bioinformatics Reading Group, but my copy of the text had not
+arrived when we gathered to talk about it. The chapter's discussion of
+alignment and scoring methods is particularly relevant to my project, and
+I thought it important to get an overview of common approaches.
+
+Most of my work this week was spent doing a literature search for the
+survey paper I am writing (or, more accurately, finishing) on existing
+methods of computational inference of CRMs. In my search, I was looking
+only for papers published since 2013, as that was when Jeff Thompson was
+working on his draft of the paper, which I am taking as my starting point.
+I cast a fairly broad net in my search and have so far found 15 papers that
+seemed to be of more than tangential relevance to the topic. Most recently,
+I have been reading the abstracts and introductions of those papers to
+determine just how relevant they actually are, and am taking notes to that
+effect. Of the ones I've investigated, I would estimate that about half are
+sufficiently relevant to the project to merit a citation in the paper.
+
+Earlier in the week, I also set up a git repository to sync the work on
+my laptop with the work I do on Bowdoin's servers.
+
+On Friday, I met with Clare to talk about my poster for the President's
+Summer Research Symposium and about narrowing in on a concise, layman-
+friendly, elevator-speech description of my project. Since our meeting, I
+have been writing up drafts of the various sections of the poster and have
+been trying to decide what images to include.
+
+
+Next week:
+
+Right now, chiseling my elevator speech and finishing my poster for the
+Research Symposium are my top priorities. I hope to have a complete rough
+draft of the poster to send to Clare for feedback by early next week. When
+the Copy and Print center reopens on Monday, I will call them to set up a
+printing appointment.
+
+I will finish taking notes on the papers I have gathered, and will likely
+do a second search to see if I find any articles of interest that I may
+have missed the first time around. Once I've gathered all the papers that
+I think will be useful to me, I begin reading and summarizing them in
+detail.
+
+Clare and I have not set up an official meeting time (which is fine by me),
+but she did suggest I come to the Wednesday Bioinformatics Group meeting
+just to share what I have been working on, which I intend to do.
+

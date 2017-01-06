@@ -1,0 +1,54 @@
+Week of 7/4/16 (Week 6)
+
+Summary:  This week I spent probably too much time making improvements to my
+	  random data functions, but they are working very well now. The
+	  latter half of the week was mostly devoted to updating documentation
+	  and to working on the function that finds the best modules in each
+	  sequence (findBestModules). As of right now, this function isn't
+	  working.
+
+Goals:    First order of business is to get findBestModules working. After
+	  that, I will implement the evaluation function. I want to get
+	  the whole thing working on *some* data set -- whether real or
+	  randomly generated -- before I leave. I talked with Clare about
+	  using the PDGFRB data, but my plan right now is to run the
+	  program on the random data (since I already have all of that set
+	  up), then try it on the PDGFRB data if I have time. I also need
+	  to start planning for my talk in a couple weeks.
+
+Tuesday
+	- Updated documentation of motif2.c, motif2.h, and Will_v2.0.c
+	  and changed variable names in order to improve clarity.
+	- Implemented an evaluation function for finding the best candidate
+	  module along a genomic sequence, given a set of motifs.
+
+Wednesday
+	- Migrated randomData (generates a random motif library with a set of
+	  instances of the motifs in a genomic sequence) and findBestModule
+	  (which finds the best candidate module in a genomic sequence, given
+	  a library of motifs) functions from Will_v2.0.c to motif2.c and added
+	  to their documentation.
+	- Worked on modifying randomData function so that it would generate
+	  instances of motifs on multiple genomic sequences.
+	- Attended biology talks.
+	- Listened to Stephen Houser speak about code organization.
+	- Spoke with Clare and Craig briefly about the arc of my project for the
+	  remaining two weeks.
+
+Thursday
+	- Made modifications to various random data generation functions.
+	- Attended CS talks. 
+	- Ran into trouble with the findBestModules function and realized it
+	  needed a complete overhaul in order to accommodate a new datatype
+	  that I had made. Began on this overhaul.
+
+Friday
+	- Until now, nearly all of my code was in a single .c/.h file pair.
+	  I spent a fair amount of time this morning breaking it up into
+	  multiple files.
+	- Something strange happened to the function that finds the best
+	  candidate modules in each sequence (I get segfaults every time
+	  I try to run it). I worked on debugging it for most of the day
+	  and did make some progress, but there are still things wrong with
+	  it. I hope to get this smoothed out soon so that I can work on
+	  the more important stuff (the evaluation function). 

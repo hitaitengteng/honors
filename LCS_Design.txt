@@ -1,0 +1,7 @@
+Will Gantt
+12/24/16
+
+LCS design questions
+
+1. What subset of the classifier population will the GA act on?
+   Just the match set [M]? The entire population [P]?
