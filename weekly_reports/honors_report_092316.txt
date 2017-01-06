@@ -1,5 +1,0 @@
-
-This week:
-  - Gathered papers from Google Scholar from the last three years
-    that propose new methods of computational inference of CRMs.
-  - Read Chapter 2 of "Fundamental Concepts in Bioinformatics"
