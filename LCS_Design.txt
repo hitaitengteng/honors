@@ -5,3 +5,4 @@ LCS design questions
 
 1. What subset of the classifier population will the GA act on?
    Just the match set [M]? The entire population [P]?
+2. I believe we settled on odds ratio as the fitness metric.
