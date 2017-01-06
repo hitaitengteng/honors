@@ -1,6 +1,0 @@
-#!/bin/bash
-
-# Wed Aug  6 09:16:58 EDT 2014
-# At this point, this is the only way I can get the frontiers template to compile. - JT
- 
-pdflatex $1
