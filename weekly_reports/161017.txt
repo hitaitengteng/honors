@@ -1,0 +1,22 @@
+Week of 10/17/16
+Will Gantt 
+
+This week:
+  
+After having a minor crisis early in the week about the focus of my project, I spoke
+with Clare and we decided, in effect, to start over on something entirely different.
+Right now, that something looks like it will be a genetics-based machine learning (GBML)
+approach to studying changes in global (and local) crop yields using data collected by
+Erik Nelson in the Economics department. Clare sent me a paper that she co-authored with
+Erik that treats of the same data, but that employs a different methodology. She also
+sent me several other resources on GBML. I have read through at least some of all of these,
+spending the most time with the paper and with the over of GBML techniques written by
+Tim Kovacs.
+
+Today (Friday), I also presented my poster at the President's Summer Research Symposium.
+
+Next week:
+
+I will continue reading through the sources Clare has given me, will try to hash out a
+concrete schedule for the remainder of the semester, and will hopefully get the approval
+of the rest of the department to switch topics.

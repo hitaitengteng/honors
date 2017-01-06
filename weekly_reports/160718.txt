@@ -1,0 +1,40 @@
+Week of 7/18/16 (Week 8)
+
+Summary:  I spent most of this week working on my presentation for
+	  the CS talks on Thursday. After I had presented, I began
+	  work on several functions for reading in actual data from
+	  the post-processor. I had hoped to finish these by the
+	  end of the week, but the preparations for the presentation
+	  took longer than anticipated. That said, I made significant
+	  progress on the functions, and they should not take long
+	  to finish.
+
+Goals:    Although my fellowship has ended, I still have to write up
+	  a report for the Office of Student Fellowships and Research,
+	  which I intend to start on soon.
+
+Monday
+	- Wrote weekly report for week of 7/11/16.
+	- Worked on presentation for the CS talks on Thursday.
+
+Tuesday
+	- Worked on presentation for the CS talks on Thursday.
+	- Helped to migrate back into 126
+
+Wednesday
+	- Worked on presentation for the CS talks tomorrow.
+	- Rehearsed presentation in front of Clare, Craig, and Ryan.
+	- Made edits to presentation based on Clare and Craig's
+	  feedback.
+
+Thursday
+	- Worked on functions for reading in data from the post-
+	  processor.
+	- Practiced for talks this afternoon.
+	- Presented talk.
+	- Continued working on functions for reading in data.
+
+Friday
+	- Worked on functions for reading in data from the post-
+	  processor.
+	- Helped move equipment from the lab back to Clare's office.

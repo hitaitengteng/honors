@@ -1,0 +1,65 @@
+Week of 6/13/16 (Week 3)
+
+Summary:  The day-by-day breakdown of my activities this week is given
+	  below, but I summarize the most important items here. After
+	  finishing my 35 curations for DNAH5, I set to work modifying
+	  the Genesis code to implement a basic evaluation function that
+	  would compare two sets of motifs (pseudo-modules). This took
+	  me longer than expected for reasons described below. Clare
+	  then suggested I modify the code I wrote to compare a set of
+	  motifs to a *sequence* of base pairs, rather than another
+	  set of motifs. I started working on this, but then realized
+	  that it would probably be best to read some of the existing
+	  literature on computational tools for inferring candidate
+	  CRMs (apart from GAMMI and GAMI-CRM), which I began doing on
+	  Friday.
+
+Goals:    Next week, I want to read at least two papers from the
+	  candidate CRM inference literature and, simultaneously, work
+	  on implementing my own. Specifically, I want the next version
+	  of my code to be able to pick out candidate modules using
+	  a window-based approach (and hopefully, in doing this, continue
+	  to improve my facility with C). 
+
+Monday:
+	- Finished curations (lots of technical difficulties here with
+	  uploading and such) for DNAH5
+	- Attended data management workshop
+
+Tuesday:
+	- Read through Clare's Genesis code documentation, practiced
+	  running the code.
+	- Read through Lab 7 from Clare's Machine Learning class to get
+	  some inspiration
+	- Began implementing a *very* rudimentary module comparison
+	  function
+
+Wednesday:
+	- Continued implementing my module comparison function and
+	  trying to understand Genesis code
+	- Listened to Stephen Houser speak
+
+Thursday:
+	- Finsihed implementing my module comparison function 
+		- This took quite a bit longer than expected on
+		  account of a) me not initially understanding the
+		  objective, and b) a couple rather pernicious bugs
+		  that took me a while to track down.
+	- Spoke with Clare about how to proceed. We decided that it would
+	  make the most sense to next adapt the module comparison (eval-
+	  uation) function to perform a somewhat more difficult task.
+	  Rather than look for conservation of motifs from one set of
+	  motifs to another, we want the program to look for conservation
+	  of motifs from a set to a genomic sequence. Started working on
+	  implementing this.
+
+Friday:
+	- Continued implementing the features of the module comparison
+	  function Clare and I discussed on Thursday.
+	- Documented and polished up the first implementation of the
+	  module comparison program
+	- Attended biology departmental lunch/talk
+	- Read some of the literature on existing methods for CRM inference.
+	  Specifically, Su et al.'s "Assessing Computational Methods of Cis-
+	  Regulatory Module Prediction."
+	- Participated in teambuilding activities

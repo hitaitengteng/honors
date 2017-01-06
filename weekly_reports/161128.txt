@@ -1,0 +1,15 @@
+Week of 11/28/16
+Will Gantt
+
+This week:
+
+I made some final edits to Chapter 2 and submitted it to Clare. Stephen
+succeeded in fixing the compilation issues we were having with EOlib
+on Dover. I have been trying to work through the accompanying tutorial,
+but have encountered some troubles with include paths, which I am
+trying to work out.
+
+Next week:
+
+I hope to resolve the problems I've run into with the tutorial and to
+talk to Clare about what to do over winter break.

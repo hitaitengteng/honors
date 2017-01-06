@@ -1,0 +1,18 @@
+Week of 11/14/16
+Will Gantt
+
+This week:
+
+I did not manage to finish Chapter 2, as I had hoped, but did make
+significant progress on it. I found and read a number of helpful
+sources on LCSs and the varieties of learning -- information that I
+incorporated in my writing. I also tried to run the Evolving Objects
+(EO) code, but ran into a number of difficulties compiling. Clare and
+I talked about this when we met on Wednesday, and she told me to put
+the code in my directory on Dover for her to look at, which I have now
+done.
+
+Next week:
+
+I hope to resolve the compilation issues with EO and to begin working
+seriously with the code. I also intend to finish Chapter 2.

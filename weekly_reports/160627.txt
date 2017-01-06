@@ -1,0 +1,58 @@
+Week of 6/27/16 (Week 5)
+
+Summary:  I am disappointed in the amount I got done this week. The bugs
+	  I ran into while making improvements to the schema and while
+	  implementing the evaluation function ate up a lot of my time.
+          I'm glad that I finished the schema and that I got started on
+	  the evaluation function, but this falls short of the objectives
+	  I outlined for myself last week. The more progress I make, the
+	  more I see just what a big project this is, and the more I
+	  worry about what I will actually be able to accomplish before
+	  the fellowship ends. It isn't for lack of effort; it's just
+	  that there's so much to do, and I often have doubts about
+	  whether the tack I'm taking is the right one.
+
+Goals:    Next week, I want to finish implementing the evaluation
+	  function that finds a single best putative module in a
+	  sequence. Once I have done that, I will implement a new
+	  evaluation function to check for conservation of motifs
+	  between single best putative modules across multiple
+	  species. I don't imagine I will be able to accomplish
+	  more than this, but after writing this evaluation
+	  function, I will incorporate multiple putative modules
+	  per species.
+
+
+Monday
+	- Finished implementing new representation schema. This is the
+	  schema I discussed in last week's report that represents
+	  instances of motifs along a given DNA strand as a pair
+	  consisting of its location on the strand and its local
+	  score. This stands in contrast to the earlier schema, which
+	  had no means of representing an *instance* of a motif on a
+	  strand --- only a single string of bases and an ID number.
+
+Tuesday
+	- Made further improvements to the schema, but came across a bug
+	  early in the afternoon, which, despite my best efforts, I was
+	  unable to fix. I will look at it again tomorrow.
+
+Wednesday
+	- Read and took notes on article on natural language processing. 
+	- Fixed bug that I discovered yesterday.
+	- Fixed several other bugs that cropped up while fixing original
+          bug.
+        - Attended biology research talks
+        - Met with Clare and Victoria and got further direction on how
+	  to spend the remaining three weeks.
+
+Thursday
+	- Brainstormed about scoring algorithms for evolving modules
+	- Began implementing an evaluation function that identifies a
+	  single best putative module in a sequence of DNA
+	- Attended CS department talks
+
+Friday
+	- Continued working on the evaluation function I began
+	  yesterday. Encountered an elusive bug that took me most of
+	  the morning to find.

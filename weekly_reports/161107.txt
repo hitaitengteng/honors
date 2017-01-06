@@ -1,0 +1,19 @@
+Week of 11/7/16
+Will Gantt
+
+This week:
+
+I finished reading Ryan's survey paper on LCSs and found a number of other
+helpful resources in his bibliography. I have also been making progress on
+"Chapter 2", having completed the section that overviews EAs, and part of
+the section on GBML and on the problem my project is addressing. Lastly,
+having gotten the go-ahead from Clare, I have been spending some time
+learning the various components of EOlib -- the codebase that I will be
+using to design my program.
+
+Next week:
+
+I hope to finish writing Chapter 2, and to continue learning the codebase 
+(and perhaps beginning to genuinely manipulate it, though there are enough
+other things on my plate this week that I may not get to that). I also
+hope to read more of the sources I found from Ryan's bibliography.
