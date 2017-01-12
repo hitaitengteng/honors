@@ -1,0 +1,24 @@
+Will Gantt
+12/24/16
+
+LCS design questions
+
+1. What subset of the classifier population will the GA act on?
+   
+    I think the GA should act on [C], the set of consistently
+    correct classifiers.
+
+2. What should be the fitness metric?
+
+   Clare has suggested odds ratio. I am curious how effective
+   this would be compared to a simple metric like:
+
+       (# correctly classified) / (# matches)
+
+3. How should classifiers recommending conflicting actions
+   be handled?
+
+4. Should I start by implementing a vanilla LCS and then modify
+   it to be fuzzy, or should I go straight for a fuzzy one?
+
+
