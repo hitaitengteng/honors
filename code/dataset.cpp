@@ -1,4 +1,13 @@
-#include "attributeVector.h"
+#include "dataset.h"
+
+/****************************************************************************
+ * File:        dataset.cpp
+ * Author:      William Gantt
+ * Description: Implementations of various functions for the Dataset class.
+ *
+ * TODO:
+ * 	- Fix type names in readFromCSVFile
+ ****************************************************************************/ 
 
 using namespace std;
 
@@ -8,7 +17,7 @@ using namespace std;
  * Output:      the number of data points successfully read in
  * Description: reads in vectors of attributes from a text file
  ****************************************************************************/
-int AttributeVector::readFromCsvFile(string fileName) {
+int Dataset::readFromCSVFile(string fileName) {
 
 	fstream fileStream; // the file stream
 	fileStream.open(fileName.c_str()); // try to open the file

@@ -6,39 +6,45 @@
 /****************************************************************************
  * File:        attribute.h
  * Author:      Will Gantt
- * Description: Attribute class definition
+ * Description: Defines the Attribute class. [Description]
  ****************************************************************************/ 
+
+using namespace std;
+
 class Attribute {
 
 	public:
-		Attribute(std::string name): 
-			name(name), val(0), op(NO_OP) {
+		Attribute(string name): 
+			name(name), center(0), spread(0), dontCare(false) {
 		}
 
-		Attribute(std::string name, float val): 
-			name(name), val(val), op(NO_OP)	{
+		Attribute(string name, double center, double spread, bool dontCare) {
+			setName(name);
+			setCenter(center);
+			setSpread(spread);
+			setDontCare(dontCare);
 		}
 
-		Attribute(std::string name, float val, int op):
-			name(name), val(val), op(op)	{
-		}
-
-		~Attribute() { }
+		~Attribute(){}
 
 		// getters 
-		std::string getName() const {return name;}
-		float getVal() const {return val;}
-		int getOperator() const {return op;}
+		string getName() const {return name;}
+		double getCenter() const {return center;}
+		double getSpread() const {return spread;}
+		bool getDontCare() const {return dontCare;}
 
 		// setters
-		void setVal(float val) {this->val = val;}
-		void setOperator(int op) {this->op = op;}
+		void setName(string name) {this->name = name;}
+		void setCenter(double center) {this->center = center;}
+		void setSpread(double spread) {this->spread = spread;}
+		void setDontCare(bool dontCare) {this->dontCare = dontCare;}
 
 	private:
-		std::string name; // the name of the attribute
-		float val;       // the value of the attribute
-		int op;      // (for rules only) the operator (<,<=,>,>=,==)
-		             // used to specify a rule
+		string name;   // the name of the attribute
+		double center; // the midpoint of the interval covered by the attribute
+		double spread; // this defines the size of the interval
+		bool dontCare; // indicates whether this attribute is a relevant component
+			       // of a given rule (true = 'we don't care'; false = 'we do care')
 };
 
 #endif

@@ -338,7 +338,6 @@ for XCS and UCS differ, I have indicated both using format [XCS]/[UCS]
 	mu:                    0.04
 	chi:                   0.8
 	v:                     5/10
-	Accuracy threshold:    0.99
 	P_#:                   0.33
 	theta_mna:             total # of classes/actions
 	theta_GA:              25
