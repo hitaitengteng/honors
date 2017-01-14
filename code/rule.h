@@ -2,7 +2,7 @@
 #define RULE_H
 
 #include "utilities.h"
-#include "attribute.h"
+#include "dataset.h"
 
 /****************************************************************************
  * File:        Rule.h
@@ -10,9 +10,6 @@
  * Description: Defines the Rule class.
  *
  * TODO:
- * 	- Implement constructors
- * 	- Implement getters and setters
- * 	- Implement vector wrapper functions
  ****************************************************************************/ 
 
 using namespace std;
@@ -21,22 +18,59 @@ class Rule {
 
 	public:
 
-		// CONSTRUCTORS
-		// DESTRUCTOR
+	// MEMBER VARIABLES
+	
+		// the condition under which the rule applies (NOTE: this should
+		// probably be private, but I was feeling too lazy to make wrapper
+		// functions)
+		vector<Attribute> condition;
+
+	// FUNCTIONS
+	
 		// mutates the class and attribute ranges in the condition with
 		// some probability
-		void mutate(double pMutate, double pDontCare, double rangeScalar);
+		void mutate(double pMutate, double pDontCare, vector<pair<double,double>> ranges, 
+				double rangeScalar, mt19937 &rng);
 
 		// assigns particular values to all "don't care" attributes based
 		// on the passed input vector
-		void specify(vector<double> input);
+		void specify(vector<double> input, vector<pair<double,double>> ranges, 
+				double rangeScalar, mt19937 &rng);
+	
+		// prints out information about a rule
+		void print();
+	
+		// getters 
+		vector<Attribute> getCondition() {return condition;}
+		int getClass() {return classification;}
+		int getTimeStamp() {return timeStamp;}
+		int getExp() {return exp;}
+		int getNumerosity() {return numerosity;}
+		int getNumMatches() {return numMatches;}
+		int getNumCorrect() {return numCorrect;}
+		int getNumDontCare() {return numDontCare;}
+		int getNumNiches() {return numNiches;}
+		int getNicheSizesSum() {return nicheSizesSum;}
+		double getAvgNicheSize() {return avgNicheSize;}
+		double getAccuracy() {return accuracy;}
+		double getFitness() {return fitness;}
 
-		// GETTERS AND SETTERS
+		// setters
+		void setCondition(vector<Attribute> condition) {this->condition = condition;}
+		void setClass(int classification) {this->classification = classification;}
+		void setTimeStamp(int timeStamp) {this->timeStamp = timeStamp;}
+		void setExp(int exp) {this->exp = exp;}
+		void setNumerosity(int numerosity) {this->numerosity = numerosity;}
+		void setNumMatches(int numMatches) {this->numMatches = numMatches;}
+		void setNumCorrect(int numCorrect) {this->numCorrect = numCorrect;}
+		void setNumDontCare(int numDontCare) {this->numDontCare = numDontCare;}
+		void setNumNiches(int numNiches) {this->numNiches = numNiches;}
+		void setNicheSizesSum(int nicheSizesSum) {this->nicheSizesSum = nicheSizesSum;}
+		void setAvgNicheSize(double avgNicheSize) {this->avgNicheSize = avgNicheSize;}
+		void setAccuracy(double accuracy) {this->accuracy = accuracy;}
+		void setFitness(double fitness) {this->fitness = fitness;}
 
 	private:
-
-		// the condition under which the rule applies
-		vector<Attribute> condition;
 
 		// the class into which any input matching the condition is
 		// to be categorized, according to the rule

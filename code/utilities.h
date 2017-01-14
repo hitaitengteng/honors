@@ -8,19 +8,13 @@
  *              functions for reading and writing to files.
  ****************************************************************************/ 
 
+#include <cstdlib>
 #include <iostream>
 #include <fstream>
-#include <cstdlib>
 #include <string>
 #include <vector>
 #include <algorithm>
-
-// rule operators
-static const int NO_OP = 0;
-static const int EQUALS = 1;
-static const int GREATER_THAN = 2;
-static const int GREATER_THAN_OR_EQUAL_TO = 3;
-static const int LESS_THAN = 4;
-static const int LESS_THAN_OR_EQUAL_TO = 5;
+#include <random>
+#include <utility>
 
 #endif // end utilities.h
