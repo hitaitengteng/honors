@@ -11,6 +11,10 @@
 
 using namespace std;
 
+// for testing
+static const int NUM_TEST_NAMES = 10;
+static const string testNames[] = {"Alpha", "Beta", "Gamma", "Delta", "Epsilon",
+			           "Zeta", "Eta", "Theta", "Iota", "Kappa"};
 class Attribute {
 
 	public:
@@ -26,6 +30,12 @@ class Attribute {
 		}
 
 		~Attribute(){}
+
+		// generates a random attribute
+		static Attribute getRandom();
+
+		// prints info about an attribute
+		void print();
 
 		// getters 
 		string getName() const {return name;}

@@ -40,9 +40,9 @@ class Population {
 		pair<Rule,Rule> crossover(int i, int j, mt19937 &rng);
 
 		// getters
-		int getSize() {return size;}
-		int getMaxSize() {return maxSize;}
-		Rule getMostGeneral() {return mostGeneral;}
+		int getSize() const {return size;}
+		int getMaxSize() const {return maxSize;}
+		Rule getMostGeneral() const {return mostGeneral;}
 
 		// setters
 		void setSize(int size) {this->size = size;}
