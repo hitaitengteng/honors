@@ -7,11 +7,49 @@
  *
  * TODO:
  *
- * 	- implement printRule
  * 	- write unit test for mutate and specify functions
  * 	- write function descriptions
  ****************************************************************************/ 
 using namespace std;
+
+/****************************************************************************
+ * Inputs:
+ * Outputs:
+ * Description: Two rules are defined to be equivalent if their condition
+ * 		and class are matching. The values of other member variables
+ * 		are considered irrelevant.
+ ****************************************************************************/ 
+bool Rule::operator==(const Rule &rule) const {
+
+	// check the classes of both rules
+	if (classification != rule.getClass())
+		return false;
+
+	// check the conditions
+	for (int i=0; i<condition.size(); i++) {
+
+		// if one of the rules has the "don't care" variable set for
+		// the current attribute and the other doesn't, the rules
+		// are not equivalent
+		if (condition[i].getDontCare() != rule.condition[i].getDontCare())
+			return false;
+
+		// if control reaches here, we know thaat both rules have
+		// the same value for the "don't care" variable. If that
+		// value is false, we must then check their center and
+		// spread variables for equality
+		if (condition[i].getDontCare() == false) {
+			if (condition[i].getCenter() != 
+			    rule.condition[i].getCenter())
+				return false;
+			if (condition[i].getSpread() != 
+			    rule.condition[i].getSpread())
+				return false;
+		}
+	}
+	return true;
+
+} // end operator==
 
 /****************************************************************************
  * Inputs:
@@ -113,6 +151,69 @@ void Rule::specify(vector<double> input, vector<pair<double,double>> ranges,
 	}
 
 } // end specify
+
+/****************************************************************************
+ * Inputs:
+ * Outputs:
+ * Description:
+ ****************************************************************************/ 
+bool Rule::generalizes(const Rule &rule) const {
+
+	// indicates whether the rules are equivalent
+	bool areEquivalent = true;
+
+	// iterate over the conditions of both rules
+	for (int i=0; i<condition.size(); i++) {
+
+		// only want to check attributes that aren't "don't cares"
+		// (if this rule has the "don't care" variable set for a
+		// particular attribute, it is at least as general as the
+		// other rule with respect to that attribute).
+		if (condition[i].getDontCare() == false) {
+
+			// if this rule has a specific value for an
+			// attribute for which the other rule has the
+			// "don't care" variable set, then the former
+			// cannot be more general than the latter
+			if (rule.condition[i].getDontCare() == true)
+				return false;
+
+			// determine the intervals over the current attribute
+			// that each rule covers
+			double r1LowerBound = condition[i].getCenter() -
+				condition[i].getSpread();
+			double r1UpperBound = condition[i].getCenter() +
+				condition[i].getSpread();
+			double r2LowerBound = rule.condition[i].getCenter() -
+				rule.condition[i].getSpread();
+			double r2UpperBound = rule.condition[i].getCenter() -
+				rule.condition[i].getSpread();
+
+			// return false if the interval described by rule 2
+			// does not fall within that described by rule 1
+			if ((r2LowerBound < r1LowerBound) ||
+			    (r2UpperBound > r1UpperBound)) {
+				return false;
+
+			  // if the intervals over the current attribute
+			  // covered by the two rules are not exactly
+			  // equivalent, the rules themselves are not
+			  // equivalent
+			} else if ((r2LowerBound) != (r1LowerBound) ||
+				   (r2UpperBound) != (r1UpperBound)) {
+				areEquivalent = false;
+			}
+		}
+	}
+	
+	// as mentioned in the description, if two rules are equivalent,
+	// the one is not considered to be a generalization of the other
+	if (areEquivalent)
+		return false;
+
+	return true;
+
+} // end generalizes
 
 /****************************************************************************
  * Inputs:

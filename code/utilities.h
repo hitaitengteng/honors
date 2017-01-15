@@ -17,4 +17,11 @@
 #include <random>
 #include <utility>
 
+// class attribute (yield change) values
+static const int NO_CLASS = 0;
+static const int HIGH_NEG = 1;
+static const int LOW_NEG = 2;
+static const int LOW_POS = 3;
+static const int HIGH_POS = 4;
+
 #endif // end utilities.h

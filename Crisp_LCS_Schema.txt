@@ -271,7 +271,8 @@ I. GENETIC ALGORITHM
 		set of possible inputs matched by the offspring is a proper
 		subset of the set of possible inputs matched by the parent.
 		As a test, this is accomplished simply by comparing the
-		number of "don't cares" in parent and offspring.
+		number of "don't cares" in parent and offspring, and then
+		the ranges of the other attributes.
 	(*3)	(The term "macroclassifier," which one encounters a good deal
 		in the literature, simply refers to a classifier that maintains
 		a numerosity tally.)

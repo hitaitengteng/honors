@@ -10,6 +10,8 @@
  * Description: Defines the Rule class.
  *
  * TODO:
+ *
+ * 	- Decide how to initialize attribute vector in ctor
  ****************************************************************************/ 
 
 using namespace std;
@@ -27,6 +29,12 @@ class Rule {
 
 	// FUNCTIONS
 	
+		// constructor
+		Rule() : numerosity(1){ }
+
+		// comparison operator
+		bool operator==(const Rule& rule) const;
+
 		// mutates the class and attribute ranges in the condition with
 		// some probability
 		void mutate(double pMutate, double pDontCare, vector<pair<double,double>> ranges, 
@@ -37,23 +45,26 @@ class Rule {
 		void specify(vector<double> input, vector<pair<double,double>> ranges, 
 				double rangeScalar, mt19937 &rng);
 	
+		// checks whether this rule is a more general version of another
+		bool generalizes(const Rule &rule) const;
+
 		// prints out information about a rule
 		void print();
 	
 		// getters 
-		vector<Attribute> getCondition() {return condition;}
-		int getClass() {return classification;}
-		int getTimeStamp() {return timeStamp;}
-		int getExp() {return exp;}
-		int getNumerosity() {return numerosity;}
-		int getNumMatches() {return numMatches;}
-		int getNumCorrect() {return numCorrect;}
-		int getNumDontCare() {return numDontCare;}
-		int getNumNiches() {return numNiches;}
-		int getNicheSizesSum() {return nicheSizesSum;}
-		double getAvgNicheSize() {return avgNicheSize;}
-		double getAccuracy() {return accuracy;}
-		double getFitness() {return fitness;}
+		vector<Attribute> getCondition() const {return condition;}
+		int getClass() const {return classification;}
+		int getTimeStamp() const {return timeStamp;}
+		int getExp() const {return exp;}
+		int getNumerosity() const {return numerosity;}
+		int getNumMatches() const {return numMatches;}
+		int getNumCorrect() const {return numCorrect;}
+		int getNumDontCare() const {return numDontCare;}
+		int getNumNiches() const {return numNiches;}
+		int getNicheSizesSum() const {return nicheSizesSum;}
+		double getAvgNicheSize() const {return avgNicheSize;}
+		double getAccuracy() const {return accuracy;}
+		double getFitness() const {return fitness;}
 
 		// setters
 		void setCondition(vector<Attribute> condition) {this->condition = condition;}
