@@ -1,4 +1,5 @@
 #include "rule.h"
+#include "dataset.h"
 
 /****************************************************************************
  * File:        main.cpp
@@ -21,8 +22,10 @@ int main(int argc, char **argv) {
 
 	uniform_real_distribution<double> dist(0,10);
 
-	Attribute a = Attribute::getRandom();
-	a.print();
+	Dataset d;
+	d.readFromCSVFile(argv[1]);
+
+	d.print();
 
 	return 0;
 	

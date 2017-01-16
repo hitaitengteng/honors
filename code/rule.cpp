@@ -7,7 +7,7 @@
  *
  * TODO:
  *
- * 	- write unit test for mutate and specify functions
+ * 	- write unit test for mutate, generalizes, and specify functions
  * 	- write function descriptions
  ****************************************************************************/ 
 using namespace std;
@@ -57,7 +57,7 @@ bool Rule::operator==(const Rule &rule) const {
  * Description:
  ****************************************************************************/ 
 void Rule::mutate(double pMutate, double pDontCare, 
-		vector<pair<double,double>> ranges, 
+		vector<pair<double,double> > ranges, 
 		double rangeScalar, 
 		mt19937 &rng) {
 
@@ -126,7 +126,7 @@ void Rule::mutate(double pMutate, double pDontCare,
  * Outputs:
  * Description:
  ****************************************************************************/ 
-void Rule::specify(vector<double> input, vector<pair<double,double>> ranges, 
+void Rule::specify(vector<double> input, vector<pair<double,double> > ranges, 
 		double rangeScalar, mt19937 &rng) {
 
 	// iterate over all attributes in the condition
@@ -147,7 +147,6 @@ void Rule::specify(vector<double> input, vector<pair<double,double>> ranges,
 			double spread = dist(rng);
 			condition[i].setSpread(spread);
 		}
-
 	}
 
 } // end specify
@@ -220,11 +219,46 @@ bool Rule::generalizes(const Rule &rule) const {
  * Outputs:
  * Description:
  ****************************************************************************/ 
+Rule Rule::getRandom(int num_attributes) {
+
+	Rule r;
+
+	// random number generator
+	mt19937 rng;
+	rng.seed(random_device{}());
+
+	// random class
+	r.setClass(rng() % NUM_CLASSES);
+
+	// random attributes
+	for (int i=0; i<num_attributes; i++) {
+		r.condition.push_back(Attribute::getRandom());
+	}
+
+	// a uniform distribution over [0,1]
+	uniform_real_distribution<double> dist(0,1);
+
+	// random accuracy and fitness
+	r.setAccuracy(dist(rng));
+	r.setFitness(dist(rng));
+
+	return r;
+
+} // end getRandom
+
+/****************************************************************************
+ * Inputs:
+ * Outputs:
+ * Description:
+ ****************************************************************************/ 
 void Rule::print() {
 
 	printf("\nAttribute:  ");
 	for (int i=0; i<condition.size(); i++)
 		printf("[ %d ] ", i);
+	printf("\nDon't Care: ");
+	for (int i=0; i<condition.size(); i++)
+		printf("[ %d ] ", condition[i].getDontCare());
 	printf("\n  Center:   ");
 	for (int i=0; i<condition.size(); i++)
 		printf("%.3f ", condition[i].getCenter()); 

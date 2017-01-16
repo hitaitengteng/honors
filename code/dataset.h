@@ -20,22 +20,22 @@ class Dataset {
 	// MEMBER VARIABLES
 	
 		// the names of all the attributes
-		vector<string> attributeNames;
+		vector<string> attribute_names_;
 
 		// the names for all the classes (i.e. the 
 		// values that the class attribute can take)
-		vector<string> classNames;
+		vector<string> class_names_;
 
 		// for each attribute, the range of 
 		// values represented in the data
-		vector<pair<double,double>> attributeRanges;
+		vector<pair<double,double> > attribute_ranges_;
 
 		// the range of values of the class attribute
 		// denoted by each class
-		vector<pair<double,double>> classRanges;
+		vector<pair<double,double> > class_ranges_;
 
 		// the set of all data points
-		vector<vector<double>> dataPoints;
+		vector<vector<double> > data_points_;
 
 	// FUNCTIONS
 	
@@ -43,40 +43,45 @@ class Dataset {
 		Dataset() {}
 
 		// custom constructor
-		Dataset(vector<string> attributeNames, vector<string> classNames,
-				vector<pair<double,double>> attributeRanges,
-				vector<pair<double,double>> classRanges,
-				vector<vector<double>> dataPoints) {
+		Dataset(vector<string> attribute_names, vector<string> class_names,
+				vector<pair<double,double> > attribute_ranges,
+				vector<pair<double,double> > class_ranges,
+				vector<vector<double> > data_points) {
 
-			this->attributeNames = attributeNames;
-			this->classNames = classNames;
-			this->classRanges = classRanges;
-			this->dataPoints = dataPoints;
+			attribute_names_ = attribute_names;
+			attribute_ranges_ = attribute_ranges;
+			class_names_ = class_names;
+			class_ranges_ = class_ranges;
+			data_points_ = data_points;
 
-			numAttributes = attributeNames.size();
-			numClasses = classNames.size();
-			numDataPoints = dataPoints.size();
+			num_attributes_ = attribute_names.size();
+			num_classes_ = class_names.size();
+			num_data_points_ = data_points.size();
 
 		}
 
 		// function for reading in data from a csv file
-		int readFromCSVFile(string fileName);
+		int readFromCSVFile(string file_name);
+
+		// function for printing all of the data points
+		// in the data set
+		void print();
 
 		// getters
-		int getNumAttributes() {return numAttributes;}
-		int getNumClasses() {return numClasses;}
-		int getNumDataPoints() {return numDataPoints;}
+		int getNumAttributes() const {return num_attributes_;}
+		int getNumClasses() const {return num_classes_;}
+		int getNumDataPoints() const {return num_data_points_;}
 
 		// setters
-		void setNumAttributes(int numAttributes) {this->numAttributes = numAttributes;}
-		void setNumClasses(int numClasses) {this->numClasses = numClasses;}
-		void setNumDataPoints(int numDataPoints) {this->numDataPoints = numDataPoints;}
+		void setNumAttributes(int num_attributes) {num_attributes_ = num_attributes;}
+		void setNumClasses(int num_classes) {num_classes_ = num_classes;}
+		void setNumDataPoints(int num_data_points) {num_data_points_ = num_data_points;}
 
 	private:
 
-		int numAttributes; // number of attributes in a data point
-		int numClasses;    // number of classes
-		int numDataPoints; // total number of data points
+		int num_attributes_;  // number of attributes in a data point
+		int num_classes_;     // number of classes
+		int num_data_points_; // total number of data points
 };
 
 #endif

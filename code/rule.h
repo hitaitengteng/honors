@@ -30,23 +30,28 @@ class Rule {
 	// FUNCTIONS
 	
 		// constructor
-		Rule() : numerosity(1){ }
+		Rule() : classification(0), timeStamp(0), exp(0), numerosity(1),
+		         numMatches(0), numCorrect(0), numDontCare(0), numNiches(0),
+			 nicheSizesSum(0), avgNicheSize(0), accuracy(0), fitness(0) {}
 
 		// comparison operator
 		bool operator==(const Rule& rule) const;
 
 		// mutates the class and attribute ranges in the condition with
 		// some probability
-		void mutate(double pMutate, double pDontCare, vector<pair<double,double>> ranges, 
+		void mutate(double pMutate, double pDontCare, vector<pair<double,double> > ranges, 
 				double rangeScalar, mt19937 &rng);
 
 		// assigns particular values to all "don't care" attributes based
 		// on the passed input vector
-		void specify(vector<double> input, vector<pair<double,double>> ranges, 
+		void specify(vector<double> input, vector<pair<double,double> > ranges, 
 				double rangeScalar, mt19937 &rng);
 	
 		// checks whether this rule is a more general version of another
 		bool generalizes(const Rule &rule) const;
+
+		// generate a random rule
+		static Rule getRandom(int num_attributes);
 
 		// prints out information about a rule
 		void print();
