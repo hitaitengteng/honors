@@ -7,7 +7,9 @@
  *
  * TODO:
  *
- * 	- Implement testGeneralizes(), testMutate(), and testSpecify()
+ * 	- Implement testMutate(), and testSpecify()
+ * 	- Add boolean arguments to let user run specific tests
+ * 	- remove rng argument from testEquality
  ****************************************************************************/ 
 using namespace std;
 
@@ -20,7 +22,21 @@ static const int NUM_ATTRIBUTES = 10;
 
 int main(int argc, char **argv) {
 
-	testSpecify();
+	mt19937 rng;
+	rng.seed(random_device{}());
+
+	vector<pair<double, double> > ranges;
+	for (int i=0; i<NUM_ATTRIBUTES; i++)
+		ranges.push_back(make_pair(0,1));
+	double rangeScalar = 0.5;
+
+	double pMutate = 0.25;
+	double pDontCare = 0.5;
+
+	Rule r = Rule::getRandom(NUM_ATTRIBUTES);
+	r.print();
+	r.mutate(pMutate, pDontCare, ranges, rangeScalar, rng);
+	r.print();
 	return 0;
 }
 
@@ -268,16 +284,22 @@ bool testGeneralizes() {
 		ranges.push_back(range);
 	}
 
-	// uniform distribution over [0,1]
-	uniform_real_distribution<double> dist(0,1);
-	Rule r1 = Rule::getRandom();
+	// generate a random rule for r1, then specify
+	// r1 and assign the resulting rule to r2
+	Rule r1 = Rule::getRandom(NUM_ATTRIBUTES);
+	Rule temp = r1;
 	Rule r2 = r1.specify(input, ranges, range_scalar, rng); 
+	r1 = temp;
+	r1.print();
+	r2.print();
 
 	// ----------------------------------------------------------------------
 	// TEST 1: one rule is a specified version of another; should return true
 	// ----------------------------------------------------------------------
 	
 	// check equality
+	printf("Generalization Test 1 (one rule is a specified version of"
+			" the other): ");
 	if (r1.generalizes(r2)) {
 		printf("Passed.\n");
 	} else {
@@ -290,9 +312,43 @@ bool testGeneralizes() {
 	// ----------------------------------------------------------------------
 	
 	// change r2
-	r2 = Rule::getRandom();
+	r2 = Rule::getRandom(NUM_ATTRIBUTES);
 
 	// check equality
+	printf("Generalization Test 2 (two completely different rules): ");
+	if (r1.generalizes(r2)) {
+		printf("Failed.\n");
+		return false;
+	} else {
+		printf("Passed.\n");
+	}
+
+	// ----------------------------------------------------------------------
+	// TEST 3: identical rules; should return false
+	// ----------------------------------------------------------------------
+
+	// set rules equal to each other
+	r1 = r2;
+
+	// check equality
+	printf("Generalization Test 3 (identical rules): ");
+	if (r1.generalizes(r2)) {
+		printf("Failed.\n");
+		return false;
+	} else {
+		printf("Passed.\n");
+	}
+
+	// ----------------------------------------------------------------------
+	// TEST 4: first rule is all "don't cares"; should return true
+	// ----------------------------------------------------------------------
+	
+	// set all of rule 1's attributes to "don't care"
+	for (int i=0; i<NUM_ATTRIBUTES; i++)
+		r1.condition[i].setDontCare(true);
+
+	// check equality
+	printf("Generalization Test 4 (first rule is all don't cares): ");
 	if (r1.generalizes(r2)) {
 		printf("Passed.\n");
 	} else {
@@ -301,16 +357,21 @@ bool testGeneralizes() {
 	}
 
 	// ----------------------------------------------------------------------
-	// TEST 3: identical rules; should return false
+	// TEST 5: empty rules; should return false
 	// ----------------------------------------------------------------------
-
-	r1 = r2;
+	
+	// reinitialize rules
+	r1 = Rule();
+	r2 = Rule();
 
 	// check equality
-	
-	// ----------------------------------------------------------------------
-	// empty rules; should return false
-	// ----------------------------------------------------------------------
-	
-	r1();
+	printf("Generalization Test 5 (empty rules): ");
+	if (r1.generalizes(r2)) {
+		printf("Failed.\n");
+		return false;
+	} else {
+		printf("Passed.\n");
+	}
+
+	return true;
 }

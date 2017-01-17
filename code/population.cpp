@@ -18,6 +18,33 @@ using namespace std;
  * Outputs:
  * Description:
  ****************************************************************************/ 
+void Population::add(Rule r) {
+
+	// do not add the rule if the population limit has been reached
+	if (rules.size() == maxSize) {
+		cout << "Unable to add rule: population limit reached." << endl;
+		return;
+	}
+
+	// add the rule to the vector of all rules
+	rules.push_back(r);
+
+	// increment the fitness sum of the population
+	fitnessSum += r.getFitness();
+
+	// if this is either the first rule added to the population,
+	// or else is more general than the most current most general
+	// rule, update 'mostGeneral'
+	if ((mostGeneral == NULL) || (r.generalizes(*mostGeneral)))
+			mostGeneral = &r;
+
+} // end add
+
+/****************************************************************************
+ * Inputs:
+ * Outputs:
+ * Description:
+ ****************************************************************************/ 
 pair<Rule,Rule> Population::crossover(int i, int j, mt19937 &rng) {
 	
 	// get the parents
@@ -57,15 +84,9 @@ pair<Rule,Rule> Population::crossover(int i, int j, mt19937 &rng) {
  ****************************************************************************/ 
 int Population::rouletteWheelSelect(mt19937 &rng) {
 
-	// sum the individual fitnesses
-	double sumFitnesses = 0;
-	for (int i=0; i<rules.size(); i++) {
-		sumFitnesses += rules[i].getFitness();
-	}
-
-	// select a random number in the range [0,sumFitnesses]
+	// select a random number in the range [0,fitnessSum]
 	uniform_real_distribution<double> dist(0,1);
-	double random = dist(rng) * sumFitnesses;
+	double random = dist(rng) * fitnessSum;
 
 	// we determine the individual selected by subtracting
 	// the individual fitnesses from the random value generated
@@ -89,22 +110,23 @@ int Population::rouletteWheelSelect(mt19937 &rng) {
  * Outputs:
  * Description:
  ****************************************************************************/ 
-void Population::subsume() { // [INCOMPLETE]
+int Population::subsume() {
 
 	// a vector to store the indices of any superfluous rules
 	vector<int> toDelete;
 
 	// for each rule in the population, check whether the most general
-	// rule generalizes it
+	// rule generalizes it; 
 	for (int i=0; i<rules.size(); i++) {
-		// make sure we're not checking the most general rule itself
-			if (mostGeneral.generalizes(rules[i]))
-				toDelete.push_back(i);
+		if (mostGeneral->generalizes(rules[i]))
+			toDelete.push_back(i);
 	}
 
 	// delete all the superfluous rules
 	for (int i=0; i<toDelete.size(); i++) {
 		rules.erase(rules.begin() + toDelete[i]);
 	}
+
+	return toDelete.size();
 
 } // end subsume

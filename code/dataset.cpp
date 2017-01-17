@@ -6,35 +6,42 @@
  * Description: Implementations of various functions for the Dataset class.
  *
  * TODO:
- * 	- Fix type names in readFromCSVFile
+ *
+ * 	- add implementation that lets you determine the ranges of attribute
+ * 	  values represented in the data
+ * 	- add implementation to determine the number of distinct classes
+ * 	  there are
  ****************************************************************************/ 
 
 using namespace std;
 
 /****************************************************************************
  * Input:       
- *              fileName: the name of the file to be read in
+ *              file_name: the name of the file to be read in
  * Output:      the number of data points successfully read in
  * Description: reads in vectors of attributes from a text file
  ****************************************************************************/
-int Dataset::readFromCSVFile(string fileName) {
+int Dataset::readFromCSVFile(string file_name) {
 
-	fstream fileStream; // the file stream
-	fileStream.open(fileName.c_str()); // try to open the file
+	fstream file_stream;                 // the file stream
+	file_stream.open(file_name.c_str()); // try to open the file
+
+	int num_data_points; // the number of attribute vectors read in
 
 	// if it opened successfully, start reading
-	if (fileStream.is_open() && fileStream.good()) {
+	if (file_stream.is_open() && file_stream.good()) {
 
-            	string line;        // the current line being read in
-	        int attNum;         // the number of the current attribute 
-	        int numVects;       // the number of attribute vectors read in
+            	string line;         // the current line being read in
 
 		// get the first line of the file (this tells us the
 		// names of the attributes)
-		getline(fileStream, line);
+		getline(file_stream, line);
 
 		// an individual word or entry from the line read in
 		string token;
+
+		// a string index denoting the end of a token
+		int tokenEnd;
 
 		// this function handles .csv files, so the delimiter
 		// should always be a comma
@@ -43,11 +50,6 @@ int Dataset::readFromCSVFile(string fileName) {
 		// appending a comma to the end of the line makes the
 		// parsing a little bit easier, as you'll see below
 		line.append(delimiter);
-
-		// a list of all the attribute names
-		vector<string> attributeNames;
-
-		int tokenEnd; // a string index
 
 		do {
 			// find the next delimiting character
@@ -58,7 +60,7 @@ int Dataset::readFromCSVFile(string fileName) {
 			token = line.substr(0, tokenEnd);
 
 			// add this string to the vector of all attribute names
-			attributeNames.push_back(token);
+			attribute_names_.push_back(token);
 
 			// delete the substring you just created from "line," as
 			// well as the delimiter that follows it
@@ -68,21 +70,18 @@ int Dataset::readFromCSVFile(string fileName) {
 		  // all of the characters from the string
 		} while (line.size() > 0);
 
-		// a variable for reading in a single attribute
-		Attribute *a;
+		// set the member variable containing the number of attributes
+		num_attributes_ = attribute_names_.size();
 
-		// a variable for the value of the attribute
-		float aVal;
-
-		// a variable for a vector of attribute values
-		AttributeVector aVect;
+		// a vector for storing attribute values
+		vector<double> curr_vect;
 
 		// read until the end of the file is reached, or until
 		// some other error flag is set
-		for (numVects = 0; fileStream.good(); numVects++) {
+		for (num_data_points = 0; file_stream.good(); num_data_points++) {
 
 			// get the current line
-			getline(fileStream, line);
+			getline(file_stream, line);
 
 			// add a comma to the end of the line (this makes parsing easier,
 			// as mentioned above)
@@ -91,7 +90,7 @@ int Dataset::readFromCSVFile(string fileName) {
 			// as attribute values are extracted from a line, they are deleted
 			// from the string. Thus, we want to move onto the next line when
 			// the line size reaches 0.
-			for (attNum = 0; line.size() > 0; attNum++) {
+			for (int j = 0; line.size() > 0; j++) {
 
 				// find the next delimiting character
 			        tokenEnd = line.find(delimiter);
@@ -103,21 +102,20 @@ int Dataset::readFromCSVFile(string fileName) {
 				// we have to have this check here because otherwise the program
 				// will throw an exception when it reaches the end of the file.
 				if (token.compare("") != 0)
-					aVal = stof(token);
-
-				// create a new attribute
-				a = new Attribute("test", aVal);
-
-			        // add this attribute value to the vector of all attribute names
-			        aVect.addAttribute(*a);
-				delete a;
+				       curr_vect.push_back(stof(token));
 
 			        // delete the substring you just created from "line," as
 			        // well as the delimiter that follows it
 			        line.erase(line.begin(), line.begin() + tokenEnd + 1);
 
 			} // end for
-		} // end if
+
+			// add the vector to the vector of data points, and then
+			// delete its contents so that it can be used again
+			data_points_.push_back(curr_vect);
+			curr_vect.clear();
+
+		} // end for 
 	} else {
 
 		// the file didn't open correctly, so print an error and quit
@@ -125,7 +123,27 @@ int Dataset::readFromCSVFile(string fileName) {
 		exit(0); 
 	}
 
-	fileStream.close(); // close the file stream
-	return numVects;    // return the number of vectors read in
+	// set the member variable containing the number 
+	// of data points to the appropriate value
+	num_data_points_ = num_data_points;
+
+	file_stream.close(); // close the file stream
+	return num_data_points;    // return the number of vectors read in
 
 } // end readFromCsvFile
+
+void Dataset::print() {
+
+	printf("Number of attributes: %d\n", num_attributes_);
+	printf("Number of classes: %d\n", num_classes_);
+	printf("Number of data points: %d\n", num_data_points_);
+	
+	vector<double> curr_vect;
+	for (int i=0; i<num_data_points_; i++) {
+		curr_vect = data_points_[i];
+		for (int j=0; j<num_attributes_; j++) {
+			printf("%.3f ", curr_vect[j]);
+		}
+		printf("\n");
+	}
+}

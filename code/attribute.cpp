@@ -16,11 +16,12 @@ Attribute Attribute::getRandom() {
 	Attribute a(name);
 
 	// set the dontCare value
-	int dontCare = rng() % 2;
-	if (dontCare == 0)
+	int dc = (rng() % 2);
+	if (dc == 0) {
 		a.setDontCare(false);
-	else
+	} else {
 		a.setDontCare(true);
+	}
 
 	// set the center and spread
 	a.setCenter(dist(rng));

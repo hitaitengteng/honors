@@ -7,8 +7,9 @@
  *
  * TODO:
  *
- * 	- write unit test for mutate, generalizes, and specify functions
  * 	- write function descriptions
+ * 	- improve efficiency of generalizes function (eliminate equality
+ * 	  check at end)
  ****************************************************************************/ 
 using namespace std;
 
@@ -126,7 +127,7 @@ void Rule::mutate(double pMutate, double pDontCare,
  * Outputs:
  * Description:
  ****************************************************************************/ 
-void Rule::specify(vector<double> input, vector<pair<double,double> > ranges, 
+Rule Rule::specify(vector<double> input, vector<pair<double,double> > ranges, 
 		double rangeScalar, mt19937 &rng) {
 
 	// iterate over all attributes in the condition
@@ -149,20 +150,36 @@ void Rule::specify(vector<double> input, vector<pair<double,double> > ranges,
 		}
 	}
 
+	return (*this);
+
 } // end specify
 
 /****************************************************************************
  * Inputs:
  * Outputs:
  * Description:
+ *
+ * NOTE: In looking through the code below, one may wonder why a boolean is
+ *       used in checking for the equivalence of the rules instead of the
+ *       '==' operator. The reason for this is that a boolean saves a lot
+ *       of time; using the '==' operator would mean doing a second iteration
+ *       through the conditions of both rules.
  ****************************************************************************/ 
 bool Rule::generalizes(const Rule &rule) const {
 
-	// indicates whether the rules are equivalent
+	// immediately return false if the rules' classes are different
+	if (classification != rule.getClass())
+		return false;
+
+	// a boolean for checking the equivalence of the two rules
 	bool areEquivalent = true;
 
 	// iterate over the conditions of both rules
 	for (int i=0; i<condition.size(); i++) {
+
+		if ((condition[i].getDontCare() == true) &&
+		     (rule.condition[i].getDontCare() == false))
+			     areEquivalent = false;
 
 		// only want to check attributes that aren't "don't cares"
 		// (if this rule has the "don't care" variable set for a
@@ -185,7 +202,7 @@ bool Rule::generalizes(const Rule &rule) const {
 				condition[i].getSpread();
 			double r2LowerBound = rule.condition[i].getCenter() -
 				rule.condition[i].getSpread();
-			double r2UpperBound = rule.condition[i].getCenter() -
+			double r2UpperBound = rule.condition[i].getCenter() +
 				rule.condition[i].getSpread();
 
 			// return false if the interval described by rule 2
@@ -194,19 +211,21 @@ bool Rule::generalizes(const Rule &rule) const {
 			    (r2UpperBound > r1UpperBound)) {
 				return false;
 
-			  // if the intervals over the current attribute
-			  // covered by the two rules are not exactly
-			  // equivalent, the rules themselves are not
-			  // equivalent
-			} else if ((r2LowerBound) != (r1LowerBound) ||
-				   (r2UpperBound) != (r1UpperBound)) {
+			  // if control reaches here, then we know the interval
+			  // described by rule 2 falls within that described by
+			  // rule 1. This else if statement checks to see whether
+			  // at least one of the bounds of rule 2 is not equivalent
+			  // to the corresponding bound of rule 1. If this is so,
+			  // then the rules cannot be equivalent.
+			} else if ((r2LowerBound > r1LowerBound) ||
+			           (r2UpperBound < r1UpperBound)) {
 				areEquivalent = false;
 			}
 		}
 	}
 	
-	// as mentioned in the description, if two rules are equivalent,
-	// the one is not considered to be a generalization of the other
+	// as mentioned in the description, if two rules are equivalent to
+	// each other, neither is considered a generalization of the other
 	if (areEquivalent)
 		return false;
 
@@ -231,8 +250,12 @@ Rule Rule::getRandom(int num_attributes) {
 	r.setClass(rng() % NUM_CLASSES);
 
 	// random attributes
+	Attribute a("");
 	for (int i=0; i<num_attributes; i++) {
-		r.condition.push_back(Attribute::getRandom());
+		a = Attribute::getRandom();
+		if (a.getDontCare() == true)
+			r.numDontCare++;
+		r.condition.push_back(a);
 	}
 
 	// a uniform distribution over [0,1]
@@ -258,7 +281,7 @@ void Rule::print() {
 		printf("[ %d ] ", i);
 	printf("\nDon't Care: ");
 	for (int i=0; i<condition.size(); i++)
-		printf("[ %d ] ", condition[i].getDontCare());
+		printf("[ %d ] ", (int) condition[i].getDontCare());
 	printf("\n  Center:   ");
 	for (int i=0; i<condition.size(); i++)
 		printf("%.3f ", condition[i].getCenter()); 

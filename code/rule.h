@@ -44,7 +44,7 @@ class Rule {
 
 		// assigns particular values to all "don't care" attributes based
 		// on the passed input vector
-		void specify(vector<double> input, vector<pair<double,double> > ranges, 
+		Rule specify(vector<double> input, vector<pair<double,double> > ranges, 
 				double rangeScalar, mt19937 &rng);
 	
 		// checks whether this rule is a more general version of another

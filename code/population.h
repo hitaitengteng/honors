@@ -27,10 +27,13 @@ class Population {
 		Population() { }
 
 		// custom constructor
-		Population(int size, int maxSize) : size(size), maxSize(maxSize) { }
+		Population(int maxSize) : maxSize(maxSize) { }
+
+		// function for adding a rule to the population
+		void add(Rule r);
 
 		// deletes superfluous rules
-		void subsume();
+		int subsume();
 
 		// selects a rule from the population using roulette
 		// wheel selection and returns its index
@@ -40,21 +43,22 @@ class Population {
 		pair<Rule,Rule> crossover(int i, int j, mt19937 &rng);
 
 		// getters
-		int getSize() const {return size;}
+		int getSize() const {return rules.size();}
+		double getFitnessSum() const {return fitnessSum;}
 		int getMaxSize() const {return maxSize;}
-		Rule getMostGeneral() const {return mostGeneral;}
+		Rule *getMostGeneral() const {return mostGeneral;}
 
 		// setters
-		void setSize(int size) {this->size = size;}
 		void setMaxSize(int maxSize) {this->maxSize = maxSize;}
-		void setMostGeneral(Rule mostGeneral) {
+		void setFitnessSum(int fitnessSum) {this->fitnessSum = fitnessSum;}
+		void setMostGeneral(Rule *mostGeneral) {
 			this->mostGeneral = mostGeneral;
 		}
 
 	private:
-		int size;           // the number of rules in the population
 		int maxSize;        // the maximum number of rules allowed
-		Rule mostGeneral;   // the most general rule in the population
+		double fitnessSum;  // the sum of all the fitnesses
+		Rule *mostGeneral;  // the most general rule in the population
 				    // (the one with the most "don't care"
 				    // attributes
 };
