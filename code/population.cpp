@@ -28,13 +28,13 @@ void Population::add(Rule r) {
 	}
 
 	// if this is either the first rule added to the population,
-	// or else is more general than the most current most general
+	// or else is more general than the current most general
 	// rule, update 'mostGeneral'
-	if (rules.empty() || (r.getNumDontCare() > mostGeneral.getNumDontCare())) {
-		mostGeneral = r;
-	} else if ((r.getNumDontCare() == mostGeneral.getNumDontCare()) &&
-			(r.generalizes(mostGeneral))) {
-		mostGeneral = r;
+	if (rules.empty() || (r.getNumDontCare() > mostGeneral->getNumDontCare())) {
+		mostGeneral = &r;
+	} else if ((r.getNumDontCare() == mostGeneral->getNumDontCare()) &&
+			(r.generalizes(*mostGeneral))) {
+		mostGeneral = &r;
 	}
 
 	// add the rule to the vector of all rules
@@ -124,7 +124,7 @@ int Population::subsume() {
 	// for each rule in the population, check whether the most general
 	// rule generalizes it; 
 	for (int i=0; i<rules.size(); i++) {
-		if (mostGeneral.generalizes(rules[i]))
+		if (mostGeneral->generalizes(rules[i]))
 			toDelete.push_back(i);
 	}
 

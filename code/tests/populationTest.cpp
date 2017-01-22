@@ -137,6 +137,9 @@ bool testSubsume(Population *p) {
 	// the number of rules subsumed by the most general rule
 	int num_subsumed = 0;
 
+	// a pointer to the most general rule in the population
+	Rule *most_general = p->getMostGeneral();
+
 	// -----------------------------------------------------------------
 	// TEST 1: no rules should be subsumed
 	// -----------------------------------------------------------------
@@ -144,13 +147,11 @@ bool testSubsume(Population *p) {
 	// by setting dontCare to false and the spread to 0, we guarantee
 	// that mostGeneral cannot generalize any other rule in the population
 	for (int i=0; i<NUM_ATTRIBUTES; i++) {
-		p->getMostGeneral().condition[i].setDontCare(false);
-		p->getMostGeneral().condition[i].setSpread(0);
-
-		cout << p->getMostGeneral().condition[i].getDontCare() << endl;
-		cout << p->getMostGeneral().condition[i].getSpread() << endl;
+		most_general->condition[i].setDontCare(false);
+		most_general->condition[i].setSpread(0);
 	}
 
+	(*most_general).print();
 	// run subsume() and evaluate results
 	num_subsumed = p->subsume();
 	printf("Subsumption Test 1 (most general does not"
@@ -163,25 +164,50 @@ bool testSubsume(Population *p) {
 	}
 
 	// -----------------------------------------------------------------
-	// TEST 2: all rules (except the most general) should be subsumed
+	// TEST 2: at least one rule should be subsumed
 	// -----------------------------------------------------------------
-	
-	// set all of the most general rule's attributes to "don't care"
-	for (int i=0; i<NUM_ATTRIBUTES; i++) 
-		p->getMostGeneral().condition[i].setDontCare(true);
-	// make sure
 
-	// run subsume() and evaluate results
+	// set all of the most general rule's attributes to "don't care."
+	// Once this has been done, the most general rule should subsume
+	// all other rules that share its class.
+	for (int i=0; i<NUM_ATTRIBUTES; i++) 
+		most_general->condition[i].setDontCare(true);
+
+	(*most_general).print();
+	// count how many rules were subsumed
 	num_subsumed = p->subsume();
+
+	// now compute the number of rules in the population that have
+	// the same class as the most general rule (so there should be
+	// at least one)
+	
+	// the number of rules in the population with the same class
+	// as the most general rule
+	int tally = 0;
+
+	// variables for classes
+	int most_general_class = most_general->getClass();
+	int curr_class = NO_CLASS;
+
+	// iterate over the rules and compare classes
+	for (int i=0; i<p->rules.size(); i++) {
+		curr_class = p->rules[i].getClass();
+		if (most_general_class == curr_class)
+			tally++;
+	}
+
+	cout << "tally: " << tally << endl;
+	cout << "num_subsumed: " << num_subsumed << endl;
 	printf("Subsumption Test 2 (most general rule has all"
 			" \"don't care\" attributes): ");
-	if (num_subsumed != MAX_POP_SIZE - 1) {
+	if (num_subsumed != tally) {
 		printf("Failed.\n");
 		return false;
 	} else {
 		printf("Passed.\n");
 	}
 	
+	exit(0);
 	// -----------------------------------------------------------------
 	// TEST 3: at least one rule should be subsumed
 	// -----------------------------------------------------------------
@@ -199,9 +225,9 @@ bool testSubsume(Population *p) {
 
 		// generalize the rule
 		if (r.condition[i].getDontCare() == false) {
-			p->getMostGeneral().condition[i].setDontCare(false);
-			p->getMostGeneral().condition[i].setCenter(r.condition[i].getCenter());
-			p->getMostGeneral().condition[i].setSpread(r.condition[i].getSpread() + 0.1);
+			most_general->condition[i].setDontCare(false);
+			most_general->condition[i].setCenter(r.condition[i].getCenter());
+			most_general->condition[i].setSpread(r.condition[i].getSpread() + 0.1);
 		}
 	}
 

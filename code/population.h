@@ -46,19 +46,17 @@ class Population {
 		int getSize() const {return rules.size();}
 		double getFitnessSum() const {return fitnessSum;}
 		int getMaxSize() const {return maxSize;}
-		Rule getMostGeneral() {return mostGeneral;}
+		Rule *getMostGeneral() {return mostGeneral;}
 
 		// setters
 		void setMaxSize(int maxSize) {this->maxSize = maxSize;}
 		void setFitnessSum(int fitnessSum) {this->fitnessSum = fitnessSum;}
-		void setMostGeneral(Rule mostGeneral) {
-			this->mostGeneral = mostGeneral;
-		}
+		void setMostGeneral(Rule *mostGeneral) {this->mostGeneral = mostGeneral;}
 
 	private:
 		int maxSize;        // the maximum number of rules allowed
 		double fitnessSum;  // the sum of all the fitnesses
-		Rule mostGeneral;  // the most general rule in the population
+		Rule *mostGeneral;  // the most general rule in the population
 				    // (the one with the most "don't care"
 				    // attributes
 };
