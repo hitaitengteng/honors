@@ -1,0 +1,134 @@
+Will Gantt
+1/13/17
+
+---------------------------------------------------------------------------
+CLASSES
+---------------------------------------------------------------------------
+
+Attribute
+Rule
+Population
+DataSet
+LCS
+
+class Attribute {
+
+	private:
+		string name;
+		double center;
+		double spread;
+		bool dontCare;
+	public:
+		// constructors
+		// getters and setters
+}
+
+class Rule {
+
+	private:
+		vector<Attribute> condition;
+		int class;
+		int timeStamp;
+		int exp;
+		int numerosity;
+		int numMatches;
+		int numCorrect;
+		int numDontCare;
+		int numNiches;
+		int nicheSizeSum;
+		double accuracy;
+		double fitness;
+		double avgNicheSize;
+	public:
+		// constructors
+		// getters and setters
+		// vector wrappers
+		void mutate(int i, double pMutate, double rngScalar);
+		void specify(vector<double> input);
+}
+
+class Population {
+
+	private:
+		vector<Rule> rules;
+		int size;
+		int maxSize;
+
+	public:
+		// constructors
+		// getters and setters
+		// vector wrappers
+		void subsume();
+		int findMostGeneral();
+		int rouletteWheelSelect();
+		Rule *crossover(int i, int j);
+}
+
+class DataSet {
+
+	private:
+		vector<string> attributeNames;
+		vector<string> classNames;
+		vector<pair<double,double>> attributeRanges;
+		vector<pair<double,double>> classRanges;
+		vector<vector<double>> dataPoints;
+		int numAttributes
+		int numDataPoints;
+	public:
+		// constructors
+		// getters and setters
+		// vector wrappers
+		// operator overloads ([], ++)
+		void readDataFromCSVFile(string fileName);
+}
+
+class LCS {
+
+	private:
+		Population pop;
+		Population matchSet;
+		Population correctSet;
+		DataSet dataSet;
+		int maxPopSize;
+		int fitnessExponent;
+		double pCrossover;
+		double pMutate;
+		double pDontCare;
+		double thetaAcc;
+		double thetaSub;
+		double thetaDel;
+		double minFitness;
+		double thetaMna;
+		double thetaGA;
+		double rangeScalar;
+		bool doGASubsumption;
+		bool doCorrectSetSubsumption;
+		Rand rng;
+	public:
+		// default constructor
+		// complete constructor
+		// getters and setters
+		void applyGA(void);          
+		int createMatchSet(void);    
+		int createCorrectSet(void);  
+		void crossover(void);          
+		void mutate(void);             
+		void cover(void);
+		void specify(void);            
+		int  select(void);             
+		void delete(int n);            
+		void gaSubsume(void);
+		bool doGA(void);
+		bool doCover(void);
+		bool doSpecify(void);
+		void processInput(int i);
+		void rngSeed(int seed);
+
+}
+
+---------------------------------------------------------------------------
+OTHER FILES
+---------------------------------------------------------------------------
+
+main.cpp
+utilities.h

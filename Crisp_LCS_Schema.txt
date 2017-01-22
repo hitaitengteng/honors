@@ -1,0 +1,349 @@
+Will Gantt
+1/10/17
+
+This document presents a blueprint for a possible LCS implementation
+adapted for the supervised learning context I am working in. It draws
+heavily from an LCS called sUpervised Learning Classifier System (UCS)
+developed by Ester Bernado-Mansilla and Josep M. Garrell-Guiu. However,
+UCS, in turn, takes its inspiration from Stewart Wilson's XCS. The LCS
+I describe here is Michigan-style and accuracy-based, and uses crisp
+real-valued intervals in classifier conditions.
+
+I am also exploring, as an alternative to this schema, a fuzzy LCS.
+If implementing an LCS of this kind seems feasible, I will draft a
+second blueprint with details.
+
+---------------------------------------------------------------------------
+A. KNOWLEDGE REPRESENTATION
+---------------------------------------------------------------------------
+
+I. RULES
+
+	Rules will be represented as objects, the EO library permitting.
+	Failing that, they will be represented as structs. In either case,
+	a rule will contain the elements listed below. Sets of rules will
+	simply be vectors of rule objects/structs.
+
+II. CONDITION
+
+	Conditions will be represented as arrays of attribute objects (or
+	structs). I have not decided whether an attribute should contain
+	its name (or ID number), or whether its identity should be denoted
+	merely by its position in the array. Regardless, since nearly all
+	of the attributes in Erik's data are real-valued, an attribute in
+	a rule will specify a range of possible values by a CENTER variable
+	and a SPREAD variable.
+
+	To allow for the "don't care" values used in traditional LCSs, each 
+	attribute in the condition will contain a boolean variable, DONT_CARE,
+	which will have value 1 if the attribute is a "don't care" and will 
+	have value 0 otherwise.
+
+III. CLASS
+
+	It remains to be decided how change in yield, the class attribute,
+	will be discretized. My current thinking is to use the schema
+	{HP, LP, LN, HN}, where the values denote "High positive," "Low
+	positive," "Low negative," and "High negative" change. Each class
+	will be associated with some integer value.
+
+IV. ACCURACY
+
+	This measures the ratio of the number of inputs that the rule
+	matches AND correctly classifies to the number of inputs that the
+	rule matches: 
+
+		ACC = (# matching) / (# (matching AND correct))
+
+	The accuracy variable, ACC, will be a double.
+
+	In addition to ACC, a rule will maintain the values of the numerator
+	and denominator as separate variables, which I will call "NUM_MATCHES"
+	and "NUM_CORRECT," respectively. This makes the fitness update
+	considerably easier.
+
+V. FITNESS
+
+	This LCS is an accuracy-based LCS, and so fitness will be based on
+	accuracy. In the UCS paper, the authors define the fitness, F, of
+	a rule as F = ACC^v, where v is some constant. The utility of
+	raising the accuracy variable to any constant but 1 to obtain the
+	fitness eludes me. Until I can determine why this is done, accuracy
+	and fitness wil be a single variable.
+
+	By raising ACC to a constant greater than 1, differences in fitness
+	are exaggerated. Suppose a classifier C1 has accuracy 0.6 and another
+	classifier C2 has accuracy 0.8. If we set v to 10, as the authors of
+	the UCS paper have done, their fitnesses become roughly 0.006 and 
+	0.11, respectively. This is a useful way of doing things if one wants
+	to reward even very small improvements in accuracy, and to emphasize
+	that a classifier with 50% accuracy, say, isn't really worth much more
+	than a classifier with 20% accuracy, as they are both clearly
+	ineffective.
+
+VI. NUMEROSITY
+
+	The number of copies of the rule in the population. This variable,
+	NUM, will be an integer.
+
+VII. NICHE SET SIZE
+
+	The average size of the correct sets to which the rule belongs.
+	AVG_NICHE_SIZE will be a double. In order to have this statistic 
+	on-hand, a rule will also have to maintain a sum of the sizes of 
+	the correct sets to which it belongs, as well as the number of 
+	correct sets. 
+
+	[To ponder: is there any utility in holding on to correct sets across
+	the generations?]
+
+VIII. TIME STAMP
+
+	The most recent time step at which this classifier participated in
+	an iteration of the GA.
+
+---------------------------------------------------------------------------
+B. PERFORMANCE COMPONENT
+---------------------------------------------------------------------------
+
+I. INPUTS
+
+	Currently, inputs are read in as attribute vectors, but this ought
+	to be fixed, as they can just as easily (and more economically) be
+	represented as simple vectors of real values, so long as a given
+	attribute is associated with a particular location in the vector.
+
+	An input matches a rule iff for each input attribute value e_i,
+	either:
+
+		1. e_i falls within the range specified by the
+		   corresponding rule attribute x_i.
+		2. x_i has the DONT_CARE variable set to true.
+
+II. MATCH SET CONSTRUCTION
+
+	Inputs are fed to the system one-by-one at the beginning of each
+	iteration of the algorithm. It must then be determined which, if
+	any, of the rules in the population set [P] match the input. Each
+	rule is checked according to the procedure described in I above.
+	If it is found to match the input, it is added to the match set [M] 
+	a vector of rules) and NUM_MATCHES is incremented (see IV). If no 
+	match is found, the covering operator is invoked (see C-II). If
+	a match is found, but not all classes are represented in [M], the
+	covering operator is still invoked.
+
+III. CORRECT SET CONSTRUCTION
+
+	This step is simultaneous with the construction of the match set.
+	If a rule is found to match the input, the rule's class is then
+	checked against that of the input. If they match here as well,
+	then the rule is added to the correct set [C] (also a vector
+	of rules), and NUM_CORRECT is updated (see IV). 
+
+	Optionally, one can do a check for subsumption. Traditionally,
+	this has been called "action set subsumption." The idea is to find
+	the most general classifier in [C], and then to check every other
+	classifier in [C] to see whether its conditions cover a set of
+	inputs that is a proper subset of those covered by the most
+	general classifier. Of course, this doesn't guarantee that all
+	superfluous rules will be eliminated; just those that cover
+	subsets of the most general rule.
+
+IV. FITNESS UPDATE
+
+	Assuming that rules maintain a variable for the number of matches
+	(NUM_MATCHES) and a variable for the number of matches it
+	correctly classifies (NUM_CORRECT), the fitness update takes care
+	of itself, as both values will have been adjusted where necessary
+	in the match set and correct set construction steps.
+
+V. SPECIFY OPERATOR
+
+	This is an operator designed to reduce the number of overly
+	general rules, which can prevent effective learning. This was
+	originally proposed as an extension of XCS, and its use is 
+	conditioned on the amount of error in the action set. I'm still
+	thinking about how to translate this to a supervised learning
+	context.
+
+---------------------------------------------------------------------------
+C. LEARNING COMPONENT
+---------------------------------------------------------------------------
+
+I. GENETIC ALGORITHM
+
+	In the XCS classifier system (Wilson, 1995), the GA is invoked
+	probabilistically. The decision to invoke the GA on a given
+	iteration is determined by the following procedure.
+
+		1. The system keeps track of the number of time steps
+		   since a GA run.
+		2. When the GA is executed, it is executed on the action
+		   set [A] (the analog of [C] in my problem). All of the
+		   classifiers in [A] are time-stamped with the number of
+		   time steps since the last invocation of the GA.
+		3. When a new action set [A] is created, the average of all
+		   of the time stamps in [A] is taken, and if it exceeds
+		   certain threshold theta_GA, then the GA is invoked.
+
+	Since UCS is based on XCS, and since no difference is mentioned in
+	terms of *when* the GA is invoked for UCS, I assume that the latter
+	employs the same method.
+	
+	(a) Initialization.
+
+		The size of [P] will be specified on the command line.
+		I will keep with the common practice of not initializing
+		any classifiers, and will allow the covering operator to
+		generate all of them for me.
+
+	(b) Evaluation/Fitness Update.
+		
+		The fitness update occurs only when a new input is
+		processed. Fitness is computed using the formula described
+		in B-IV.
+
+	(c) Selection.
+
+		A single set of parents is chosen from [C] via
+		roulette wheel selection.
+
+	(d) Crossover.
+
+		The parents are crossed (using 1-pt crossover) with
+		some probability chi. It is worth noting that in Wilson's
+		implementation of XCSR(*1), the point of crossover need not
+		be *between* attributes, but may in fact be *within* an
+		interval predicate. E.g. suppose an attribute x of one
+		parent i has CENTER c_i and SPREAD s_i, and the same
+		attribute in parent j has CENTER c_j and SPREAD s_j. Then,
+		if the point of crossover is chosen to be *within*
+		attribute x, the values of the CENTER variables will be
+		swapped (without swapping the SPREAD variables). This is
+		an interesting thought, but seems like more work than it's
+		worth.
+
+	(*1)	XCSR is Stewart Wilson's extension of XCS to accommodate
+		real values in classifier conditions.
+
+	(e) Mutation. [INCOMPLETE]
+
+		In Wilson's paper, "Get Real! XCS with Continuous-
+		Valued Inputs," he suggests that, for each real-valued
+		attribute, a random value m in [0,0.1R) be chosen
+		(where R is the range of that attribute over all inputs),
+		as well as a random sign, and that this value be added
+		or subtracted (according to the sign) to the CENTER
+		variable. At the moment, I see no reason not to take
+		his word. For each offspring, mutation occurs with a
+		probability of mu.
+
+		A couple other things to consider:
+			1. The probability with which a given attribute
+			   should be mutated to a "don't care."
+			2. Whether classes should be mutated as well, and
+			   if so, with what probability this should occur.
+			3. Whether it might be advantageous to gradually
+			   restrict the range from which the m values are
+			   selected as the generations increase.
+
+	(f) Subsumption/Replacement.
+
+		If the fitter of a set of parents is sufficiently experienced
+		(EXP > theta_sub) and accurate (ACC > acc_0), and
+		is more general than a given offspring(*2), then that offspring
+		is deleted and the numerosity(*3) of the parent is increased
+		(this is known as "subsumption"). Note that the only actual
+		comparison being made between the parent and the offspring
+		is in terms of generality (the accuracy and experience
+		variables of the offspring are set to 0). If the fitter parent 
+		does not meet these criteria, the offspring is added to the
+		population. 
+
+		Another rule from the population must then be deleted. The
+		probability that a rule will chosen for deletion is
+		proportional to the AVG_NICHE_SIZE variable. I have not
+		decided whether or how other factors, like experience and
+		accuracy, should play a role in this calculation.
+
+
+	(*2)	A parent classifier is more general than its offspring iff the
+		set of possible inputs matched by the offspring is a proper
+		subset of the set of possible inputs matched by the parent.
+		As a test, this is accomplished simply by comparing the
+		number of "don't cares" in parent and offspring, and then
+		the ranges of the other attributes.
+	(*3)	(The term "macroclassifier," which one encounters a good deal
+		in the literature, simply refers to a classifier that maintains
+		a numerosity tally.)
+
+II. COVERING OPERATOR
+
+	Here, once again, I consult Wilson (2000). He suggests that if no
+	classifier matches a given input x, a new one be created according
+	to the procedure described below, but only if the number of actions
+	(classes) represented in [M] exceeds a certain threshold theta_mna:
+
+		For each attribute in the condition of the classifier,
+		set its DONT_CARE variable to true with some probability P_#.
+		Otherwise, set the CENTER variable to the corresponding 
+		input value x_i, and set the SPREAD variable to a random 
+		random value the range [0,s_i), where s_i is a predefined
+		constant.
+
+	Wilson also suggests generating one classifier (with its own
+	randomly generated condition) for each possible action/class. I can
+	see why one would want to do this (namely, to guarantee that *one*
+	of the newly created classifiers will cover the input), but supposing
+	there are N classes, that means that every time the covering operator
+	is invoked, we must delete N classifiers from the population, which
+	seems excessive. I may have to experiment, but I'm inclined to go
+	with the UCS approach, which just assigns the covering classifier
+	a random action.
+
+---------------------------------------------------------------------------
+D. MISCELLANEA
+---------------------------------------------------------------------------
+
+Descriptions of parameters (from "An Algorithmic Description of XCS," Butz
+& Wilson, 2001):
+
+	- N: the maximum size of the population.
+	- v: the exponent to which a classifier's accuracy is raised in
+	     order to determine the fitness.
+	- theta_GA: if the average number of time steps since a classifier
+	     in [C] participated in an iteration of the GA exceeds this
+	     value, the GA is invoked.
+	- chi: the probability of applying crossover in the GA.
+	- mu: the probability of mutating an attribute in an offspring.
+	- theta_del: deletion threshold. If the experience of a classifier
+	     exceeds this value, it will not be a candidate for deletion
+	     when a new classifier is introduced into [P].
+	- theta_sub: the subsumption threshold. The experience of a
+	     classifier must exceed this value in order to be able to
+	     subsume another classifier.
+	- P_#: the probability of setting an attribute's DONT_CARE
+	     variable to true when creating a new classifier using the
+	     covering operator.
+	- theta_mna: the number of actions (classes) represented in [M]
+	     below which the covering operator will be invoked.
+	- acc_0: the accuracy threshold for subsumption. If the accuracy
+	     of a classifier is below this value, it will not be allowed
+	     to subsume another.
+
+Below I have listed some typical argument values for XCS and UCS (to help
+me get a sense of what values are reasonable). Where the parameter values
+for XCS and UCS differ, I have indicated both using format [XCS]/[UCS]
+
+	acc_0:                 0.99
+	mu:                    0.04
+	chi:                   0.8
+	v:                     5/10
+	P_#:                   0.33
+	theta_mna:             total # of classes/actions
+	theta_GA:              25
+	theta_del:             20
+	theta_sub:             20
+
+Consult the paper cited at the beginning of this section to get more
+guidance as to appropriate values.

@@ -1,0 +1,278 @@
+Using the EO Library
+
+---------------
+// ALGORITHM //
+---------------
+
+To create the genetic algorithm, you must choose the functor object
+representing the kind of GA you want, and pass the following as
+parameters:
+	
+	- The stopping condition(s) (an eoContinue object or subclass)
+	- The evaluation function (an eoEvalFuncPtr object or subclass)
+	- The selection operator(s) (an eoSelectOne object or subclass)
+	- The operator transform (an eoTransform object or subclass)
+	- The replacement operator (an eoReplacement object or subclass)
+
+For example:
+
+	eoEasyEA<Indi> gga(<stop_cond>, <eval>, <select>, <trans>, <replace>);
+
+-----------------
+// CHECKPOINTS //
+-----------------
+
+An eoCheckpoint object contains information about things that need
+to be evaluated at each generation. This information comes in four
+flavors:
+
+	1. Stopping conditions.
+	2. Statistics
+	3. Monitors
+	4. Updaters
+
+Each kind of information has a corresponding object that must be added
+to the eoCheckpoint object using the "add" function, and is explained
+in more detail below.
+
+Stopping conditions. When initialized, an eoCheckpoint object should be
+passed an eoContinuator (or eoCombinedContinuator) object that specifies
+the stopping conditions.
+
+Statistics. These are computed using eoStat objects. The eoStat class
+inherits from the eoValueParam class, which allows an instance of the
+former to be displayed to the user. The EO library comes with some of
+the more common stats built in:
+
+	eoBestFitnessStat<Indi>: returns the highest fitness in the
+	population.
+
+	eoAverageStat<Indi>: returns the average fitness of the
+	population.
+
+	eoMomentStat<Indi>: returns a pair of doubles comprising the
+	average and standard deviation.
+
+Monitors. These display and write data about eoValueParam objects.
+There are two classes that inherit from eoMonitor that will be of
+interest to you:
+
+	eoStdoutMonitor: displays info in the console window.
+
+	eoFileMonitor: writes info to a file. The constructor requires
+	as parameters the name of the file to be written to and,
+	optionally, a delimiting character.
+
+You must add (using the "add" function) to the monitors any
+eoValueParam object whose information you want to display.
+
+Updater. eoUpdater objects basically just encapsulate any generation-
+dependent information that doesn't fit into one of the three previous
+categories. There are a couple updaters that come built in:
+
+	eoIncrementor: accepts a counter (an eoValueParam) as an
+	argument to its constructor and increments it every time
+	the constructor is called. In effect, counts the number of
+	generations that have passed.
+
+	eoCountedStatSaver: used to save state information. Look
+	this up when you need it.
+
+--------------------------
+// CROSSOVER & MUTATION //
+--------------------------
+
+All crossover and mutation operators are functor objects of class
+eoQuadOp (for binary operators) or of class (eoMonOp) for unary
+operators. The available types of crossover and mutation for real-
+valued vectors that might interest you are listed below:
+
+CROSSOVER
+	eoSegmentCrossover: standard segment crossover; selects a
+			    random point in the real-valued vector
+			    of each of the parents and swaps to
+			    create children.
+
+			eoSegmentCrossover<Indi> myCross;
+
+MUTATION
+	
+	eoUniformMutation: chooses a new value for each variable
+			   uniformly on an interval centered at
+			   the parent value. The width of the interval
+			   is specified with a parameter EPSILON.
+
+			eoUniformMutation<Indi> myMut(EPSILON);
+
+---------------------------------
+// EVALUATION/FITNESS FUNCTION //
+---------------------------------
+
+The fitness function must be in its own header file. In the main file,
+it must be encapsulated as a functor object:
+
+	eoEvalFuncPtr<Indi, <return type>, <arguments>> myFunc(<name of header file containing eval function>)
+
+You can also adjust the parameters to minimize the fitness, but I have
+no idea why one would ever want to do this.
+
+--------------
+// INCLUDES //
+--------------
+
+For evolution of real-valued vectors, must include <eo> and <es.h>
+
+--------------------
+// INITIALIZATION //
+--------------------
+
+To initialize the population, you must declare an empty object of
+class eoPop<Indi> and then fill it with Indis. 
+
+To initialize a population of fixed length with random attribute values,
+you will need to do the following:
+
+	1. Declare a uniform generator object
+
+		eoUniformGenerator<T> name(<low>, <high>);
+
+	   where T is the type of the attribute value, and "low" and
+	   "high" represent the bounds of the range of possible values.
+
+	2. Declare a fixed-length initialization object:
+
+		eoInitFixedLength<Indi> name(<# attributes>,
+					     <uniform generator>);
+
+	3. Declare the population:
+
+		eoPop<Indi> pop(<pop_size>, <initializer object>);
+
+	4. (Optional) to add to the population, you may use the
+	   "append" function. E.g:
+
+		pop.append(<new_pop_size>, <initializer object>);
+
+	5. I believe you can use the "apply" function to apply the
+	   evaluation function to the population a single time:
+
+		apply<Indi>(<evaluation function>, <eoPop>);
+
+----------------
+// MISCELLANY //
+----------------
+
+Your main function must call the function that executes the GA (duh),
+but it uses a try-catch block that you should retain. Thus, the actual
+function that calls the GA is declared separately.
+
+All operators must be encapsulated in an eoTransformObject:
+
+	eoTransform<Indi> transform(<crossover>, <crossover_prob>,
+				    <mutation>, <mutation_prob>);
+
+All functor objects are templatized with respect to the type of the
+individual.
+
+All individuals are templatized with respect to the type of the
+fitness.
+
+----------------
+// PARAMETERS //
+----------------
+
+There are two important classes for reading in input: eoParser and
+eoValueParam. 
+
+	eoParser parser(argc, argv);
+	eoValueParam<T> param_name(<default value>, <long keyword>,
+				   <comment>, [<character keyword>)
+
+eoParser may be used to read in parameter values from the command
+line, a text file, or default values. Parameters may be specified
+in a .param file or on the command line. Once you have declared
+your eoParser object and created a parameter, you must pass the
+parameter to the parser. This is accomplished by doing the following:
+
+	parser.processParam(param_name);
+
+
+-----------------------------
+// RANDOM NUMBER GENERATOR //
+-----------------------------
+
+The global random number generator is called "rng" and should be used
+any time a random value is needed. If this is not reseeded with a new
+value before every run of the GA, it will return the same results
+(unless you change some other parameter as well).
+
+	rng.flip() returns a random boolean.
+	rng.uniform() returns a random value in [0,1]
+
+--------------------
+// REPRESENTATION //
+--------------------
+
+The individuals to be evolved must be typdef'ed. The one used in
+the example is of the eoReal class. You'll want to find out how to
+define your own objects to be evolved.
+
+-----------------------------
+// SELECTION & REPLACEMENT //
+-----------------------------
+
+The selection and replacement mechanisms available include:
+
+	eoDetTournamentSelect<Indi> select(T_SIZE): tournament 
+	selection
+
+	eoProportionalSelect<Indi> select: roulette wheel
+
+	eoRandomSelect<Indi> select: random selection
+
+These must be encapsulated as one of the following:
+
+	// generate <x> percent as many offspring as parents
+	eoSelectPerc<Indi> select(selectOne, <x>);
+
+	// generat <x> offspring per set of parents
+	eoSelectNumber<Indi> select(selectOne, <x>);
+
+For your replacement strategy, you'll want:
+
+	eoPlusReplacement<Indi> select<Indi>
+
+which retains the best individuals from among parents AND offspring.
+
+-------------
+// SORTING //
+-------------
+
+A population may be sorted in descending order of fitness by calling
+the "sort" method on the eoPop object. E.g. pop.sort(); 
+
+------------------------
+// STOPPING CONDITION //
+------------------------
+
+The stopping condition is an object of type eoContinue. eoContinue
+itself has a number of subclasses for common stopping conditions.
+Some of these are listed below:
+
+	eoGenContinue<Indi> genCont(MAX_GEN): stop after MAX_GEN
+	generations.
+
+	eoSteadyFitContinue<Indi> steadyCont(MIN_GEN, STEADY_GEN):
+	do MIN_GEN generations, then stop after STEADY_GEN generations
+	of no improvement.
+
+	eoFitContinue<Indi> fitCont(<fitness>): stop when fitness
+	reaches a target value.
+
+If you want to have multiple stopping conditions, you must combine
+them using an eoCombinedContinue object, like so:
+
+	eoCombinedContinue<Indi> continuator(genCont);
+	continuator.add(steadyCont);
+	continuator.add(fitCont);
+
