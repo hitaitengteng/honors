@@ -1,0 +1,69 @@
+Will Gantt
+1/7/17
+
+Hi Clare,
+
+As I mentioned in my email, I have only just received VPN access from IT,
+and so have not been able to look at anything on Dover for a couple weeks.
+I see that you were right about there not being any weekly reports for
+December. I distinctly remember writing one for the week of December 5th - 12th,
+but cannot seem to find it. For the week of December 12th - 19th, I did
+not write a report; I was so caught up with final projects and exams for
+my other classes that I made no progress that week. Regardless, I should
+have written a report and apologize for not doing so.
+
+Since the beginning of break, I have been reading and taking notes on the 
+LCS book you lent me, which has helped me in designing the structure of
+my own system. However, I still have a few questions on the design front. Without
+the EO library, there was not much I could do in the way of implementation,
+but I have written some skeleton code, including a function for reading in
+Erik's data.
+
+Today, and for the remainder of break, I will continue to work with the EO
+library and to integrate it with the rest of the code. The tutorial that
+accompanies the EO source code is lengthy, and I'm working through it.
+
+Currently, I'm drawing a lot of inspiration from the sUpervised Learning
+Classier (UCS) proposed by Ester Bernado-Mansilla and Josep M. Garrell-Guiu
+in "Accuracy-Based Learning Classifier Systems: Models, Analysis, and
+Applications to Classification Tasks." UCS was designed specifically for
+supervised learning classification tasks, is straightforward, and has
+proved to be very competitive with other LCSs, as well as non-evolutionary
+classification methods.
+
+The most significant downside to UCS is that its classifiers' conditions
+are represented in the ternary alphabet. For an implementation of UCS
+to be able to handle Erik's data, we would have to discretize not only the
+yield deltas, but the deltas for all the other attributes as well, into
+High and Low categories. Either that, or expand UCS to accommodate a base-n
+alphabet, in which case the attribute deltas would still have to be
+discretized, but not necessarily to just two classes (e.g. we could do
+quartiles if we used a base-4 alphabet). 
+
+[Addendum (1/12/17): Stewart Wilson wrote an extension of his XCS classifier
+to accommodate real numbers that avoids ternary alphabet representation, so
+I think I'll try using his system.]
+
+Something along these lines may be more practical for an initial implementation,
+but I'm thinking that, ultimately, a fuzzy LCS is the way to go. A few guys, 
+including Bernado-Mansilla (one of the original UCS guys) created a fuzzy version 
+of UCS that I'm currently looking into. They represent their conditions as
+a set of linguistic terms in conjunctive normal form, and the action as just
+a single class. Something like:
+
+IF (x_1 is A_1) AND (x_2 is A_2) AND ... AND (x_n is A_n) THEN c_k
+
+where x_1, ... , x_n are attributes; A_1, ... , A_n are their predicates, and
+c_k is the class into which any datum matching the condition of the rule will
+be classified. There's a lot more to it (I haven't read the entire paper yet),
+but I would love to hear your thoughts on this approach.
+
+[Addendum (1/12/17): Having now read a good deal more on fuzzy systems, I
+worry that, while they might be somewhat better suited to the problem, they
+are considerably more difficult to implement. At the moment, I'm planning to
+stick with the original plan. A blueprint of the system I'm currently trying
+to implement can be found in Crisp_LCS_Schema.txt in this directory. It's
+quite a long document, so don't feel obligated to read it all.]
+
+
+Will
