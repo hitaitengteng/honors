@@ -23,20 +23,8 @@ static const int NUM_ATTRIBUTES = 10;
 int main(int argc, char **argv) {
 
 	mt19937 rng;
-	rng.seed(random_device{}());
+	testEquality(rng);
 
-	vector<pair<double, double> > ranges;
-	for (int i=0; i<NUM_ATTRIBUTES; i++)
-		ranges.push_back(make_pair(0,1));
-	double rangeScalar = 0.5;
-
-	double pMutate = 0.25;
-	double pDontCare = 0.5;
-
-	Rule r = Rule::getRandom(NUM_ATTRIBUTES);
-	r.print();
-	r.mutate(pMutate, pDontCare, ranges, rangeScalar, rng);
-	r.print();
 	return 0;
 }
 
@@ -105,7 +93,7 @@ bool testEquality(mt19937 &rng) {
 	}
 
 	// check equality
-	printf("Rule Equality Test 1 (same center, spread, class): ");
+	printf("Rule Equality Test 2 (same center, spread, class): ");
 	if (r1 == r2) {
 		printf("Passed.\n");
 	} else {
@@ -125,7 +113,7 @@ bool testEquality(mt19937 &rng) {
 	}
 
 	// check equality
-	printf("Rule Equality Test 2 (same center and class, different spreads): ");
+	printf("Rule Equality Test 3 (same center and class, different spreads): ");
 	if (r1 == r2) {
 		printf("Failed.\n");
 		return false;
@@ -148,7 +136,7 @@ bool testEquality(mt19937 &rng) {
 	}
 
 	// check equality
-	printf("Rule Equality Test 3 (same spread and class, different centers): ");
+	printf("Rule Equality Test 4 (same spread and class, different centers): ");
 	if (r1 == r2) {
 		printf("Failed.\n");
 		return false;
@@ -174,7 +162,7 @@ bool testEquality(mt19937 &rng) {
 	} while (r1.getClass() == r2.getClass());
 
 	// check equality
-	printf("Rule Equality Test 4 (same center and spread, different classes): ");
+	printf("Rule Equality Test 5 (same center and spread, different classes): ");
 	if (r1 == r2) {
 		printf("Failed.\n");
 		return false;
@@ -193,7 +181,7 @@ bool testEquality(mt19937 &rng) {
 	r1.condition[rng() % NUM_ATTRIBUTES].setDontCare(true);
 
 	// check equality
-	printf("Rule Equality Test 5 (one rule generalizes the other) ");
+	printf("Rule Equality Test 6 (one rule generalizes the other) ");
 	if (r1 == r2) {
 		printf("Failed.\n");
 		return false;

@@ -35,7 +35,7 @@ bool Rule::operator==(const Rule &rule) const {
 		if (condition[i].getDontCare() != rule.condition[i].getDontCare())
 			return false;
 
-		// if control reaches here, we know thaat both rules have
+		// if control reaches here, we know that both rules have
 		// the same value for the "don't care" variable. If that
 		// value is false, we must then check their center and
 		// spread variables for equality
@@ -165,7 +165,7 @@ Rule Rule::specify(vector<double> input, vector<pair<double,double> > ranges,
  *       of time; using the '==' operator would mean doing a second iteration
  *       through the conditions of both rules.
  ****************************************************************************/ 
-bool Rule::generalizes(const Rule &rule) const {
+bool Rule::generalizes(Rule &rule) const {
 
 	// immediately return false if the rules' classes are different
 	if (classification != rule.getClass())
@@ -208,25 +208,12 @@ bool Rule::generalizes(const Rule &rule) const {
 			// return false if the interval described by rule 2
 			// does not fall within that described by rule 1
 			if ((r2LowerBound < r1LowerBound) ||
-			    (r2UpperBound > r1UpperBound)) {
+			    (r2UpperBound > r1UpperBound))
 				return false;
-
-			  // if control reaches here, then we know the interval
-			  // described by rule 2 falls within that described by
-			  // rule 1. This else if statement checks to see whether
-			  // at least one of the bounds of rule 2 is not equivalent
-			  // to the corresponding bound of rule 1. If this is so,
-			  // then the rules cannot be equivalent.
-			} else if ((r2LowerBound > r1LowerBound) ||
-			           (r2UpperBound < r1UpperBound)) {
-				areEquivalent = false;
-			}
 		}
 	}
 	
-	// as mentioned in the description, if two rules are equivalent to
-	// each other, neither is considered a generalization of the other
-	if (areEquivalent)
+	if ((*this) == rule) 
 		return false;
 
 	return true;

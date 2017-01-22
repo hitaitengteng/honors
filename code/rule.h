@@ -48,7 +48,7 @@ class Rule {
 				double rangeScalar, mt19937 &rng);
 	
 		// checks whether this rule is a more general version of another
-		bool generalizes(const Rule &rule) const;
+		bool generalizes(Rule &rule) const;
 
 		// generate a random rule
 		static Rule getRandom(int num_attributes);

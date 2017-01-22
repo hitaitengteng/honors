@@ -19,8 +19,8 @@ bool testRouletteWheelSelect(Population *p);
 bool testSubsume(Population *p);
 
 // named constants
-int MAX_POP_SIZE = 25;
-int NUM_ATTRIBUTES = 10;
+static const int MAX_POP_SIZE = 50;
+static const int NUM_ATTRIBUTES = 10;
 
 // random number generator
 mt19937 rng;
@@ -31,8 +31,8 @@ int main(int argc, char **argv) {
 	rng.seed(random_device{}());
 
 	// create a population of randomly generated rules
-	Population *p = new Population(MAX_POP_SIZE);
 	Rule r;
+	Population *p = new Population(MAX_POP_SIZE);
 	for (int i=0; i<MAX_POP_SIZE; i++) {
 		r = Rule::getRandom(NUM_ATTRIBUTES);
 		p->add(r);
@@ -40,6 +40,7 @@ int main(int argc, char **argv) {
 
 	testSubsume(p);
 	delete p;
+	exit(0);
 	return 0;
 }
 
@@ -143,8 +144,11 @@ bool testSubsume(Population *p) {
 	// by setting dontCare to false and the spread to 0, we guarantee
 	// that mostGeneral cannot generalize any other rule in the population
 	for (int i=0; i<NUM_ATTRIBUTES; i++) {
-		p->getMostGeneral()->condition[i].setDontCare(false);
-		p->getMostGeneral()->condition[i].setSpread(0);
+		p->getMostGeneral().condition[i].setDontCare(false);
+		p->getMostGeneral().condition[i].setSpread(0);
+
+		cout << p->getMostGeneral().condition[i].getDontCare() << endl;
+		cout << p->getMostGeneral().condition[i].getSpread() << endl;
 	}
 
 	// run subsume() and evaluate results
@@ -164,7 +168,8 @@ bool testSubsume(Population *p) {
 	
 	// set all of the most general rule's attributes to "don't care"
 	for (int i=0; i<NUM_ATTRIBUTES; i++) 
-		p->getMostGeneral()->condition[i].setDontCare(true);
+		p->getMostGeneral().condition[i].setDontCare(true);
+	// make sure
 
 	// run subsume() and evaluate results
 	num_subsumed = p->subsume();
@@ -187,20 +192,22 @@ bool testSubsume(Population *p) {
 	// the upper and lower bounds of an attribute
 	double upperBound = 0;
 	double lowerBound = 0;
+
 	for (int i=0; i<NUM_ATTRIBUTES; i++) {
 		upperBound = r.condition[i].getCenter() + r.condition[i].getSpread();
 		lowerBound = r.condition[i].getCenter() - r.condition[i].getSpread();
 
 		// generalize the rule
 		if (r.condition[i].getDontCare() == false) {
-			p->getMostGeneral()->condition[i].setDontCare(false);
-			p->getMostGeneral()->condition[i].setCenter(r.condition[i].getCenter());
-			p->getMostGeneral()->condition[i].setSpread(r.condition[i].getSpread() + 0.1);
+			p->getMostGeneral().condition[i].setDontCare(false);
+			p->getMostGeneral().condition[i].setCenter(r.condition[i].getCenter());
+			p->getMostGeneral().condition[i].setSpread(r.condition[i].getSpread() + 0.1);
 		}
 	}
 
 	// run subsume() and evaluate results
 	num_subsumed = p->subsume();
+	printf("Subsumption Test 3 (at least one rule should be subsumed): ");
 	if (num_subsumed == 0) {
 		printf("Failed.\n");
 		return false;
@@ -209,4 +216,5 @@ bool testSubsume(Population *p) {
 	}
 	
 	return true;
+
 } // end testSubsume
