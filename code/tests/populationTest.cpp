@@ -14,11 +14,12 @@
  ****************************************************************************/ 
 using namespace std;
 
+// advance function declarations
 bool testCrossover(Population *p);
 bool testRouletteWheelSelect(Population *p);
 bool testSubsume(Population *p);
 
-// named constants
+// named constants (these should ultimately be passed as parameters)
 static const int MAX_POP_SIZE = 50;
 static const int NUM_ATTRIBUTES = 10;
 
@@ -38,12 +39,17 @@ int main(int argc, char **argv) {
 		p->add(r);
 	}
 
-	testSubsume(p);
+	testRouletteWheelSelect(p);
 	delete p;
-	exit(0);
 	return 0;
 }
 
+/****************************************************************************
+ * Inputs:      the population on which the crossover operator will be tested
+ * Outputs:     a boolean indicating whether all tests of the crossover
+ * 		function on the given population were passed
+ * Description: runs various tests of the crossover function
+ ****************************************************************************/ 
 bool testCrossover(Population *p) {
 
 	// select parents randomly from the population
@@ -73,6 +79,13 @@ bool testCrossover(Population *p) {
 	return true;
 }
 
+/****************************************************************************
+ * Inputs:      the population on which the roulette wheel selection operator
+ * 		is to be tested
+ * Outputs:     a boolean indicating whether all of the tests of the
+ * 		roulette wheel selection on the given population were passed
+ * Description: runs various tests of the roulette wheel selection operator
+ ****************************************************************************/ 
 bool testRouletteWheelSelect(Population *p) {
 
 	// print info on the fitnesses of all the rules
@@ -132,6 +145,12 @@ bool testRouletteWheelSelect(Population *p) {
 
 } // end testRouletteWheelSelect
 
+/****************************************************************************
+ * Inputs:      the population on which the subsume operator is to be tested
+ * Outputs:     a boolean indicating whether all tests of the subsume
+ * 		function on the given population were passed
+ * Description: runs various tests of the subsume function
+ ****************************************************************************/ 
 bool testSubsume(Population *p) {
 
 	// the number of rules subsumed by the most general rule
@@ -139,7 +158,6 @@ bool testSubsume(Population *p) {
 
 	// a pointer to the most general rule in the population
 	Rule *most_general = p->getMostGeneral();
-
 	// -----------------------------------------------------------------
 	// TEST 1: no rules should be subsumed
 	// -----------------------------------------------------------------
@@ -151,7 +169,6 @@ bool testSubsume(Population *p) {
 		most_general->condition[i].setSpread(0);
 	}
 
-	(*most_general).print();
 	// run subsume() and evaluate results
 	num_subsumed = p->subsume();
 	printf("Subsumption Test 1 (most general does not"
@@ -173,13 +190,9 @@ bool testSubsume(Population *p) {
 	for (int i=0; i<NUM_ATTRIBUTES; i++) 
 		most_general->condition[i].setDontCare(true);
 
-	(*most_general).print();
-	// count how many rules were subsumed
-	num_subsumed = p->subsume();
-
-	// now compute the number of rules in the population that have
-	// the same class as the most general rule (so there should be
-	// at least one)
+	// compute the number of rules in the population that have the
+	// same class as the most general rule (so there should be at
+	// least one)
 	
 	// the number of rules in the population with the same class
 	// as the most general rule
@@ -192,14 +205,18 @@ bool testSubsume(Population *p) {
 	// iterate over the rules and compare classes
 	for (int i=0; i<p->rules.size(); i++) {
 		curr_class = p->rules[i].getClass();
-		if (most_general_class == curr_class)
-			tally++;
+		if (most_general_class == curr_class) {
+			if (!(p->rules[i] == (*most_general)))
+				tally++;
+		}
 	}
 
-	cout << "tally: " << tally << endl;
-	cout << "num_subsumed: " << num_subsumed << endl;
+	// count how many rules were subsumed
+	num_subsumed = p->subsume();
+
 	printf("Subsumption Test 2 (most general rule has all"
 			" \"don't care\" attributes): ");
+
 	if (num_subsumed != tally) {
 		printf("Failed.\n");
 		return false;
@@ -207,13 +224,12 @@ bool testSubsume(Population *p) {
 		printf("Passed.\n");
 	}
 	
-	exit(0);
 	// -----------------------------------------------------------------
 	// TEST 3: at least one rule should be subsumed
 	// -----------------------------------------------------------------
 	
 	// select a random rule from the population
-	Rule r = p->rules[rng() % MAX_POP_SIZE];
+	Rule r = p->rules[rng() % p->rules.size()];
 
 	// the upper and lower bounds of an attribute
 	double upperBound = 0;

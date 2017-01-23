@@ -27,7 +27,17 @@ class Population {
 		Population() { }
 
 		// custom constructor
-		Population(int maxSize) : maxSize(maxSize) { }
+		Population(int maxSize) : maxSize(maxSize) { 
+
+			mostGeneral = new Rule();
+		
+		}
+
+		// custom destructor
+		~Population() {
+
+			delete mostGeneral;
+		}
 
 		// function for adding a rule to the population
 		void add(Rule r);
@@ -41,6 +51,14 @@ class Population {
 
 		// creates two new rules using single-point crossover
 		pair<Rule,Rule> crossover(int i, int j, mt19937 &rng);
+
+		// prints all the rules in the population
+		void inline print() {
+			for (int i=0; i<rules.size(); i++) {
+				printf("\nRule %d\n--------", i);
+				rules[i].print();	
+			}
+		}
 
 		// getters
 		int getSize() const {return rules.size();}

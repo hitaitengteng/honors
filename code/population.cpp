@@ -31,10 +31,11 @@ void Population::add(Rule r) {
 	// or else is more general than the current most general
 	// rule, update 'mostGeneral'
 	if (rules.empty() || (r.getNumDontCare() > mostGeneral->getNumDontCare())) {
-		mostGeneral = &r;
+		mostGeneral = new Rule();
+		(*mostGeneral) = r;
 	} else if ((r.getNumDontCare() == mostGeneral->getNumDontCare()) &&
 			(r.generalizes(*mostGeneral))) {
-		mostGeneral = &r;
+		(*mostGeneral) = r;
 	}
 
 	// add the rule to the vector of all rules
@@ -118,21 +119,20 @@ int Population::rouletteWheelSelect(mt19937 &rng) {
  ****************************************************************************/ 
 int Population::subsume() {
 
-	// a vector to store the indices of any superfluous rules
-	vector<int> toDelete;
+	// the number of rules subsumed
+	int num_subsumed = 0;
 
 	// for each rule in the population, check whether the most general
-	// rule generalizes it; 
-	for (int i=0; i<rules.size(); i++) {
-		if (mostGeneral->generalizes(rules[i]))
-			toDelete.push_back(i);
+	// rule generalizes it; if so, remove it from the vector of rules
+	for (auto it = rules.begin(); it != rules.end(); ) {
+		if (mostGeneral->generalizes(*it)) {
+			rules.erase(it);
+			++num_subsumed;
+		} else {
+			it++;
+		}
 	}
 
-	// delete all the superfluous rules
-	for (int i=0; i<toDelete.size(); i++) {
-		rules.erase(rules.begin() + toDelete[i]);
-	}
-
-	return toDelete.size();
+	return num_subsumed;
 
 } // end subsume
