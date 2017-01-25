@@ -10,6 +10,7 @@
  * 	- write function descriptions
  * 	- improve efficiency of generalizes function (eliminate equality
  * 	  check at end)
+ * 	- add rule ID to print function
  ****************************************************************************/ 
 using namespace std;
 
@@ -19,12 +20,21 @@ using namespace std;
  * Description: Two rules are defined to be equivalent if their condition
  * 		and class are matching. The values of other member variables
  * 		are considered irrelevant.
+ *
+ * 		NOTE: ID number is considered irrelevant because there
+ * 		should never be duplicates of these. If one needs to
+ * 		determine whether two rules are literally the same object,
+ * 		then the comparison is easily made using the getID function.
  ****************************************************************************/ 
 bool Rule::operator==(const Rule &rule) const {
 
 	// check the classes of both rules
 	if (classification != rule.getClass())
 		return false;
+
+	// if the rules are in fact the same object, return true immediately
+	if (id == rule.getID())
+		return true;
 
 	// check the conditions
 	for (int i=0; i<condition.size(); i++) {
@@ -116,10 +126,8 @@ void Rule::mutate(double pMutate, double pDontCare,
 				else
 					condition[i].setCenter(oldCenter - centerAdjust);
 			}
-
 		}
 	}
-
 } // end mutate
 
 /****************************************************************************
@@ -149,9 +157,7 @@ Rule Rule::specify(vector<double> input, vector<pair<double,double> > ranges,
 			condition[i].setSpread(spread);
 		}
 	}
-
 	return (*this);
-
 } // end specify
 
 /****************************************************************************
@@ -167,19 +173,14 @@ Rule Rule::specify(vector<double> input, vector<pair<double,double> > ranges,
  ****************************************************************************/ 
 bool Rule::generalizes(Rule &rule) const {
 
-	// immediately return false if the rules' classes are different
-	if (classification != rule.getClass())
+	// immediately return false if the rules' classes are different or
+	// if they have the same ID number (that is, if they are *literally*
+	// the same rule)
+	if ((classification != rule.getClass()) || (id == rule.getID()))
 		return false;
-
-	// a boolean for checking the equivalence of the two rules
-	bool areEquivalent = true;
 
 	// iterate over the conditions of both rules
 	for (int i=0; i<condition.size(); i++) {
-
-		if ((condition[i].getDontCare() == true) &&
-		     (rule.condition[i].getDontCare() == false))
-			     areEquivalent = false;
 
 		// only want to check attributes that aren't "don't cares"
 		// (if this rule has the "don't care" variable set for a
@@ -212,10 +213,6 @@ bool Rule::generalizes(Rule &rule) const {
 				return false;
 		}
 	}
-	
-	if ((*this) == rule) 
-		return false;
-
 	return true;
 
 } // end generalizes
@@ -263,6 +260,7 @@ Rule Rule::getRandom(int num_attributes) {
  ****************************************************************************/ 
 void Rule::print() {
 
+	printf("\nRule %d\n--------\n", id);
 	printf("\nAttribute:  ");
 	for (int i=0; i<condition.size(); i++)
 		printf("[ %d ] ", i);

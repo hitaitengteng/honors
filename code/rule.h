@@ -30,9 +30,9 @@ class Rule {
 	// FUNCTIONS
 	
 		// constructor
-		Rule() : classification(0), timeStamp(0), exp(0), numerosity(1),
+		Rule() : id(0), classification(0), timeStamp(0), exp(0), numerosity(1),
 		         numMatches(0), numCorrect(0), numDontCare(0), numNiches(0),
-			 nicheSizesSum(0), avgNicheSize(0), accuracy(0), fitness(0) {}
+			 nicheSizesSum(0), avgNicheSize(0), accuracy(0), fitness(0) { }
 
 		// comparison operator
 		bool operator==(const Rule& rule) const;
@@ -58,6 +58,7 @@ class Rule {
 	
 		// getters 
 		vector<Attribute> getCondition() const {return condition;}
+		int getID() const {return id;}
 		int getClass() const {return classification;}
 		int getTimeStamp() const {return timeStamp;}
 		int getExp() const {return exp;}
@@ -85,8 +86,12 @@ class Rule {
 		void setAvgNicheSize(double avgNicheSize) {this->avgNicheSize = avgNicheSize;}
 		void setAccuracy(double accuracy) {this->accuracy = accuracy;}
 		void setFitness(double fitness) {this->fitness = fitness;}
+		void setID(int id) {this->id = id;}
 
 	private:
+
+		// a number that uniquely identifies the rule
+		int id;
 
 		// the class into which any input matching the condition is
 		// to be categorized, according to the rule

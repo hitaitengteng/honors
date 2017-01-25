@@ -27,11 +27,14 @@ void Population::add(Rule r) {
 		return;
 	}
 
+	// give the rule an ID number
+	r.setID(id_count);
+	id_count++;
+
 	// if this is either the first rule added to the population,
 	// or else is more general than the current most general
 	// rule, update 'mostGeneral'
 	if (rules.empty() || (r.getNumDontCare() > mostGeneral->getNumDontCare())) {
-		mostGeneral = new Rule();
 		(*mostGeneral) = r;
 	} else if ((r.getNumDontCare() == mostGeneral->getNumDontCare()) &&
 			(r.generalizes(*mostGeneral))) {
@@ -43,7 +46,6 @@ void Population::add(Rule r) {
 
 	// increment the fitness sum of the population
 	fitnessSum += r.getFitness();
-
 
 } // end add
 
@@ -113,9 +115,9 @@ int Population::rouletteWheelSelect(mt19937 &rng) {
 } // end rouletteWheelSelect
 
 /****************************************************************************
- * Inputs:
- * Outputs:
- * Description:
+ * Inputs:      none
+ * Outputs:     the number of rules subsumed
+ * Description: 
  ****************************************************************************/ 
 int Population::subsume() {
 

@@ -24,6 +24,7 @@ int main(int argc, char **argv) {
 
 	mt19937 rng;
 	testEquality(rng);
+	testGeneralizes();
 
 	return 0;
 }
@@ -275,11 +276,11 @@ bool testGeneralizes() {
 	// generate a random rule for r1, then specify
 	// r1 and assign the resulting rule to r2
 	Rule r1 = Rule::getRandom(NUM_ATTRIBUTES);
+	r1.setID(0);
 	Rule temp = r1;
 	Rule r2 = r1.specify(input, ranges, range_scalar, rng); 
+	r2.setID(1);
 	r1 = temp;
-	r1.print();
-	r2.print();
 
 	// ----------------------------------------------------------------------
 	// TEST 1: one rule is a specified version of another; should return true
@@ -331,9 +332,15 @@ bool testGeneralizes() {
 	// TEST 4: first rule is all "don't cares"; should return true
 	// ----------------------------------------------------------------------
 	
+	// make sure ID numbers are different
+	r2.setID(1);
+
 	// set all of rule 1's attributes to "don't care"
 	for (int i=0; i<NUM_ATTRIBUTES; i++)
 		r1.condition[i].setDontCare(true);
+
+	// make sure the rules have the same class
+	r1.setClass(r2.getClass());
 
 	// check equality
 	printf("Generalization Test 4 (first rule is all don't cares): ");

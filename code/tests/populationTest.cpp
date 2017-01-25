@@ -39,7 +39,7 @@ int main(int argc, char **argv) {
 		p->add(r);
 	}
 
-	testRouletteWheelSelect(p);
+	testSubsume(p);
 	delete p;
 	return 0;
 }
@@ -158,6 +158,7 @@ bool testSubsume(Population *p) {
 
 	// a pointer to the most general rule in the population
 	Rule *most_general = p->getMostGeneral();
+
 	// -----------------------------------------------------------------
 	// TEST 1: no rules should be subsumed
 	// -----------------------------------------------------------------

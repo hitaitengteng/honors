@@ -8,8 +8,7 @@
  * Description: Defines the Population class.
  *
  * TODO:
- * 	- Implement constructors
- * 	- Implement getters and setters
+ * 	- make id_count private
  ****************************************************************************/ 
 
 using namespace std;
@@ -18,16 +17,21 @@ class Population {
 
 	public:
 
-	// MEMBER VARIABLES
+	// MEMBER VARIABLES (these should definitely be private)
+
 		vector<Rule> rules; // the set of rules
+		int id_count;
 
 	// FUNCTIONS
 	
 		// default constructor
-		Population() { }
+		Population() : id_count(0), fitnessSum(0) { 
+		
+			mostGeneral = new Rule();
+		}
 
 		// custom constructor
-		Population(int maxSize) : maxSize(maxSize) { 
+		Population(int maxSize) : id_count(0), maxSize(maxSize), fitnessSum(0) {
 
 			mostGeneral = new Rule();
 		
