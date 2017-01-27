@@ -274,8 +274,6 @@ bool testSubsume(Population *p) {
 	// make sure most_general has the same
 	// class as the randomly chosene rule
 	most_general.setClass(r.getClass());
-	r.print();
-	most_general.print();
 
 	// reassign most general
 	p->setMostGeneral(most_general);
