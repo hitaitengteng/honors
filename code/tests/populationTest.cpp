@@ -156,8 +156,12 @@ bool testSubsume(Population *p) {
 	// the number of rules subsumed by the most general rule
 	int num_subsumed = 0;
 
-	// a pointer to the most general rule in the population
-	Rule *most_general = p->getMostGeneral();
+	// A pointer to the most general rule in the population.
+	// Note that when we update most_general below, we are NOT updating
+	// the rule object that is actually in the population, but rather
+	// a copy of it. There are good reasons for this, which I present
+	// elsewhere [give location]
+	Rule most_general = p->getMostGeneral();
 
 	// -----------------------------------------------------------------
 	// TEST 1: no rules should be subsumed
@@ -166,9 +170,12 @@ bool testSubsume(Population *p) {
 	// by setting dontCare to false and the spread to 0, we guarantee
 	// that mostGeneral cannot generalize any other rule in the population
 	for (int i=0; i<NUM_ATTRIBUTES; i++) {
-		most_general->condition[i].setDontCare(false);
-		most_general->condition[i].setSpread(0);
+		most_general.condition[i].setDontCare(false);
+		most_general.condition[i].setSpread(0);
 	}
+
+	// reassign mostGeneral
+	p->setMostGeneral(most_general);
 
 	// run subsume() and evaluate results
 	num_subsumed = p->subsume();
@@ -189,7 +196,7 @@ bool testSubsume(Population *p) {
 	// Once this has been done, the most general rule should subsume
 	// all other rules that share its class.
 	for (int i=0; i<NUM_ATTRIBUTES; i++) 
-		most_general->condition[i].setDontCare(true);
+		most_general.condition[i].setDontCare(true);
 
 	// compute the number of rules in the population that have the
 	// same class as the most general rule (so there should be at
@@ -200,17 +207,20 @@ bool testSubsume(Population *p) {
 	int tally = 0;
 
 	// variables for classes
-	int most_general_class = most_general->getClass();
+	int most_general_class = most_general.getClass();
 	int curr_class = NO_CLASS;
 
 	// iterate over the rules and compare classes
-	for (int i=0; i<p->rules.size(); i++) {
+	for (size_t i=0; i<p->rules.size(); i++) {
 		curr_class = p->rules[i].getClass();
 		if (most_general_class == curr_class) {
-			if (!(p->rules[i] == (*most_general)))
+			if (!(p->rules[i] == most_general))
 				tally++;
 		}
 	}
+
+	// reassign mostGeneral
+	p->setMostGeneral(most_general);
 
 	// count how many rules were subsumed
 	num_subsumed = p->subsume();
@@ -224,29 +234,51 @@ bool testSubsume(Population *p) {
 	} else {
 		printf("Passed.\n");
 	}
+
 	
 	// -----------------------------------------------------------------
 	// TEST 3: at least one rule should be subsumed
 	// -----------------------------------------------------------------
 	
-	// select a random rule from the population
-	Rule r = p->rules[rng() % p->rules.size()];
+	Rule r;
+	do {
+		// select a random rule from the population
+		r = p->rules[rng() % p->rules.size()];
 
-	// the upper and lower bounds of an attribute
-	double upperBound = 0;
-	double lowerBound = 0;
+	} while (r == p->getMostGeneral()); // make sure it isn't the most
+					    // general rule
 
+	// the center and spread of the current
+	// attribute of the randomly chosen rule
+	double ri_center = 0;
+	double ri_spread = 0;
+
+	// iterate over all of the attributes
 	for (int i=0; i<NUM_ATTRIBUTES; i++) {
-		upperBound = r.condition[i].getCenter() + r.condition[i].getSpread();
-		lowerBound = r.condition[i].getCenter() - r.condition[i].getSpread();
 
-		// generalize the rule
+		// get the center and spread of the current  
+		// attribute for the randomly chosen rule
+		ri_center = r.condition[i].getCenter(); 
+		ri_spread = r.condition[i].getSpread();
+
+		// set the center and spread of the current attribute in
+		// most_general so that it encompasses the range of
+		// values for the current attribute in r
 		if (r.condition[i].getDontCare() == false) {
-			most_general->condition[i].setDontCare(false);
-			most_general->condition[i].setCenter(r.condition[i].getCenter());
-			most_general->condition[i].setSpread(r.condition[i].getSpread() + 0.1);
+			most_general.condition[i].setDontCare(false);
+			most_general.condition[i].setCenter(ri_center);
+			most_general.condition[i].setSpread(ri_spread + 0.01);
 		}
 	}
+
+	// make sure most_general has the same
+	// class as the randomly chosene rule
+	most_general.setClass(r.getClass());
+	r.print();
+	most_general.print();
+
+	// reassign most general
+	p->setMostGeneral(most_general);
 
 	// run subsume() and evaluate results
 	num_subsumed = p->subsume();
@@ -258,6 +290,7 @@ bool testSubsume(Population *p) {
 		printf("Passed.\n");
 	}
 	
+	// if control reaches here, all tests have passed
 	return true;
 
 } // end testSubsume

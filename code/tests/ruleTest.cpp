@@ -56,6 +56,11 @@ bool testEquality(mt19937 &rng) {
 	// TEST 2: same center, spread, and class; should return true
 	// ----------------------------------------------------------------------
 	
+	// make sure ID numbers are different (otherwise, the equality check
+	// will always return true)
+	r1.setID(1);
+	r2.setID(2);
+
 	// make sure classes are the same
 	r1.setClass(HIGH_POS);
 	r2.setClass(HIGH_POS);

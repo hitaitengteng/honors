@@ -34,8 +34,11 @@ class Rule {
 		         numMatches(0), numCorrect(0), numDontCare(0), numNiches(0),
 			 nicheSizesSum(0), avgNicheSize(0), accuracy(0), fitness(0) { }
 
-		// comparison operator
-		bool operator==(const Rule& rule) const;
+		// equality operator
+		bool operator==(const Rule &rule) const;
+
+		// inequality operator
+		bool operator!=(const Rule &rule) const;
 
 		// mutates the class and attribute ranges in the condition with
 		// some probability

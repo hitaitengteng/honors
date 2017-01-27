@@ -25,23 +25,10 @@ class Population {
 	// FUNCTIONS
 	
 		// default constructor
-		Population() : id_count(0), fitnessSum(0) { 
-		
-			mostGeneral = new Rule();
-		}
+		Population() : id_count(0), fitnessSum(0) {  }
 
 		// custom constructor
-		Population(int maxSize) : id_count(0), maxSize(maxSize), fitnessSum(0) {
-
-			mostGeneral = new Rule();
-		
-		}
-
-		// custom destructor
-		~Population() {
-
-			delete mostGeneral;
-		}
+		Population(int maxSize) : id_count(0), maxSize(maxSize), fitnessSum(0) {  }
 
 		// function for adding a rule to the population
 		void add(Rule r);
@@ -58,8 +45,7 @@ class Population {
 
 		// prints all the rules in the population
 		void inline print() {
-			for (int i=0; i<rules.size(); i++) {
-				printf("\nRule %d\n--------", i);
+			for (size_t i=0; i<rules.size(); i++) {
 				rules[i].print();	
 			}
 		}
@@ -68,19 +54,18 @@ class Population {
 		int getSize() const {return rules.size();}
 		double getFitnessSum() const {return fitnessSum;}
 		int getMaxSize() const {return maxSize;}
-		Rule *getMostGeneral() {return mostGeneral;}
+		Rule getMostGeneral() {return mostGeneral;}
 
 		// setters
 		void setMaxSize(int maxSize) {this->maxSize = maxSize;}
 		void setFitnessSum(int fitnessSum) {this->fitnessSum = fitnessSum;}
-		void setMostGeneral(Rule *mostGeneral) {this->mostGeneral = mostGeneral;}
+		void setMostGeneral(Rule mostGeneral) {this->mostGeneral = mostGeneral;}
 
 	private:
 		int maxSize;        // the maximum number of rules allowed
 		double fitnessSum;  // the sum of all the fitnesses
-		Rule *mostGeneral;  // the most general rule in the population
-				    // (the one with the most "don't care"
-				    // attributes
+		Rule mostGeneral;   // the most general rule in the population
+				    // (the one with the most "don't care" attributes)
 };
 
 #endif

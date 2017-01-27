@@ -11,6 +11,7 @@
  * 	- improve efficiency of generalizes function (eliminate equality
  * 	  check at end)
  * 	- add rule ID to print function
+ * 	- add != operator
  ****************************************************************************/ 
 using namespace std;
 
@@ -37,7 +38,7 @@ bool Rule::operator==(const Rule &rule) const {
 		return true;
 
 	// check the conditions
-	for (int i=0; i<condition.size(); i++) {
+	for (size_t i=0; i<condition.size(); i++) {
 
 		// if one of the rules has the "don't care" variable set for
 		// the current attribute and the other doesn't, the rules
@@ -60,7 +61,18 @@ bool Rule::operator==(const Rule &rule) const {
 	}
 	return true;
 
-} // end operator==
+} // end operator ==
+
+/****************************************************************************
+ * Inputs:
+ * Outputs:
+ * Description:
+ ****************************************************************************/ 
+bool Rule::operator!=(const Rule &rule) const {
+
+	return !((*this) == rule);
+
+} // end operator != 
 
 /****************************************************************************
  * Inputs:
@@ -80,7 +92,7 @@ void Rule::mutate(double pMutate, double pDontCare,
 	double result2;
 
 	// iterate over all attributes in the condition
-	for (int i=0; i<condition.size(); i++) {
+	for (size_t i=0; i<condition.size(); i++) {
 
 		// get a random value between 0 and 1
 		result1 = dist(rng);
@@ -139,7 +151,7 @@ Rule Rule::specify(vector<double> input, vector<pair<double,double> > ranges,
 		double rangeScalar, mt19937 &rng) {
 
 	// iterate over all attributes in the condition
-	for (int i=0; i<condition.size(); i++) {
+	for (size_t i=0; i<condition.size(); i++) {
 
 		// if the current attribute is a "don't care" attribute...
 		if (condition[i].getDontCare() == true) {
@@ -180,7 +192,7 @@ bool Rule::generalizes(Rule &rule) const {
 		return false;
 
 	// iterate over the conditions of both rules
-	for (int i=0; i<condition.size(); i++) {
+	for (size_t i=0; i<condition.size(); i++) {
 
 		// only want to check attributes that aren't "don't cares"
 		// (if this rule has the "don't care" variable set for a
@@ -262,16 +274,16 @@ void Rule::print() {
 
 	printf("\nRule %d\n--------\n", id);
 	printf("\nAttribute:  ");
-	for (int i=0; i<condition.size(); i++)
-		printf("[ %d ] ", i);
+	for (size_t i=0; i<condition.size(); i++)
+		printf("[ %d ] ", (int) i);
 	printf("\nDon't Care: ");
-	for (int i=0; i<condition.size(); i++)
+	for (size_t i=0; i<condition.size(); i++)
 		printf("[ %d ] ", (int) condition[i].getDontCare());
 	printf("\n  Center:   ");
-	for (int i=0; i<condition.size(); i++)
+	for (size_t i=0; i<condition.size(); i++)
 		printf("%.3f ", condition[i].getCenter()); 
 	printf("\n  Spread:   ");
-	for (int i=0; i<condition.size(); i++)
+	for (size_t i=0; i<condition.size(); i++)
 		printf("%.3f ", condition[i].getSpread());
 
 	printf("\n");

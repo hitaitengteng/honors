@@ -34,11 +34,11 @@ void Population::add(Rule r) {
 	// if this is either the first rule added to the population,
 	// or else is more general than the current most general
 	// rule, update 'mostGeneral'
-	if (rules.empty() || (r.getNumDontCare() > mostGeneral->getNumDontCare())) {
-		(*mostGeneral) = r;
-	} else if ((r.getNumDontCare() == mostGeneral->getNumDontCare()) &&
-			(r.generalizes(*mostGeneral))) {
-		(*mostGeneral) = r;
+	if (rules.empty() || (r.getNumDontCare() > mostGeneral.getNumDontCare())) {
+		mostGeneral = r;
+	} else if ((r.getNumDontCare() == mostGeneral.getNumDontCare()) &&
+			(r.generalizes(mostGeneral))) {
+		mostGeneral = r;
 	}
 
 	// add the rule to the vector of all rules
@@ -72,7 +72,7 @@ pair<Rule,Rule> Population::crossover(int i, int j, mt19937 &rng) {
 		off1.condition.push_back(p1.condition[i]);
 		off2.condition.push_back(p2.condition[i]);
 	}
-	for (int i=crossPoint; i<p1.condition.size(); i++) {
+	for (size_t i=crossPoint; i<p1.condition.size(); i++) {
 		off1.condition.push_back(p2.condition[i]);
 		off2.condition.push_back(p1.condition[i]);
 	}
@@ -102,7 +102,7 @@ int Population::rouletteWheelSelect(mt19937 &rng) {
 	// above until that value falls to or below 0. In this way,
 	// an individual's likelihood of being selected is directly
 	// proportional to its fitness. 
-	for (int i=0; i<rules.size(); i++) {
+	for (size_t i=0; i<rules.size(); i++) {
 		random -= rules[i].getFitness();
 		if (random <= 0)
 			return i;
@@ -127,7 +127,7 @@ int Population::subsume() {
 	// for each rule in the population, check whether the most general
 	// rule generalizes it; if so, remove it from the vector of rules
 	for (auto it = rules.begin(); it != rules.end(); ) {
-		if (mostGeneral->generalizes(*it)) {
+		if (mostGeneral.generalizes(*it)) {
 			rules.erase(it);
 			++num_subsumed;
 		} else {
