@@ -53,6 +53,9 @@ class Rule {
 		// checks whether this rule is a more general version of another
 		bool generalizes(Rule &rule) const;
 
+		// checks whether this rule matches an input datum
+		bool matches(vector<double> &input) const;
+
 		// generate a random rule
 		static Rule getRandom(int num_attributes);
 

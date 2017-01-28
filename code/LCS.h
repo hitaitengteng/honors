@@ -15,19 +15,14 @@ class LCS {
 		void applyGA();
 
 		// the match set consists of all the rules in the population
-		// matching a given input
-		int createMatchSet();
+		// matching a given input. The correct set consists of all
+		// the rules in the match set that correctly classify the
+		// input.
+		int createMatchAndCorrectSets();
 
-		// the correct set consists of all the rules in the population
-		// that both match the input AND correctly classify it
-		int createCorrectSet();
-
-		// creates two offspring, which may or may not be added to
-		// the population
-		void crossover();
-
-		// for mutating newly-created rules
-		void mutate();
+		// runs the crossover, mutation, and subsumption operators
+		// as appropriate
+		void reproduceAndReplace();
 
 		// when no rule in the population matches an input, this function
 		// creates one that does
@@ -62,17 +57,23 @@ class LCS {
 		// seeds the random number generator
 		void rngSeed(int seed);
 
-	private:
+		// GETTERS AND SETTERS
+		vector<double> getCurrDataPoint() {return _curr_data_point;}
+		void setCurrDataPoint(vector<double> curr_data_point) {
+			_curr_data_point = curr_data_point;
+		}
 
 		// the population of rules
 		Population pop;
 
 		// the set of all rules matching a given input
-		Population matchSet;
+		Population _match_set;
 
 		// the set of all rules that both match a given input AND
 		// correctly classify it
-		Population correctSet;
+		Population _correct_set;
+
+	private:
 
 		// the data set used to train the LCS
 		Dataset dataset;
@@ -120,6 +121,9 @@ class LCS {
 		// a scalar that determines the range from which random attribute
 		// values may be selected
 		double rangeScalar;
+
+		// the current datum being processed
+		vector<double> _curr_data_point;
 
 		// indicates whether the GA subsumption operator should be used
 		bool doGASubsumption;

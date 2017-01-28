@@ -7,7 +7,7 @@
  *
  * TODO:
  *
- * 	- Implement testMutate(), and testSpecify()
+ * 	- Implement testMutate()
  * 	- Add boolean arguments to let user run specific tests
  * 	- remove rng argument from testEquality
  ****************************************************************************/ 
@@ -17,6 +17,7 @@ bool testEquality(mt19937 &rng);
 bool testGeneralizes();
 bool testMutate();
 bool testSpecify();
+bool testMatches();
 
 static const int NUM_ATTRIBUTES = 10;
 

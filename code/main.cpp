@@ -7,7 +7,8 @@
  * Description: 
  *
  * TODO:
- * 	- Determine default spread values for all attributes
+ * 	- fix member variable names in all necessary files
+ * 	- add comments (esp function descriptions)
  ****************************************************************************/ 
 
 using namespace std;

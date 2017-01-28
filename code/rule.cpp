@@ -234,6 +234,41 @@ bool Rule::generalizes(Rule &rule) const {
  * Outputs:
  * Description:
  ****************************************************************************/ 
+bool Rule::matches(vector<double> &input) const {
+
+	// the center and spread of the current attribute
+	double center = 0;
+	double spread = 0;
+
+	// iterate over the attributes of the rule's condition
+	for (size_t i=0; i<condition.size(); i++) {
+
+		// evaluate only if the current attribute is not set to
+		// "don't care" in the condition
+		if (condition[i].getDontCare() == false) {
+
+			// get the center and spread of the current 
+			// attribute in the condition
+			center = condition[i].getCenter();
+			spread = condition[i].getSpread();
+
+			// check whether the input value for the current
+			// attribute falls within the range [center - spread,
+			// center + spread]. If not, return false.
+			if ((input[i] < (center - spread)) ||
+			    (input[i] > (center + spread))
+				return false;
+		}
+	} 
+	return true;
+	
+} // end matches
+
+/****************************************************************************
+ * Inputs:
+ * Outputs:
+ * Description:
+ ****************************************************************************/ 
 Rule Rule::getRandom(int num_attributes) {
 
 	Rule r;
