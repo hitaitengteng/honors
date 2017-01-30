@@ -13,6 +13,7 @@
  * 	  descriptions)
  * 	- make it so that you're using a single random number generator for
  * 	  all functions
+ * 	- Update Crisp_LCS_Schema.txt
  *
  ****************************************************************************/ 
 
@@ -20,18 +21,20 @@ using namespace std;
 
 int main(int argc, char **argv) {
 
-	// a Marsenne Twister random number generator
-	mt19937 rng; 
+	rng.seed(rd());
 
-	// seed the RNG (random_device generates a non-deterministic seed)
-	rng.seed(random_device{}());
+	vector<double> d1 = Dataset::randomDataPoint(10);
+	vector<double> d2 = Dataset::randomDataPoint(10);
 
-	uniform_real_distribution<double> dist(0,10);
+	for (int i=0; i<10; i++) {
+		printf("%.3f ", d1[i]);
+	}
 
-	Dataset d;
-	d.readFromCSVFile(argv[1]);
-
-	d.print();
+	printf("\n");
+	for (int i=0; i<10; i++) {
+		printf("%.3f ", d2[i]);
+	}
+	printf("\n");
 
 	return 0;
 	

@@ -46,13 +46,15 @@ class Dataset {
 		Dataset(vector<string> attribute_names, vector<string> class_names,
 				vector<pair<double,double> > attribute_ranges,
 				vector<pair<double,double> > class_ranges,
-				vector<vector<double> > data_points) {
+				vector<vector<double> > data_points,
+				int seed) {
 
 			attribute_names_ = attribute_names;
 			attribute_ranges_ = attribute_ranges;
 			class_names_ = class_names;
 			class_ranges_ = class_ranges;
 			data_points_ = data_points;
+
 
 			num_attributes_ = attribute_names.size();
 			num_classes_ = class_names.size();
@@ -65,7 +67,25 @@ class Dataset {
 
 		// function for printing all of the data points
 		// in the data set
-		void print();
+		void printDataset();
+
+		// prints a single data point
+		void printDataPoint(vector<double> data_point) {
+
+			int i;
+			for (i=0; i<num_attributes_; i++)
+				printf("%s", attribute_names_[i].c_str());
+			printf("\n");
+			for (i=0; i<num_attributes_; i++)
+				printf("%.3f", data_point[i]);
+			printf("\n");
+		}
+
+		// create a random data set
+		static Dataset randomDataSet(int num_data_points);
+
+		// create a random data point
+		static vector<double> randomDataPoint(int num_attributes);
 
 		// getters
 		int getNumAttributes() const {return num_attributes_;}

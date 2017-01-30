@@ -30,7 +30,7 @@ bool Rule::operator==(const Rule &rule) const {
 		return true;
 
 	// check the conditions
-	int condition_length = condition_length;
+	int condition_length = condition.size();
 	for (size_t i=0; i<condition_length; i++) {
 
 		// if one of the rules has the "don't care" variable set for
@@ -95,7 +95,7 @@ void Rule::mutate(double pMutate, double pDontCare,
 	double result2;
 
 	// iterate over all attributes in the condition
-	int condition_length = condition_length;
+	int condition_length = condition.size();
 	for (size_t i=0; i<condition_length; i++) {
 
 		// get a random value between 0 and 1
@@ -162,8 +162,11 @@ void Rule::mutate(double pMutate, double pDontCare,
 Rule Rule::specify(vector<double> input, vector<pair<double,double> > ranges, 
 		double range_scalar, mt19937 &rng) {
 
+	// set the class attribute value of the rule to that of the input
+	setClass(input.back());
+
 	// iterate over all attributes in the condition
-	int condition_length = condition_length;
+	int condition_length = condition.size();
 	for (size_t i=0; i<condition_length; i++) {
 
 		// if the current attribute is a "don't care" attribute...
@@ -212,7 +215,7 @@ bool Rule::generalizes(Rule &rule) const {
 		return false;
 
 	// iterate over the conditions of both rules
-	int condition_length = condition_length;
+	int condition_length = condition.size();
 	for (size_t i=0; i<condition_length; i++) {
 
 		// only want to check attributes that aren't "don't cares"
@@ -266,7 +269,7 @@ bool Rule::matches(vector<double> &input) const {
 	double spread = 0;
 
 	// iterate over the attributes of the rule's condition
-	int condition_length = condition_length;
+	int condition_length = condition.size();
 	for (size_t i=0; i<condition_length; i++) {
 
 		// evaluate only if the current attribute is not set to
@@ -337,7 +340,7 @@ void Rule::print() {
 
 	printf("\nRule %d\n--------\n", id);
 	printf("\nAttribute:  ");
-	int condition_length = condition_length;
+	int condition_length = condition.size();
 	for (size_t i=0; i<condition_length; i++)
 		printf("[ %d ] ", (int) i);
 	printf("\nDon't Care: ");

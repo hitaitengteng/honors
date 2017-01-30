@@ -28,9 +28,6 @@ class LCS {
 		// creates one that does
 		void cover();
 
-		// deletes n rules from the population
-		void del(int n);
-
 		// eliminates superfluous rules
 		void gaSubsume();
 
@@ -47,7 +44,7 @@ class LCS {
 		void processInput(int i);
 
 		// seeds the random number generator
-		void rngSeed(int seed);
+		void rngSeed(int seed) {rng.seed(seed);}
 
 		// GETTERS AND SETTERS
 		vector<double> getCurrDataPoint() {return _curr_data_point;}
@@ -108,7 +105,7 @@ class LCS {
 
 		// the maximum number of time steps that may pass before the
 		// GA is invoked
-		double thetaGA;
+		double _theta_ga;
 
 		// a scalar that determines the range from which random attribute
 		// values may be selected

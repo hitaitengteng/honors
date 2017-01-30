@@ -43,13 +43,18 @@ class Population {
 			mostGeneral = Rule();
 		}
 
+		// indicates whether the population is empty
+		bool empty() {
+			return (rules.size() == 0);
+		}
+
 		// selects a rule from the population using roulette
 		// wheel selection and returns its index
 		int rouletteWheelSelect(mt19937 &rng);
 
 		// indicates whether at least one rule in the population
 		// matches a given input
-		bool matchExists(vector<double> &input);
+		bool matchExists(vector<double> &input) const;
 
 		// creates two new rules using single-point crossover
 		pair<Rule,Rule> crossover(int i, int j, mt19937 &rng);

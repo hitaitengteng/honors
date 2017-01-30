@@ -9,25 +9,20 @@ UCS, in turn, takes its inspiration from Stewart Wilson's XCS. The LCS
 I describe here is Michigan-style and accuracy-based, and uses crisp
 real-valued intervals in classifier conditions.
 
-I am also exploring, as an alternative to this schema, a fuzzy LCS.
-If implementing an LCS of this kind seems feasible, I will draft a
-second blueprint with details.
-
 ---------------------------------------------------------------------------
 A. KNOWLEDGE REPRESENTATION
 ---------------------------------------------------------------------------
 
 I. RULES
 
-	Rules will be represented as objects, the EO library permitting.
-	Failing that, they will be represented as structs. In either case,
-	a rule will contain the elements listed below. Sets of rules will
-	simply be vectors of rule objects/structs.
+	Rules will be represented as objects that contain the attributes
+	listed in II-VIII. Sets of rules will be represented as vectors
+	of Rule objects.
 
 II. CONDITION
 
-	Conditions will be represented as arrays of attribute objects (or
-	structs). I have not decided whether an attribute should contain
+	Conditions will be represented as arrays of attribute objects
+	I have not decided whether an attribute should contain
 	its name (or ID number), or whether its identity should be denoted
 	merely by its position in the array. Regardless, since nearly all
 	of the attributes in Erik's data are real-valued, an attribute in
@@ -125,9 +120,9 @@ II. MATCH SET CONSTRUCTION
 	Inputs are fed to the system one-by-one at the beginning of each
 	iteration of the algorithm. It must then be determined which, if
 	any, of the rules in the population set [P] match the input. Each
-	rule is checked according to the procedure described in I above.
+	rule is checked according to the procedure described in (I) above.
 	If it is found to match the input, it is added to the match set [M] 
-	a vector of rules) and NUM_MATCHES is incremented (see IV). If no 
+	a Population object) and NUM_MATCHES is incremented (see IV). If no 
 	match is found, the covering operator is invoked (see C-II). If
 	a match is found, but not all classes are represented in [M], the
 	covering operator is still invoked.
@@ -162,9 +157,7 @@ V. SPECIFY OPERATOR
 	This is an operator designed to reduce the number of overly
 	general rules, which can prevent effective learning. This was
 	originally proposed as an extension of XCS, and its use is 
-	conditioned on the amount of error in the action set. I'm still
-	thinking about how to translate this to a supervised learning
-	context.
+	conditioned on the amount of error in the action set.
 
 ---------------------------------------------------------------------------
 C. LEARNING COMPONENT

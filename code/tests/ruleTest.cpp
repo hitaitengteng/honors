@@ -9,7 +9,6 @@
  *
  * 	- Implement testMutate()
  * 	- Add boolean arguments to let user run specific tests
- * 	- remove rng argument from testEquality
  ****************************************************************************/ 
 using namespace std;
 
@@ -21,9 +20,12 @@ bool testMatches();
 
 static const int NUM_ATTRIBUTES = 10;
 
+mt19937 rng;
+random_device rd;
+
 int main(int argc, char **argv) {
 
-	mt19937 rng;
+	rng.seed(rd());
 	testEquality();
 	testGeneralizes();
 
@@ -31,7 +33,7 @@ int main(int argc, char **argv) {
 }
 
 /****************************************************************************
- * Inputs:      a Mersenne Twister random number generator
+ * Inputs:      
  * Outputs:     a boolean indicating whether all tests have passed
  * Description: a unit test for the Rule class equality operator ('==')
  ****************************************************************************/ 
@@ -39,10 +41,6 @@ bool testEquality() {
 
 	Rule r1;
 	Rule r2;
-
-	// a random number generator
-	mt19937 rng;
-	rng.seed(random_device{}());
 
 	// ----------------------------------------------------------------------
 	// TEST 1: condition has not been initialized; should return true
@@ -70,9 +68,6 @@ bool testEquality() {
 	r1.setClass(HIGH_POS);
 	r2.setClass(HIGH_POS);
 
-	// for selecting random doubles on the interval [0,1]
-	uniform_real_distribution<double> dist(0,1);
-
 	// variables for the center and spread of the interval
 	// covered by a particular attribute
 	double center = 0;
@@ -92,8 +87,8 @@ bool testEquality() {
 		r2.condition[i].setDontCare(false);
 
 		// get a random center and spread
-		center = dist(rng);
-		spread = dist(rng);
+		center = real_dist(rng);
+		spread = real_dist(rng);
 
 		// assign the same center and spread to the
 		// current attribute in both rules
@@ -120,7 +115,7 @@ bool testEquality() {
 
 		// change the spread values for the 
 		// attributes in the condition of rule 2
-		r2.condition[i].setSpread(dist(rng));
+		r2.condition[i].setSpread(real_dist(rng));
 	}
 
 	// check equality
@@ -143,7 +138,7 @@ bool testEquality() {
 		r2.condition[i].setSpread(spread);
 
 		// ...and change the centers
-		r2.condition[i].setCenter(dist(rng));
+		r2.condition[i].setCenter(real_dist(rng));
 	}
 
 	// check equality
@@ -212,13 +207,6 @@ bool testEquality() {
  ****************************************************************************/ 
 bool testSpecify() {
 
-	// random number generator
-	mt19937 rng;
-	rng.seed(random_device{}());
-
-	// uniform distribution over [0,1]
-	uniform_real_distribution<double> dist(0,1);
-
 	// create a random input vector
 	printf("    Input\n");
 	printf("-------------\n");
@@ -232,14 +220,14 @@ bool testSpecify() {
 	pair<double,double> range = make_pair(0,1);
 	double a;
 	for (int i=0; i<NUM_ATTRIBUTES; i++) {
-		a = dist(rng);
+		a = real_dist(rng);
 		printf("%.3f ", a);
 		input.push_back(a);
 		ranges.push_back(range);
 	}
 
 	// random range scalar
-	double range_scalar = dist(rng);
+	double range_scalar = real_dist(rng);
 
 	// generate a random rule
 	Rule r = Rule::getRandom(NUM_ATTRIBUTES);
@@ -266,20 +254,13 @@ bool testSpecify() {
  ****************************************************************************/ 
 bool testGeneralizes() {
 
-	// random number generator
-	mt19937 rng;
-	rng.seed(random_device{}());
-
-	// uniform distribution over [0,1]
-	uniform_real_distribution<double> dist(0,1);
-
 	// generate a random input vector, range vector, and range scalar
-	double range_scalar = dist(rng);
+	double range_scalar = real_dist(rng);
 	vector<pair<double,double> > ranges;
 	pair<double,double> range = make_pair(0,1);
 	vector<double> input;
 	for (int i=0; i<NUM_ATTRIBUTES; i++) {
-		input.push_back(dist(rng));
+		input.push_back(real_dist(rng));
 		ranges.push_back(range);
 	}
 

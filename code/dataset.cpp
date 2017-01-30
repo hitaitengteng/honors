@@ -132,18 +132,61 @@ int Dataset::readFromCSVFile(string file_name) {
 
 } // end readFromCsvFile
 
-void Dataset::print() {
+void Dataset::printDataset() {
 
 	printf("Number of attributes: %d\n", num_attributes_);
 	printf("Number of classes: %d\n", num_classes_);
 	printf("Number of data points: %d\n", num_data_points_);
-	
-	vector<double> curr_vect;
-	for (int i=0; i<num_data_points_; i++) {
-		curr_vect = data_points_[i];
-		for (int j=0; j<num_attributes_; j++) {
-			printf("%.3f ", curr_vect[j]);
-		}
-		printf("\n");
+
+	printf("Attributes: \n");
+	for (int i=0; i<num_attributes_; i++)
+		printf("%s\n", attribute_names_[i].c_str());
+
+} // end print
+
+Dataset Dataset::randomDataSet(int num_data_points) {
+
+	// all ranges for randomly generated data are [0,1]
+	pair<double,double> range_pair = make_pair(0,1);
+
+	// create the vector of attribute names and ranges
+	vector<string> attribute_names;
+	vector< pair<double,double> > attribute_ranges;
+	for (int i=0; i<NUM_TEST_NAMES; i++) {
+		attribute_names.push_back(test_names[i]);
+		attribute_ranges.push_back(range_pair);
 	}
-}
+
+	// create the vector of class names
+/*	vector<string> class_names;
+	for (int i=0; i<NUM_CLASSES; i++) {
+		class_names.push_back(class_names[i]);
+	}
+
+*/
+	// create the vector of class ranges
+	vector<pair<double,double> > class_ranges;
+	class_ranges.push_back(make_pair(0,0.25));
+	class_ranges.push_back(make_pair(0.25,0.5));
+	class_ranges.push_back(make_pair(0.5,0.75));
+	class_ranges.push_back(make_pair(0.75,1));
+
+	// create the vector of data points
+	vector< vector<double> > data_points;
+	vector<double> curr_data_point;
+
+} // end randomDataSet
+
+vector<double> Dataset::randomDataPoint(int num_attributes) {
+
+	// generate random values for the attributes
+	vector<double> data_point;
+	for (int i=0; i<(num_attributes-1); i++) 
+		data_point.push_back(real_dist(rng));
+
+	// add a random class
+	data_point.push_back(int_dist(rng) % NUM_CLASSES);
+
+	return data_point;
+
+} // end randomDataPoint

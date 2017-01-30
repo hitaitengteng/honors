@@ -22,13 +22,12 @@ bool testSubsume(Population *p);
 static const int MAX_POP_SIZE = 50;
 static const int NUM_ATTRIBUTES = 10;
 
-// random number generator
 mt19937 rng;
+random_device rd;
 
 int main(int argc, char **argv) {
 
-	// seed the random number generator
-	rng.seed(random_device{}());
+	rng.seed(rd());
 
 	// create a population of randomly generated rules
 	Rule r;

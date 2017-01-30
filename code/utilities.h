@@ -20,6 +20,16 @@
 
 using namespace std;
 
+// a random number generator
+extern mt19937 rng;
+
+// a random device
+extern random_device rd;
+
+// a uniform distribution over [0,1]
+static uniform_real_distribution<double> real_dist(0,1);
+static uniform_int_distribution<int> int_dist(0,5);
+
 // class attribute (yield change) values
 static const int NO_CLASS = 0;
 static const int HIGH_NEG = 1;
@@ -27,11 +37,12 @@ static const int LOW_NEG = 2;
 static const int LOW_POS = 3;
 static const int HIGH_POS = 4;
 
-static const int NUM_CLASSES = 4;
+static const int NUM_CLASSES = 5;
 static const int NUM_TEST_NAMES = 10;
 
 // for testing
 static const string test_names[] = {"Alpha", "Beta", "Gamma", "Delta", "Epsilon",
 			           "Zeta", "Eta", "Theta", "Iota", "Kappa"};
+static const string class_names[] = {"NO_CLASS", "HIGH_NEG", "LOW_NEG", "LOW_POS", "HIGH_POS"};
 
 #endif // end utilities.h
