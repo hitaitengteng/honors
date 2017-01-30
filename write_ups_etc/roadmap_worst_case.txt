@@ -1,0 +1,43 @@
+1/30/17
+Will Gantt
+
+
+The following is my worst-case timeline for my honors project.
+I have tried to keep in mind here that humans are terrible at
+estimating just how bad the worst case can be.
+
+
+Implementing & Testing:
+
+Get a preliminary version of the LCS up and running.
+
+Test the LCS on Erik's data and debug as necessary.
+
+Write at least two variations on the initial implementation.
+
+Test the variations and debug as necessary.
+
+Compare the performance and output of the variations on Erik's
+
+data. Document the results and try to explain them.
+
+If the results suggest that one or more versions of the LCS
+might be improved in a particular way, implement the improvements
+and test again.
+
+Writing:
+
+Write the Results section: This section should compare the results
+of the different versions with one another, and with Erik and Clare's
+findings as well.
+
+Write the Discussion and Conclusion sections: This should attempt to 
+explain the results, as well as the shortcomings of the system.
+
+Write the System Description section. This should include descriptions
+of both the original implementation and the variations, and should also
+lay out the experimental set-up.
+
+Rewrite the Introduction section and write the abstract. This will 
+largely be a revision of the "Chapter 2" I submitted first semester,
+with some added background information.
