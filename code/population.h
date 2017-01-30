@@ -36,9 +36,20 @@ class Population {
 		// deletes superfluous rules
 		int subsume();
 
+		// reset the population
+		void clear() {
+			rules.clear();
+			fitnessSum = 0;
+			mostGeneral = Rule();
+		}
+
 		// selects a rule from the population using roulette
 		// wheel selection and returns its index
 		int rouletteWheelSelect(mt19937 &rng);
+
+		// indicates whether at least one rule in the population
+		// matches a given input
+		bool matchExists(vector<double> &input);
 
 		// creates two new rules using single-point crossover
 		pair<Rule,Rule> crossover(int i, int j, mt19937 &rng);

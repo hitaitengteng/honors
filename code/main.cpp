@@ -8,7 +8,12 @@
  *
  * TODO:
  * 	- fix member variable names in all necessary files
- * 	- add comments (esp function descriptions)
+ * 	- make member variables private that should be private
+ * 	- add comments to the population and LCS files (esp function 
+ * 	  descriptions)
+ * 	- make it so that you're using a single random number generator for
+ * 	  all functions
+ *
  ****************************************************************************/ 
 
 using namespace std;

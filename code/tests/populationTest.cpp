@@ -10,7 +10,6 @@
  *
  * 	- Tell user what the crossover point is in testCrossover and
  * 	  testSubsume.
- * 	- Fix test subsume
  ****************************************************************************/ 
 using namespace std;
 

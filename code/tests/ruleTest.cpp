@@ -13,7 +13,7 @@
  ****************************************************************************/ 
 using namespace std;
 
-bool testEquality(mt19937 &rng);
+bool testEquality();
 bool testGeneralizes();
 bool testMutate();
 bool testSpecify();
@@ -24,7 +24,7 @@ static const int NUM_ATTRIBUTES = 10;
 int main(int argc, char **argv) {
 
 	mt19937 rng;
-	testEquality(rng);
+	testEquality();
 	testGeneralizes();
 
 	return 0;
@@ -35,10 +35,14 @@ int main(int argc, char **argv) {
  * Outputs:     a boolean indicating whether all tests have passed
  * Description: a unit test for the Rule class equality operator ('==')
  ****************************************************************************/ 
-bool testEquality(mt19937 &rng) {
+bool testEquality() {
 
 	Rule r1;
 	Rule r2;
+
+	// a random number generator
+	mt19937 rng;
+	rng.seed(random_device{}());
 
 	// ----------------------------------------------------------------------
 	// TEST 1: condition has not been initialized; should return true

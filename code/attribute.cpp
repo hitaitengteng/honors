@@ -10,7 +10,7 @@ Attribute Attribute::getRandom() {
 
 	// generate a name for the attribute type
 	int index = rng() % NUM_TEST_NAMES;
-	string name = testNames[index];
+	string name = test_names[index];
 	
 	// create the attribute
 	Attribute a(name);

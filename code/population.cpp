@@ -7,9 +7,9 @@
  *
  * TODO:
  * 	- method descriptions
- * 	- complete subsume implementation
  * 	- unit test all functions
- * 	- remove rng from arguments?
+ * 	- remove rng from arguments
+ * 	- implement matchExists function
  ****************************************************************************/ 
 
 using namespace std;
@@ -102,7 +102,8 @@ int Population::rouletteWheelSelect(mt19937 &rng) {
 	// above until that value falls to or below 0. In this way,
 	// an individual's likelihood of being selected is directly
 	// proportional to its fitness. 
-	for (size_t i=0; i<rules.size(); i++) {
+	int num_rules = rules.size();
+	for (size_t i=0; i<num_rules; i++) {
 		random -= rules[i].getFitness();
 		if (random <= 0)
 			return i;
@@ -138,3 +139,21 @@ int Population::subsume() {
 	return num_subsumed;
 
 } // end subsume
+
+/****************************************************************************
+ * Inputs:      input: the input to be checked for a match.
+ * Outputs:     A boolean indicating whether one of the rules in the
+ * 		population matches the input.
+ * Description: See above.
+ ****************************************************************************/ 
+bool Population::matchExists(vector<double> &input) const {
+
+	int num_rules = rules.size();
+	for (size_t i=0; i<num_rules; i++) {
+		if (rules[i].matches(input))
+			return true;
+	}
+		
+	return false;
+
+} // end matchExists

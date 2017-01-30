@@ -18,7 +18,7 @@ class LCS {
 		// matching a given input. The correct set consists of all
 		// the rules in the match set that correctly classify the
 		// input.
-		int createMatchAndCorrectSets();
+		void createMatchAndCorrectSets();
 
 		// runs the crossover, mutation, and subsumption operators
 		// as appropriate
@@ -27,14 +27,6 @@ class LCS {
 		// when no rule in the population matches an input, this function
 		// creates one that does
 		void cover();
-
-		// assigns a specific value to all of the "don't care" attributes 
-		// in a rule
-		void specify();
-
-		// chooses a rule from the population (by roulette wheel selection)
-		// and returns its index
-		int select();
 
 		// deletes n rules from the population
 		void del(int n);

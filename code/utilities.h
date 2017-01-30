@@ -31,7 +31,7 @@ static const int NUM_CLASSES = 4;
 static const int NUM_TEST_NAMES = 10;
 
 // for testing
-static const string testNames[] = {"Alpha", "Beta", "Gamma", "Delta", "Epsilon",
+static const string test_names[] = {"Alpha", "Beta", "Gamma", "Delta", "Epsilon",
 			           "Zeta", "Eta", "Theta", "Iota", "Kappa"};
 
 #endif // end utilities.h
