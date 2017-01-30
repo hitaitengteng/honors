@@ -9,8 +9,8 @@ would be no less work to write an LCS using that code than it would be
 to develop my own from scratch. I also figured that it would be easier
 to understand and debug my own code.
 
-A description of the LCS can be found in Crisp_LCS_Schema.txt in this
-directory. The implementation uses five classes: Attribute, Rule,
+A description of the LCS can be found in Crisp_LCS_Schema.txt in the
+"write_ups_etc" directory. The implementation uses five classes: Attribute, Rule,
 Population, LCS, and Dataset. I have essentially finished the first
 three, am mostly done with Dataset, and am currently trying to put
 everything together in the LCS class.
