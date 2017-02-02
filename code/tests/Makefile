@@ -6,11 +6,14 @@ CPPFLAGS =  -g # Debugging
 CPPFLAGS += -Wall # Show all warnings
 CPPFLAGS += -std=c++11 # Must use C++11
 
-test_rules: ruleTest.cpp ../rule.cpp ../attribute.cpp ../dataset.cpp
-	$(CXX) $(CPPFLAGS) -o test_rules ruleTest.cpp ../rule.cpp ../attribute.cpp ../dataset.cpp
+RULE_DEPS = ruleTest.cpp ../rule.cpp ../attribute.cpp ../dataset.cpp
+POP_DEPS = populationTest.cpp ../population.cpp ../rule.cpp ../attribute.cpp ../dataset.cpp
 
-test_pop: populationTest.cpp ../population.cpp ../rule.cpp ../attribute.cpp
-	$(CXX) $(CPPFLAGS) -o test_pop populationTest.cpp ../population.cpp ../rule.cpp ../attribute.cpp
+test_rules: $(RULE_DEPS)
+	$(CXX) $(CPPFLAGS) -o test_rules $(RULE_DEPS)
+
+test_pop: $(POP_DEPS)
+	$(CXX) $(CPPFLAGS) -o test_pop $(POP_DEPS)
 
 all:
 	make test_rules

@@ -28,6 +28,10 @@ static const int NUM_ATTRIBUTES = 10;
 mt19937 rng;
 random_device rd;
 
+// uniform distributions
+uniform_real_distribution<double> real_dist(0,1);
+uniform_int_distribution<int> int_dist(0,1);
+
 int main(int argc, char **argv) {
 
 	rng.seed(rd());
@@ -67,7 +71,7 @@ bool testCrossover(Population *p) {
 	pair<Rule,Rule> offspring;
 
 	// cross them
-	offspring = p->crossover(p1_index, p2_index, rng);
+	offspring = p->crossover(p1_index, p2_index);
 	Rule off1 = offspring.first;
 	Rule off2 = offspring.second;
 
@@ -97,9 +101,9 @@ bool testRouletteWheelSelect(Population *p) {
 		printf("%d           %.3f\n", i, p->rules[i].getFitness());
 
 	// select three rules randomly from the population
-	int r1_index = p->rouletteWheelSelect(rng);
-	int r2_index = p->rouletteWheelSelect(rng);
-	int r3_index = p->rouletteWheelSelect(rng);
+	int r1_index = p->rouletteWheelSelect();
+	int r2_index = p->rouletteWheelSelect();
+	int r3_index = p->rouletteWheelSelect();
 
 	// get their fitnesses
 	double r1_fitness = p->rules[r1_index].getFitness();

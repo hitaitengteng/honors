@@ -8,8 +8,6 @@
  * TODO:
  * 	- method descriptions
  * 	- unit test all functions
- * 	- remove rng from arguments
- * 	- implement matchExists function
  ****************************************************************************/ 
 
 using namespace std;

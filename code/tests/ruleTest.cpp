@@ -8,14 +8,13 @@
  *
  * TODO:
  *
- * 	- Implement testMutate()
  * 	- Add boolean arguments to let user run specific tests
  ****************************************************************************/ 
 using namespace std;
 
 bool testEquality();
 bool testGeneralizes();
-bool testMutate();
+void testMutate();
 bool testSpecify();
 bool testMatches();
 
@@ -27,6 +26,11 @@ random_device rd;
 uniform_real_distribution<double> real_dist(0,1);
 uniform_int_distribution<int> int_dist(1,10);
 
+// named constants
+static const double P_MUTATE = 0.2;
+static const double P_DONT_CARE = 0.5;
+static const double RANGE_SCALAR = 0.1;
+
 /****************************************************************************
  * Input:
  * Output:
@@ -35,7 +39,7 @@ uniform_int_distribution<int> int_dist(1,10);
 int main(int argc, char **argv) {
 
 	rng.seed(rd());
-	testMatches();
+	testMutate();
 
 	return 0;
 }
@@ -431,3 +435,36 @@ bool testMatches() {
 	return true;
 
 } // end testMatches
+
+/****************************************************************************
+ * Input:
+ * Output:
+ * Description:
+ ****************************************************************************/ 
+void testMutate() {
+
+	// generate a random rule
+	Rule r = Rule::getRandom(NUM_TEST_ATTRIBUTES);
+
+	// create a vector of ranges
+	vector<pair<double,double> > ranges;
+	for (int i=0; i<NUM_TEST_ATTRIBUTES; i++)
+		ranges.push_back(make_pair(0,1));
+	
+	// original rule
+	printf("\nOriginal Rule:\n");
+	r.print();
+
+	// first mutation
+	r.mutate(P_MUTATE, P_DONT_CARE, ranges, RANGE_SCALAR);
+	
+	printf("\nFirst Mutation:\n");
+	r.print();
+
+	// second mutation
+	r.mutate(P_MUTATE, P_DONT_CARE, ranges, RANGE_SCALAR);
+	
+	printf("\nFirst Mutation:\n");
+	r.print();
+
+} // end testMutate
