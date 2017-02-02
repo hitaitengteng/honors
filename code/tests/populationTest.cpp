@@ -10,6 +10,7 @@
  *
  * 	- Tell user what the crossover point is in testCrossover and
  * 	  testSubsume.
+ * 	- Implement a test for the matchExists, clear, and empty functions 
  ****************************************************************************/ 
 using namespace std;
 
@@ -18,10 +19,12 @@ bool testCrossover(Population *p);
 bool testRouletteWheelSelect(Population *p);
 bool testSubsume(Population *p);
 
-// named constants (these should ultimately be passed as parameters)
+// named constants (these should ultimately 
+// be passed as parameters)
 static const int MAX_POP_SIZE = 50;
 static const int NUM_ATTRIBUTES = 10;
 
+// random number generator and seed generator
 mt19937 rng;
 random_device rd;
 

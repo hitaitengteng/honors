@@ -7,7 +7,7 @@
  *
  * TODO:
  *
- * 	- Implement testMutate()
+ * 	- Implement testMutate() and testMatches()
  * 	- Add boolean arguments to let user run specific tests
  ****************************************************************************/ 
 using namespace std;

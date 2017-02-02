@@ -1,19 +1,35 @@
 #include "population.h"
 
+/****************************************************************************
+ * File:        LCS.cpp
+ * Author:      Will Gantt
+ * Description:
+ *
+ * TODO:
+ * 	- Need a separate function, maybe "evaluateInput," for testing mode.
+ * 	- Get RNG working
+ ****************************************************************************/
+
+/****************************************************************************
+ * Inputs:      The current input's index in the vector of all inputs
+ * Outputs:     None.
+ * Description: [For training set only; should eventually be called in a
+ * 		 for-loop in main.cpp]
+ ****************************************************************************/
 void LCS::processInput(int i) {
 
 	// get a data instance from the data set
-	// and assign it to curr_data_instance (or whatever
-	// the variable is called)
+	// and assign it to curr_data_point_
 	
 	// createMatchAndCorrectSets();
+	// (the cover operator is taken care of
+	// in this function)
 	
 	// if (doSpecify)
 	//     specify()
 	
 	// if (doGA)
 	//     applyGA()
-	
 
 } // end processInput
 
@@ -31,7 +47,8 @@ void LCS::applyGA() {
 void LCS::createMatchAndCorrectSets() {
 
 	// clear the old match and correct sets
-	// NOTE: this is not valid syntax
+	// NOTE: verify that the clear() function
+	// works before testing this function.
 	_match_set.clear();
 	_correct_set.clear();
 	
@@ -84,10 +101,14 @@ void LCS::reproduceAndReplace() {
 void LCS::cover() {
 
 	// create a new rule
-	
+	Rule r;
+
 	// specify it based on the value of curr_data_instance
-	
-	// add it to the population
+	// r.specify(curr_data_point_, ranges, rangeScalar, <mt19937>);
+
+	// add it to the population and the match set
+	// pop_.add(r);
+	// match_set_.add(r);
 	
 } // end cover
 
@@ -104,6 +125,8 @@ bool LCS::doCover() {
 
 	// if the match set is empty or not all classes
 	// are represented in the match set, return true
+	// Q: How are you going to determine whether all
+	// of the classes are present in the match set?
 	
 	// otherwise, return false
 	return false;

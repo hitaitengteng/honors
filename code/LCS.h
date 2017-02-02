@@ -11,6 +11,8 @@ class LCS {
 		// complete constructor
 		// getters and setters
 
+	// MEMBER FUNCTIONS 
+	
 		// execute a single iteration of the genetic algorithm
 		void applyGA();
 
@@ -43,30 +45,31 @@ class LCS {
 		// processes a single input from the dataset
 		void processInput(int i);
 
-		// seeds the random number generator
-		void rngSeed(int seed) {rng.seed(seed);}
-
 		// GETTERS AND SETTERS
 		vector<double> getCurrDataPoint() {return _curr_data_point;}
 		void setCurrDataPoint(vector<double> curr_data_point) {
 			_curr_data_point = curr_data_point;
 		}
+	
+	// MEMBER VARIABLES (these should probably be private)
 
 		// the population of rules
-		Population pop;
+		Population pop_;
 
 		// the set of all rules matching a given input
-		Population _match_set;
+		Population match_set_;
 
 		// the set of all rules that both match a given input AND
 		// correctly classify it
-		Population _correct_set;
-
-	private:
+		Population correct_set_;
 
 		// the data set used to train the LCS
-		Dataset dataset;
+		Dataset training_set_;
 
+		// the data set used to test the LCS
+		Dataset testing_set_;
+
+	private:
 		// the maximum allowable number of rules in the population
 		int maxPopSize;
 
@@ -112,7 +115,7 @@ class LCS {
 		double rangeScalar;
 
 		// the current datum being processed
-		vector<double> _curr_data_point;
+		vector<double> curr_data_point_;
 
 		// indicates whether the GA subsumption operator should be used
 		bool doGASubsumption;
@@ -120,9 +123,6 @@ class LCS {
 		// indicates whether the correct set subsumption operator should
 		// be used
 		bool doCorrectSetSubsumption;
-
-		// a random number generator
-		Rand rng;
 };
 
 #endif

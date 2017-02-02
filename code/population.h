@@ -20,7 +20,8 @@ class Population {
 	// MEMBER VARIABLES (these should definitely be private)
 
 		vector<Rule> rules; // the set of rules
-		int id_count;
+		int id_count;       // counts the number of IDs
+				    // that have been used
 
 	// FUNCTIONS
 	

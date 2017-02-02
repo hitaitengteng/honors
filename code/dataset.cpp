@@ -132,6 +132,11 @@ int Dataset::readFromCSVFile(string file_name) {
 
 } // end readFromCsvFile
 
+/****************************************************************************
+ * Inputs:
+ * Outputs;
+ * Description:
+ ****************************************************************************/ 
 void Dataset::printDataset() {
 
 	printf("Number of attributes: %d\n", num_attributes_);
@@ -144,6 +149,11 @@ void Dataset::printDataset() {
 
 } // end print
 
+/****************************************************************************
+ * Inputs:
+ * Outputs;
+ * Description:
+ ****************************************************************************/ 
 Dataset Dataset::randomDataSet(int num_data_points) {
 
 	// all ranges for randomly generated data are [0,1]
@@ -158,12 +168,11 @@ Dataset Dataset::randomDataSet(int num_data_points) {
 	}
 
 	// create the vector of class names
-/*	vector<string> class_names;
+	vector<string> class_names;
 	for (int i=0; i<NUM_CLASSES; i++) {
 		class_names.push_back(class_names[i]);
 	}
 
-*/
 	// create the vector of class ranges
 	vector<pair<double,double> > class_ranges;
 	class_ranges.push_back(make_pair(0,0.25));
@@ -175,15 +184,25 @@ Dataset Dataset::randomDataSet(int num_data_points) {
 	vector< vector<double> > data_points;
 	vector<double> curr_data_point;
 
+/*	d = Dataset(attribute_names, class_names, attribute_ranges,
+			class_ranges, data_points);
+	return d;
+*/
+
 } // end randomDataSet
 
+/****************************************************************************
+ * Inputs:
+ * Outputs;
+ * Description:
+ ****************************************************************************/ 
 vector<double> Dataset::randomDataPoint(int num_attributes) {
 
 	// generate random values for the attributes
 	vector<double> data_point;
 	for (int i=0; i<(num_attributes-1); i++) 
 		data_point.push_back(real_dist(rng));
-
+ 
 	// add a random class
 	data_point.push_back(int_dist(rng) % NUM_CLASSES);
 

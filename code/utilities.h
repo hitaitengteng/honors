@@ -27,8 +27,8 @@ extern mt19937 rng;
 extern random_device rd;
 
 // a uniform distribution over [0,1]
-static uniform_real_distribution<double> real_dist(0,1);
-static uniform_int_distribution<int> int_dist(0,5);
+extern uniform_real_distribution<double> real_dist;
+extern uniform_int_distribution<int> int_dist;
 
 // class attribute (yield change) values
 static const int NO_CLASS = 0;

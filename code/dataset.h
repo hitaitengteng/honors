@@ -46,8 +46,7 @@ class Dataset {
 		Dataset(vector<string> attribute_names, vector<string> class_names,
 				vector<pair<double,double> > attribute_ranges,
 				vector<pair<double,double> > class_ranges,
-				vector<vector<double> > data_points,
-				int seed) {
+				vector<vector<double> > data_points) {
 
 			attribute_names_ = attribute_names;
 			attribute_ranges_ = attribute_ranges;
