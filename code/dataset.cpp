@@ -139,13 +139,19 @@ int Dataset::readFromCSVFile(string file_name) {
  ****************************************************************************/ 
 void Dataset::printDataset() {
 
+	int i; // counter
+
 	printf("Number of attributes: %d\n", num_attributes_);
 	printf("Number of classes: %d\n", num_classes_);
 	printf("Number of data points: %d\n", num_data_points_);
 
 	printf("Attributes: \n");
-	for (int i=0; i<num_attributes_; i++)
-		printf("%s\n", attribute_names_[i].c_str());
+	for (i=0; i<num_attributes_; i++)
+		printf("%s ", attribute_names_[i].c_str());
+	printf("\n");
+
+	for (i=0; i<num_data_points_; i++)
+		printDataPoint(data_points_[i], num_attributes_);
 
 } // end print
 
@@ -154,7 +160,7 @@ void Dataset::printDataset() {
  * Outputs;
  * Description:
  ****************************************************************************/ 
-Dataset Dataset::randomDataSet(int num_data_points) {
+Dataset Dataset::randomDataset(int num_data_points) {
 
 	// all ranges for randomly generated data are [0,1]
 	pair<double,double> range_pair = make_pair(0,1);
@@ -163,18 +169,19 @@ Dataset Dataset::randomDataSet(int num_data_points) {
 	vector<string> attribute_names;
 	vector< pair<double,double> > attribute_ranges;
 	for (int i=0; i<NUM_TEST_NAMES; i++) {
-		attribute_names.push_back(test_names[i]);
+		attribute_names.push_back(TEST_NAMES[i]);
 		attribute_ranges.push_back(range_pair);
 	}
 
 	// create the vector of class names
 	vector<string> class_names;
 	for (int i=0; i<NUM_CLASSES; i++) {
-		class_names.push_back(class_names[i]);
+		class_names.push_back(CLASS_NAMES[i]);
 	}
 
 	// create the vector of class ranges
 	vector<pair<double,double> > class_ranges;
+	class_ranges.push_back(make_pair(0,0));
 	class_ranges.push_back(make_pair(0,0.25));
 	class_ranges.push_back(make_pair(0.25,0.5));
 	class_ranges.push_back(make_pair(0.5,0.75));
@@ -182,12 +189,12 @@ Dataset Dataset::randomDataSet(int num_data_points) {
 
 	// create the vector of data points
 	vector< vector<double> > data_points;
-	vector<double> curr_data_point;
+	for (int i=0; i<num_data_points; i++)
+		data_points.push_back(randomDataPoint(NUM_TEST_NAMES));
 
-/*	d = Dataset(attribute_names, class_names, attribute_ranges,
+	Dataset d = Dataset(attribute_names, class_names, attribute_ranges,
 			class_ranges, data_points);
 	return d;
-*/
 
 } // end randomDataSet
 

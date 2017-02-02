@@ -69,19 +69,14 @@ class Dataset {
 		void printDataset();
 
 		// prints a single data point
-		void printDataPoint(vector<double> data_point) {
-
-			int i;
-			for (i=0; i<num_attributes_; i++)
-				printf("%s", attribute_names_[i].c_str());
-			printf("\n");
-			for (i=0; i<num_attributes_; i++)
-				printf("%.3f", data_point[i]);
+		static void printDataPoint(vector<double> data_point, int num_attributes) {
+			for (int i=0; i<num_attributes; i++)
+				printf("%.3f ", data_point[i]);
 			printf("\n");
 		}
 
 		// create a random data set
-		static Dataset randomDataSet(int num_data_points);
+		static Dataset randomDataset(int num_data_points);
 
 		// create a random data point
 		static vector<double> randomDataPoint(int num_attributes);

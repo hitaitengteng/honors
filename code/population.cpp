@@ -54,7 +54,7 @@ void Population::add(Rule r) {
  * Outputs:
  * Description:
  ****************************************************************************/ 
-pair<Rule,Rule> Population::crossover(int i, int j, mt19937 &rng) {
+pair<Rule,Rule> Population::crossover(int i, int j) {
 	
 	// get the parents
 	Rule p1 = rules[i];
@@ -91,11 +91,10 @@ pair<Rule,Rule> Population::crossover(int i, int j, mt19937 &rng) {
  * Outputs:
  * Description:
  ****************************************************************************/ 
-int Population::rouletteWheelSelect(mt19937 &rng) {
+int Population::rouletteWheelSelect() {
 
 	// select a random number in the range [0,fitnessSum]
-	uniform_real_distribution<double> dist(0,1);
-	double random = dist(rng) * fitnessSum;
+	double random = real_dist(rng) * fitnessSum;
 
 	// we determine the individual selected by subtracting
 	// the individual fitnesses from the random value generated

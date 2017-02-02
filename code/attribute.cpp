@@ -1,16 +1,22 @@
 #include "attribute.h"
 
+/****************************************************************************
+ * File: attribute.h
+ * Author: Will Gantt
+ * Description:
+ ****************************************************************************/ 
+
+
+/****************************************************************************
+ * Inputs:      None
+ * Outputs:
+ * Description:
+ ****************************************************************************/ 
 Attribute Attribute::getRandom() {
-
-	// a random number generator and a uniform distrubtion over [0,1]
-	mt19937 rng;
-	rng.seed(random_device{}());
-	uniform_real_distribution<double> dist(0,1);
-
 
 	// generate a name for the attribute type
 	int index = rng() % NUM_TEST_NAMES;
-	string name = test_names[index];
+	string name = TEST_NAMES[index];
 	
 	// create the attribute
 	Attribute a(name);
@@ -24,13 +30,18 @@ Attribute Attribute::getRandom() {
 	}
 
 	// set the center and spread
-	a.setCenter(dist(rng));
-	a.setSpread(dist(rng));
+	a.setCenter(real_dist(rng));
+	a.setSpread(real_dist(rng));
 
 	return a;
 
 } // end getRandom
 
+/****************************************************************************
+ * Inputs:      None
+ * Outputs:     None
+ * Description:
+ ****************************************************************************/ 
 void Attribute::print() {
 
 	string dc = "";

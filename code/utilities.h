@@ -39,10 +39,11 @@ static const int HIGH_POS = 4;
 
 static const int NUM_CLASSES = 5;
 static const int NUM_TEST_NAMES = 10;
+static const int NUM_TEST_ATTRIBUTES = 10;
 
 // for testing
-static const string test_names[] = {"Alpha", "Beta", "Gamma", "Delta", "Epsilon",
+static const string TEST_NAMES[] = {"Alpha", "Beta", "Gamma", "Delta", "Epsilon",
 			           "Zeta", "Eta", "Theta", "Iota", "Kappa"};
-static const string class_names[] = {"NO_CLASS", "HIGH_NEG", "LOW_NEG", "LOW_POS", "HIGH_POS"};
+static const string CLASS_NAMES[] = {"NO_CLASS", "HIGH_NEG", "LOW_NEG", "LOW_POS", "HIGH_POS"};
 
 #endif // end utilities.h

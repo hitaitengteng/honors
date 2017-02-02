@@ -43,12 +43,12 @@ class Rule {
 		// mutates the class and attribute ranges in the condition with
 		// some probability
 		void mutate(double pMutate, double pDontCare, vector<pair<double,double> > ranges, 
-				double rangeScalar, mt19937 &rng);
+				double rangeScalar);
 
 		// assigns particular values to all "don't care" attributes based
 		// on the passed input vector
 		Rule specify(vector<double> input, vector<pair<double,double> > ranges, 
-				double rangeScalar, mt19937 &rng);
+				double rangeScalar);
 	
 		// checks whether this rule is a more general version of another
 		bool generalizes(Rule &rule) const;

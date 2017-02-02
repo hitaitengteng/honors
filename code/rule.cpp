@@ -84,11 +84,7 @@ bool Rule::operator!=(const Rule &rule) const {
  ****************************************************************************/ 
 void Rule::mutate(double pMutate, double pDontCare, 
 		vector<pair<double,double> > ranges, 
-		double rangeScalar, 
-		mt19937 &rng) {
-
-	// a uniform distribution over [0,1]
-	uniform_real_distribution<double> dist(0,1);
+		double rangeScalar) {
 
 	// a random values on [0,1]
 	double result1;
@@ -99,7 +95,7 @@ void Rule::mutate(double pMutate, double pDontCare,
 	for (size_t i=0; i<condition_length; i++) {
 
 		// get a random value between 0 and 1
-		result1 = dist(rng);
+		result1 = real_dist(rng);
 
 		// if the value is less than or equal to pMutate, we mutate
 		// the current attribute. The attribute may be mutated by 
@@ -109,7 +105,7 @@ void Rule::mutate(double pMutate, double pDontCare,
 
 			// determine whether to change the "don't care" value
 			// or to move the center
-			result2 = dist(rng);
+			result2 = real_dist(rng);
 
 			if (result2 <= pDontCare) { // change to "don't care"
 
@@ -128,8 +124,8 @@ void Rule::mutate(double pMutate, double pDontCare,
 
 				// select a random value in the interval [0,maxVal] 
 				// by which the center is to be adjusted
-				uniform_real_distribution<double> dist2(0,maxVal);
-				double centerAdjust = dist2(rng);
+				uniform_real_distribution<double> real_dist2(0,maxVal);
+				double centerAdjust = real_dist2(rng);
 
 				// get the current center value
 				double oldCenter = condition[i].getCenter();
@@ -160,7 +156,7 @@ void Rule::mutate(double pMutate, double pDontCare,
  * 		that range.
  ****************************************************************************/ 
 Rule Rule::specify(vector<double> input, vector<pair<double,double> > ranges, 
-		double range_scalar, mt19937 &rng) {
+		double range_scalar) {
 
 	// set the class attribute value of the rule to that of the input
 	setClass(input.back());
@@ -180,8 +176,8 @@ Rule Rule::specify(vector<double> input, vector<pair<double,double> > ranges,
 			// within a particular range)
 			double range = ranges[i].second - ranges[i].first;
 			double maxVal = range * range_scalar;
-			uniform_real_distribution<double> dist(0, maxVal);
-			double spread = dist(rng);
+			uniform_real_distribution<double> real_dist2(0, maxVal);
+			double spread = real_dist2(rng);
 			condition[i].setSpread(spread);
 		}
 	}
@@ -304,10 +300,6 @@ Rule Rule::getRandom(int num_attributes) {
 
 	Rule r;
 
-	// random number generator
-	mt19937 rng;
-	rng.seed(random_device{}());
-
 	// random class
 	r.setClass(rng() % NUM_CLASSES);
 
@@ -320,12 +312,9 @@ Rule Rule::getRandom(int num_attributes) {
 		r.condition.push_back(a);
 	}
 
-	// a uniform distribution over [0,1]
-	uniform_real_distribution<double> dist(0,1);
-
 	// random accuracy and fitness
-	r.setAccuracy(dist(rng));
-	r.setFitness(dist(rng));
+	r.setAccuracy(real_dist(rng));
+	r.setFitness(real_dist(rng));
 
 	return r;
 

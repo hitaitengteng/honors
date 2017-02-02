@@ -1,4 +1,5 @@
 #include "../rule.h"
+#include "../dataset.h"
 
 /****************************************************************************
  * File:        ruleTest.cpp
@@ -7,7 +8,7 @@
  *
  * TODO:
  *
- * 	- Implement testMutate() and testMatches()
+ * 	- Implement testMutate()
  * 	- Add boolean arguments to let user run specific tests
  ****************************************************************************/ 
 using namespace std;
@@ -18,16 +19,23 @@ bool testMutate();
 bool testSpecify();
 bool testMatches();
 
-static const int NUM_ATTRIBUTES = 10;
-
+// a random number and seed generator
 mt19937 rng;
 random_device rd;
 
+// some distributions
+uniform_real_distribution<double> real_dist(0,1);
+uniform_int_distribution<int> int_dist(1,10);
+
+/****************************************************************************
+ * Input:
+ * Output:
+ * Description:
+ ****************************************************************************/ 
 int main(int argc, char **argv) {
 
 	rng.seed(rd());
-	testEquality();
-	testGeneralizes();
+	testMatches();
 
 	return 0;
 }
@@ -74,7 +82,7 @@ bool testEquality() {
 	double spread = 0;
 
 	// iterate over the conditions of each rule
-	for (int i=0; i<NUM_ATTRIBUTES; i++) {
+	for (int i=0; i<NUM_TEST_ATTRIBUTES; i++) {
 		
 		// add a random attribute to the condition
 		r1.condition.push_back(Attribute::getRandom());
@@ -111,7 +119,7 @@ bool testEquality() {
 	// TEST 3: same centers and class, different spreads; should return false
 	// ----------------------------------------------------------------------
 	
-	for (int i=0; i<NUM_ATTRIBUTES; i++) {
+	for (int i=0; i<NUM_TEST_ATTRIBUTES; i++) {
 
 		// change the spread values for the 
 		// attributes in the condition of rule 2
@@ -131,7 +139,7 @@ bool testEquality() {
 	// TEST 4: same spreads and class, different centers; should return false
 	// ----------------------------------------------------------------------
 	
-	for (int i=0; i<NUM_ATTRIBUTES; i++) {
+	for (int i=0; i<NUM_TEST_ATTRIBUTES; i++) {
 
 		// reset the spread of the attributes in rule 2, which was
 		// altered for the previous test...
@@ -154,7 +162,7 @@ bool testEquality() {
 	// TEST 5: same center and spread, different classes; should return false
 	// ----------------------------------------------------------------------
 	
-	for (int i=0; i<NUM_ATTRIBUTES; i++) {
+	for (int i=0; i<NUM_TEST_ATTRIBUTES; i++) {
 
 		// reset the center of the attributes in rule 2,
 		// which was altered for the previous test
@@ -184,7 +192,7 @@ bool testEquality() {
 	r1.setClass(r2.getClass());
 
 	// make one of the attributes in rule 1 a "don't care"
-	r1.condition[rng() % NUM_ATTRIBUTES].setDontCare(true);
+	r1.condition[rng() % NUM_TEST_ATTRIBUTES].setDontCare(true);
 
 	// check equality
 	printf("Rule Equality Test 6 (one rule generalizes the other) ");
@@ -211,7 +219,7 @@ bool testSpecify() {
 	printf("    Input\n");
 	printf("-------------\n");
 
-	for (int i=0; i<NUM_ATTRIBUTES; i++)
+	for (int i=0; i<NUM_TEST_ATTRIBUTES; i++)
 		printf("[ %d ] ", i);
 	printf("\n");
 
@@ -219,7 +227,7 @@ bool testSpecify() {
 	vector<pair<double,double> > ranges;
 	pair<double,double> range = make_pair(0,1);
 	double a;
-	for (int i=0; i<NUM_ATTRIBUTES; i++) {
+	for (int i=0; i<NUM_TEST_ATTRIBUTES; i++) {
 		a = real_dist(rng);
 		printf("%.3f ", a);
 		input.push_back(a);
@@ -230,14 +238,14 @@ bool testSpecify() {
 	double range_scalar = real_dist(rng);
 
 	// generate a random rule
-	Rule r = Rule::getRandom(NUM_ATTRIBUTES);
+	Rule r = Rule::getRandom(NUM_TEST_ATTRIBUTES);
 
 	printf("\n\nOriginal Rule\n");
 	printf("-------------");
 	r.print();
 
 	// run specify
-	r.specify(input, ranges, range_scalar, rng);
+	r.specify(input, ranges, range_scalar);
 
 	printf("\n  New Rule\n");
 	printf("-------------");
@@ -259,17 +267,17 @@ bool testGeneralizes() {
 	vector<pair<double,double> > ranges;
 	pair<double,double> range = make_pair(0,1);
 	vector<double> input;
-	for (int i=0; i<NUM_ATTRIBUTES; i++) {
+	for (int i=0; i<NUM_TEST_ATTRIBUTES; i++) {
 		input.push_back(real_dist(rng));
 		ranges.push_back(range);
 	}
 
 	// generate a random rule for r1, then specify
 	// r1 and assign the resulting rule to r2
-	Rule r1 = Rule::getRandom(NUM_ATTRIBUTES);
+	Rule r1 = Rule::getRandom(NUM_TEST_ATTRIBUTES);
 	r1.setID(0);
 	Rule temp = r1;
-	Rule r2 = r1.specify(input, ranges, range_scalar, rng); 
+	Rule r2 = r1.specify(input, ranges, range_scalar); 
 	r2.setID(1);
 	r1 = temp;
 
@@ -292,7 +300,7 @@ bool testGeneralizes() {
 	// ----------------------------------------------------------------------
 	
 	// change r2
-	r2 = Rule::getRandom(NUM_ATTRIBUTES);
+	r2 = Rule::getRandom(NUM_TEST_ATTRIBUTES);
 
 	// check equality
 	printf("Generalization Test 2 (two completely different rules): ");
@@ -327,7 +335,7 @@ bool testGeneralizes() {
 	r2.setID(1);
 
 	// set all of rule 1's attributes to "don't care"
-	for (int i=0; i<NUM_ATTRIBUTES; i++)
+	for (int i=0; i<NUM_TEST_ATTRIBUTES; i++)
 		r1.condition[i].setDontCare(true);
 
 	// make sure the rules have the same class
@@ -360,4 +368,66 @@ bool testGeneralizes() {
 	}
 
 	return true;
-}
+
+} // end testGeneralizes
+
+/****************************************************************************
+ * Input:
+ * Output:
+ * Description:
+ ****************************************************************************/ 
+bool testMatches() {
+
+	// a variable for the results of the tests
+	bool is_a_match = false;
+
+	// the data instance
+	vector<double> data_instance = Dataset::randomDataPoint(NUM_TEST_ATTRIBUTES);
+
+	// -----------------------------------------------------------------------
+	// TEST 1: Rule's condition covers the data instance
+	// -----------------------------------------------------------------------
+
+	// generate the rule by specifying attribute values based
+	// on the data point
+	Rule r = Rule::getRandom(NUM_TEST_ATTRIBUTES);
+	for (int i=0; i<NUM_TEST_ATTRIBUTES; i++)
+		r.condition[i].setCenter(data_instance[i]);
+
+	// evaluate
+	printf("Test 1 (should return true): ");
+	is_a_match = r.matches(data_instance);
+	if (is_a_match) {
+		printf("Passed.\n");
+	} else {
+		return false;
+		printf("Failed.\n");
+	}
+
+	// -----------------------------------------------------------------------
+	// TEST 2: Rule's condition does not cover the data instance
+	// -----------------------------------------------------------------------
+
+	// here, we are guaranteeing that the value of the first attribute
+	// in the data instance is *not* covered by the rule
+	double first_att_spread = r.condition[0].getSpread();
+	r.condition[0].setCenter(data_instance[0] - first_att_spread - 0.01);
+	r.condition[0].setDontCare(false);
+
+	r.print();
+	printf("\n");
+	Dataset::printDataPoint(data_instance, NUM_TEST_ATTRIBUTES);
+
+	// evaluate
+	printf("Test 2 (should return false): ");
+	is_a_match = r.matches(data_instance);
+	if (is_a_match) {
+		printf("Failed.\n");
+		return false;
+	} else {
+		printf("Passed.\n");
+	}
+
+	return true;
+
+} // end testMatches
