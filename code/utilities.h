@@ -18,17 +18,15 @@
 #include <utility>
 #include <chrono>
 
-using namespace std;
-
 // a random number generator
-extern mt19937 rng;
+extern std::mt19937 rng;
 
 // a random device
-extern random_device rd;
+extern std::random_device rd;
 
 // a uniform distribution over [0,1]
-extern uniform_real_distribution<double> real_dist;
-extern uniform_int_distribution<int> int_dist;
+extern std::uniform_real_distribution<double> real_dist;
+extern std::uniform_int_distribution<int> int_dist;
 
 // class attribute (yield change) values
 static const int NO_CLASS = 0;
@@ -42,8 +40,8 @@ static const int NUM_TEST_NAMES = 10;
 static const int NUM_TEST_ATTRIBUTES = 10;
 
 // for testing
-static const string TEST_NAMES[] = {"Alpha", "Beta", "Gamma", "Delta", "Epsilon",
+static const std::string TEST_NAMES[] = {"Alpha", "Beta", "Gamma", "Delta", "Epsilon",
 			           "Zeta", "Eta", "Theta", "Iota", "Kappa"};
-static const string CLASS_NAMES[] = {"NO_CLASS", "HIGH_NEG", "LOW_NEG", "LOW_POS", "HIGH_POS"};
+static const std::string CLASS_NAMES[] = {"NO_CLASS", "HIGH_NEG", "LOW_NEG", "LOW_POS", "HIGH_POS"};
 
 #endif // end utilities.h

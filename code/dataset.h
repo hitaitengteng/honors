@@ -11,7 +11,6 @@
  * 	- Ideally, the vector member variables would be private, but
  * 	  wrapper functions are such a pain to write.
  ****************************************************************************/ 
-using namespace std;
 
 class Dataset {
 
@@ -20,22 +19,22 @@ class Dataset {
 	// MEMBER VARIABLES
 	
 		// the names of all the attributes
-		vector<string> attribute_names_;
+		std::vector<std::string> attribute_names_;
 
 		// the names for all the classes (i.e. the 
 		// values that the class attribute can take)
-		vector<string> class_names_;
+		std::vector<std::string> class_names_;
 
 		// for each attribute, the range of 
 		// values represented in the data
-		vector<pair<double,double> > attribute_ranges_;
+		std::vector<std::pair<double,double> > attribute_ranges_;
 
 		// the range of values of the class attribute
 		// denoted by each class
-		vector<pair<double,double> > class_ranges_;
+		std::vector<std::pair<double,double> > class_ranges_;
 
 		// the set of all data points
-		vector<vector<double> > data_points_;
+		std::vector<std::vector<double> > data_points_;
 
 	// FUNCTIONS
 	
@@ -43,10 +42,11 @@ class Dataset {
 		Dataset() {}
 
 		// custom constructor
-		Dataset(vector<string> attribute_names, vector<string> class_names,
-				vector<pair<double,double> > attribute_ranges,
-				vector<pair<double,double> > class_ranges,
-				vector<vector<double> > data_points) {
+		Dataset(std::vector<std::string> attribute_names, 
+				std::vector<std::string> class_names,
+				std::vector<std::pair<double,double> > attribute_ranges,
+				std::vector<std::pair<double,double> > class_ranges,
+				std::vector<std::vector<double> > data_points) {
 
 			attribute_names_ = attribute_names;
 			attribute_ranges_ = attribute_ranges;
@@ -62,14 +62,14 @@ class Dataset {
 		}
 
 		// function for reading in data from a csv file
-		int readFromCSVFile(string file_name);
+		int readFromCSVFile(std::string file_name);
 
 		// function for printing all of the data points
 		// in the data set
 		void printDataset();
 
 		// prints a single data point
-		static void printDataPoint(vector<double> data_point, int num_attributes) {
+		static void printDataPoint(std::vector<double> data_point, int num_attributes) {
 			for (int i=0; i<num_attributes; i++)
 				printf("%.3f ", data_point[i]);
 			printf("\n");
@@ -79,7 +79,7 @@ class Dataset {
 		static Dataset randomDataset(int num_data_points);
 
 		// create a random data point
-		static vector<double> randomDataPoint(int num_attributes);
+		static std::vector<double> randomDataPoint(int num_attributes);
 
 		// getters
 		int getNumAttributes() const {return num_attributes_;}

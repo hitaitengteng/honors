@@ -1,4 +1,5 @@
 #include "population.h"
+#include "lcs.h"
 
 /****************************************************************************
  * File:        LCS.cpp
@@ -7,7 +8,6 @@
  *
  * TODO:
  * 	- Need a separate function, maybe "evaluateInput," for testing mode.
- * 	- Get RNG working
  ****************************************************************************/
 
 /****************************************************************************
@@ -20,60 +20,75 @@ void LCS::processInput(int i) {
 
 	// get a data instance from the data set
 	// and assign it to curr_data_point_
+	curr_data_point_ = training_set_.data_points_[i];
+
+	createMatchAndCorrectSets();
+
+	if (doSpecify()) {
+		// select a random rule from the population
+		//
+		// specify it
+	}
 	
-	// createMatchAndCorrectSets();
-	// (the cover operator is taken care of
-	// in this function)
-	
-	// if (doSpecify)
-	//     specify()
-	
-	// if (doGA)
-	//     applyGA()
+	if (doGA())
+		applyGA();
 
 } // end processInput
 
+/****************************************************************************
+ * Inputs:      None.
+ * Outputs:     None.
+ * Description: Runs the genetic algorithm.
+ ****************************************************************************/
 void LCS::applyGA() {
 
 	// rouletteWheelSelect
-	
+	correct_set_.rouletteWheelSelect();
+
 	// reproduceAndReplace (this does crossover,
 	// mutation, and parent-child subsumption)
-	
+	reproduceAndReplace();
+
 	// reset time stamps of rules
-	
+	correct_set_.resetTimeStamps();
+
 } // end applyGA
 
+/****************************************************************************
+ * Inputs:      
+ * Outputs:    
+ * Description:
+ ****************************************************************************/
 void LCS::createMatchAndCorrectSets() {
 
 	// clear the old match and correct sets
 	// NOTE: verify that the clear() function
 	// works before testing this function.
-	_match_set.clear();
-	_correct_set.clear();
+	match_set_.clear();
+	correct_set_.clear();
 	
 	// the current rule
-	Rule *curr_rule;
+	Rule curr_rule;
 
 	// iterate over all the rules in the population
-	int pop_size = pop.size();
+	int pop_size = pop_.size();
 	for (size_t i=0; i<pop_size; i++) {
 
 		// get the current rule
-		curr_rule = *pop.rules[i];
+		curr_rule = pop_.rules_[i];
 
 		// if the current rule matches the input, add
 		// the current rule to the match set
-		if (pop.rules[i].matches(_curr_data_point)) {
-			curr_rule->num_matches++; // this is not valid
-			_match_set.add(curr_rule);
+		if (pop_.rules_[i].matches(curr_data_point_)) {
+			curr_rule.num_matches_++; // this is not valid
+			match_set_.add(curr_rule);
 
 			// if the current rule's class matches
 			// that of the input, add the current
 			// rule to the correct set
-			if (curr_rule.getClass() == input.end()) {
-				curr_rule->num_correct++;
-				_correct_set.add(curr_rule);
+			if (curr_rule.classification() == curr_data_point_.back()) {
+				curr_rule.num_correct_++;
+				correct_set_.add(curr_rule);
 				// update correct set fitness sum
 			}
 		}
@@ -83,6 +98,11 @@ void LCS::createMatchAndCorrectSets() {
 
 } // end createMatchAndCorrectSets
 
+/****************************************************************************
+ * Inputs:      
+ * Outputs:    
+ * Description:
+ ****************************************************************************/
 void LCS::reproduceAndReplace() {
 
 	// p1 = p->rouletteWheelSelect();
@@ -98,29 +118,31 @@ void LCS::reproduceAndReplace() {
 	
 } // end reproduceAndReplace
 
+/****************************************************************************
+ * Inputs:      
+ * Outputs:    
+ * Description:
+ ****************************************************************************/
 void LCS::cover() {
 
 	// create a new rule
 	Rule r;
 
 	// specify it based on the value of curr_data_instance
-	// r.specify(curr_data_point_, ranges, rangeScalar, <mt19937>);
+	// r.specify(curr_data_point_, ranges, range_scalar_); 
 
 	// add it to the population and the match set
-	// pop_.add(r);
-	// match_set_.add(r);
+	pop_.add(r);
+	match_set_.add(r);
 	
 } // end cover
 
-bool LCS::doGA() {
 
-//	return (_correct_set.fitnessSum() > _theta_ga);
-
-	// remove this once implemented
-	return false;
-
-} // end doGA
-
+/****************************************************************************
+ * Inputs:      
+ * Outputs:    
+ * Description:
+ ****************************************************************************/
 bool LCS::doCover() {
 
 	// if the match set is empty or not all classes
@@ -133,6 +155,11 @@ bool LCS::doCover() {
 
 } // end doCover
 
+/****************************************************************************
+ * Inputs:      
+ * Outputs:    
+ * Description:
+ ****************************************************************************/
 bool LCS::doSpecify() {
 
 	// the specify operator is invoked on the correct

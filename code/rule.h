@@ -8,13 +8,7 @@
  * File:        Rule.h
  * Author:      William Gantt
  * Description: Defines the Rule class.
- *
- * TODO:
- *
- * 	- Decide how to initialize attribute vector in ctor
  ****************************************************************************/ 
-
-using namespace std;
 
 class Rule {
 
@@ -25,14 +19,14 @@ class Rule {
 		// the condition under which the rule applies (NOTE: this should
 		// probably be private, but I was feeling too lazy to make wrapper
 		// functions)
-		vector<Attribute> condition;
+		std::vector<Attribute> condition_;
 
 	// FUNCTIONS
 	
 		// constructor
-		Rule() : id(0), classification(0), timeStamp(0), exp(0), numerosity(1),
-		         numMatches(0), numCorrect(0), numDontCare(0), numNiches(0),
-			 nicheSizesSum(0), avgNicheSize(0), accuracy(0), fitness(0) { }
+		Rule() : id_(0), classification_(0), time_stamp_(0), exp_(0), numerosity_(1),
+		         num_matches_(0), num_correct_(0), num_dont_care_(0), num_niches_(0),
+			 niche_sizes_sum_(0), avg_niche_size_(0), accuracy_(0), fitness_(0) { }
 
 		// equality operator
 		bool operator==(const Rule &rule) const;
@@ -42,19 +36,19 @@ class Rule {
 
 		// mutates the class and attribute ranges in the condition with
 		// some probability
-		void mutate(double pMutate, double pDontCare, vector<pair<double,double> > ranges, 
-				double rangeScalar);
+		void mutate(double p_mutate, double p_dont_care, std::vector<std::pair<double,double> > ranges, 
+				double range_scalar);
 
 		// assigns particular values to all "don't care" attributes based
 		// on the passed input vector
-		Rule specify(vector<double> input, vector<pair<double,double> > ranges, 
-				double rangeScalar);
+		Rule specify(std::vector<double> input, std::vector<std::pair<double,double> > ranges, 
+				double range_scalar);
 	
 		// checks whether this rule is a more general version of another
 		bool generalizes(Rule &rule) const;
 
 		// checks whether this rule matches an input datum
-		bool matches(vector<double> &input) const;
+		bool matches(std::vector<double> &input) const;
 
 		// generate a random rule
 		static Rule getRandom(int num_attributes);
@@ -63,84 +57,84 @@ class Rule {
 		void print();
 	
 		// getters 
-		vector<Attribute> getCondition() const {return condition;}
-		int getID() const {return id;}
-		int getClass() const {return classification;}
-		int getTimeStamp() const {return timeStamp;}
-		int getExp() const {return exp;}
-		int getNumerosity() const {return numerosity;}
-		int getNumMatches() const {return numMatches;}
-		int getNumCorrect() const {return numCorrect;}
-		int getNumDontCare() const {return numDontCare;}
-		int getNumNiches() const {return numNiches;}
-		int getNicheSizesSum() const {return nicheSizesSum;}
-		double getAvgNicheSize() const {return avgNicheSize;}
-		double getAccuracy() const {return accuracy;}
-		double getFitness() const {return fitness;}
+		std::vector<Attribute> condition() const {return condition_;}
+		int id() const {return id_;}
+		int classification() const {return classification_;}
+		int time_stamp() const {return time_stamp_;}
+		int exp() const {return exp_;}
+		int numerosity() const {return numerosity_;}
+		int num_matches() const {return num_matches_;}
+		int num_correct() const {return num_correct_;}
+		int num_dont_care() const {return num_dont_care_;}
+		int num_niches() const {return num_niches_;}
+		int niche_sizes_sum() const {return niche_sizes_sum_;}
+		double avg_niche_size() const {return avg_niche_size_;}
+		double accuracy() const {return accuracy_;}
+		double fitness() const {return fitness_;}
 
 		// setters
-		void setCondition(vector<Attribute> condition) {this->condition = condition;}
-		void setClass(int classification) {this->classification = classification;}
-		void setTimeStamp(int timeStamp) {this->timeStamp = timeStamp;}
-		void setExp(int exp) {this->exp = exp;}
-		void setNumerosity(int numerosity) {this->numerosity = numerosity;}
-		void setNumMatches(int numMatches) {this->numMatches = numMatches;}
-		void setNumCorrect(int numCorrect) {this->numCorrect = numCorrect;}
-		void setNumDontCare(int numDontCare) {this->numDontCare = numDontCare;}
-		void setNumNiches(int numNiches) {this->numNiches = numNiches;}
-		void setNicheSizesSum(int nicheSizesSum) {this->nicheSizesSum = nicheSizesSum;}
-		void setAvgNicheSize(double avgNicheSize) {this->avgNicheSize = avgNicheSize;}
-		void setAccuracy(double accuracy) {this->accuracy = accuracy;}
-		void setFitness(double fitness) {this->fitness = fitness;}
-		void setID(int id) {this->id = id;}
+		void setCondition(std::vector<Attribute> condition) {condition_ = condition;}
+		void setClass(int classification) {classification_ = classification;}
+		void setTimeStamp(int time_stamp) {time_stamp_ = time_stamp;}
+		void setExp(int exp) {exp_ = exp;}
+		void setNumerosity(int numerosity) {numerosity_ = numerosity;}
+		void setNumMatches(int num_matches) {num_matches_ = num_matches;}
+		void setNumCorrect(int num_correct) {num_correct_ = num_correct;}
+		void setNumDontCare(int num_dont_care) {num_dont_care_ = num_dont_care;}
+		void setNumNiches(int num_niches) {num_niches_ = num_niches;}
+		void setNicheSizesSum(int niche_sizes_sum) {niche_sizes_sum_ = niche_sizes_sum;}
+		void setAvgNicheSize(double avg_niche_size) {avg_niche_size_ = avg_niche_size;}
+		void setAccuracy(double accuracy) {accuracy_ = accuracy;}
+		void setFitness(double fitness) {fitness_ = fitness;}
+		void setID(int id) {id_ = id;}
 
 	private:
 
 		// a number that uniquely identifies the rule
-		int id;
+		int id_;
 
 		// the class into which any input matching the condition is
 		// to be categorized, according to the rule
-		int classification;
+		int classification_;
 
 		// the last generation on which this rule participated in an
 		// iteration of the GA
-		int timeStamp;
+		int time_stamp_;
 
 		// the number of times this rule's parameters have been updated
-		int exp;
+		int exp_;
 
 		// the number of copies of this rule in the population set [P]
-		int numerosity;
+		int numerosity_;
 
 		// the number of inputs that this rule matches
-		int numMatches;
+		int num_matches_;
 
 		// the number of inputs that this rule both matches AND correctly
 		// classifies
-		int numCorrect;
+		int num_correct_;
 
 		// the number of attributes in the condition of this rule whose
 		// dontCare variable is set to true
-		int numDontCare;
+		int num_dont_care_;
 
 		// the number of distinct correct sets to which this rule has
 		// belonged
-		int numNiches;
+		int num_niches_;
 
 		// the sum of the sizes of all niches to which this rule has
 		// belonged
-		int nicheSizesSum;
+		int niche_sizes_sum_;
 
 		// the average size of the correct sets to which this rule has
 		// belonged
-		double avgNicheSize;
+		double avg_niche_size_;
 
 		// the rule's accuracy in correctly classifying inputs
-		double accuracy;
+		double accuracy_;
 
 		// the rule's fitness (used in the GA; based on accuracy)
-		double fitness;
+		double fitness_;
 
 };
 

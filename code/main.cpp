@@ -16,9 +16,9 @@
  * 	- remove using namespace from header files
  *
  ****************************************************************************/ 
-
+  
 using namespace std;
-
+   
 // declared as external variables in utilities.h, defined here
 mt19937 rng;
 random_device rd;
@@ -31,11 +31,8 @@ uniform_int_distribution<int> int_dist(1,10);
  *
  ****************************************************************************/ 
 int main(int argc, char **argv) {
-
+   
 	rng.seed(rd());
-
-	Dataset d = Dataset::randomDataset(11);
-	d.printDataset();
 
 	return 0;
 	

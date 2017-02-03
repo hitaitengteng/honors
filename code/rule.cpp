@@ -22,33 +22,33 @@ using namespace std;
 bool Rule::operator==(const Rule &rule) const {
 
 	// check the classes of both rules
-	if (classification != rule.getClass())
+	if (classification_ != rule.classification())
 		return false;
 
 	// if the rules are in fact the same object, return true immediately
-	if (id == rule.getID())
+	if (id_ == rule.id())
 		return true;
 
 	// check the conditions
-	int condition_length = condition.size();
+	int condition_length = condition_.size();
 	for (size_t i=0; i<condition_length; i++) {
 
 		// if one of the rules has the "don't care" variable set for
 		// the current attribute and the other doesn't, the rules
 		// are not equivalent
-		if (condition[i].getDontCare() != rule.condition[i].getDontCare())
+		if (condition_[i].dont_care() != rule.condition_[i].dont_care())
 			return false;
 
 		// if control reaches here, we know that both rules have
 		// the same value for the "don't care" variable. If that
 		// value is false, we must then check their center and
 		// spread variables for equality
-		if (condition[i].getDontCare() == false) {
-			if (condition[i].getCenter() != 
-			    rule.condition[i].getCenter())
+		if (condition_[i].dont_care() == false) {
+			if (condition_[i].center() != 
+			    rule.condition_[i].center())
 				return false;
-			if (condition[i].getSpread() != 
-			    rule.condition[i].getSpread())
+			if (condition_[i].spread() != 
+			    rule.condition_[i].spread())
 				return false;
 		}
 	}
@@ -69,58 +69,58 @@ bool Rule::operator!=(const Rule &rule) const {
 } // end operator != 
 
 /****************************************************************************
- * Inputs:      pMutate: the probability that the value of a single
+ * Inputs:      p_mutate: the probability that the value of a single
  * 			 attribute is mutated.
- * 		pDontCare: given that an attribute is to be mutated, the
+ * 		p_dont_care: given that an attribute is to be mutated, the
  * 			   probability that it will be mutated to a "don't
  * 			   care" value
  * 		ranges: the acceptable values for each attribute
- * 		rangeScalar: used in determining the size of the new range
+ * 		range_scalar: used in determining the size of the new range
  * 			     of a mutated attribute.
  * 		rng: a random number generator
  * Outputs:     None.
  * Description: Mutates a rule. This involves probabilistically altering the
  * 		values of the attributes in its condition.
  ****************************************************************************/ 
-void Rule::mutate(double pMutate, double pDontCare, 
+void Rule::mutate(double p_mutate, double p_dont_care, 
 		vector<pair<double,double> > ranges, 
-		double rangeScalar) {
+		double range_scalar) {
 
 	// a random values on [0,1]
 	double result1;
 	double result2;
 
 	// iterate over all attributes in the condition
-	int condition_length = condition.size();
+	int condition_length = condition_.size();
 	for (size_t i=0; i<condition_length; i++) {
 
 		// get a random value between 0 and 1
 		result1 = real_dist(rng);
 
-		// if the value is less than or equal to pMutate, we mutate
+		// if the value is less than or equal to p_mutate, we mutate
 		// the current attribute. The attribute may be mutated by 
 		// either adjusting its "center" variable, or by adjusting
 		// its "don't care" value
-		if (result1 <= pMutate) {
+		if (result1 <= p_mutate) {
 
 			// determine whether to change the "don't care" value
 			// or to move the center
 			result2 = real_dist(rng);
 
-			if (result2 <= pDontCare) { // change to "don't care"
+			if (result2 <= p_dont_care) { // change to "don't care"
 
-				if (condition[i].getDontCare() == true)
-					condition[i].setDontCare(false);
+				if (condition_[i].dont_care() == true)
+					condition_[i].setDontCare(false);
 				else
-					condition[i].setDontCare(true);
+					condition_[i].setDontCare(true);
 
 			} else {                    // move center
 
 				// get the range of values for the current attribute
 				double range = ranges[i].second - ranges[i].first;
 
-				// scale the range by rangeScalar
-				double maxVal = range * rangeScalar;
+				// scale the range by range_scalar
+				double maxVal = range * range_scalar;
 
 				// select a random value in the interval [0,maxVal] 
 				// by which the center is to be adjusted
@@ -128,15 +128,15 @@ void Rule::mutate(double pMutate, double pDontCare,
 				double centerAdjust = real_dist2(rng);
 
 				// get the current center value
-				double oldCenter = condition[i].getCenter();
+				double oldCenter = condition_[i].center();
 
 				// adjust the center (whether to add centerAdjust or
 				// substract centerAdjust is determined by whether
 				// rng is odd or even)
 				if (rng() % 2 == 0)
-					condition[i].setCenter(oldCenter + centerAdjust);
+					condition_[i].setCenter(oldCenter + centerAdjust);
 				else
-					condition[i].setCenter(oldCenter - centerAdjust);
+					condition_[i].setCenter(oldCenter - centerAdjust);
 			}
 		}
 	}
@@ -146,7 +146,7 @@ void Rule::mutate(double pMutate, double pDontCare,
  * Inputs:      input: the data instance that will be used to specify the
  * 		       rule.
  * 		ranges: the acceptable ranges of values for each attribute
- * 		rangeScalar: used to scale the spread of an attribute
+ * 		range_scalar: used to scale the spread of an attribute
  * 		rng: a random number generator
  * Outputs:     a specified version of the rule
  * Description: Specifies a rule based on an input vector. For each attribute
@@ -162,15 +162,15 @@ Rule Rule::specify(vector<double> input, vector<pair<double,double> > ranges,
 	setClass(input.back());
 
 	// iterate over all attributes in the condition
-	int condition_length = condition.size();
+	int condition_length = condition_.size();
 	for (size_t i=0; i<condition_length; i++) {
 
 		// if the current attribute is a "don't care" attribute...
-		if (condition[i].getDontCare() == true) {
+		if (condition_[i].dont_care() == true) {
 
 			// specify its value 
-			condition[i].setDontCare(false);
-			condition[i].setCenter(input[i]);
+			condition_[i].setDontCare(false);
+			condition_[i].setCenter(input[i]);
 
 			// and specify its spread (generate a random spread
 			// within a particular range)
@@ -178,7 +178,7 @@ Rule Rule::specify(vector<double> input, vector<pair<double,double> > ranges,
 			double maxVal = range * range_scalar;
 			uniform_real_distribution<double> real_dist2(0, maxVal);
 			double spread = real_dist2(rng);
-			condition[i].setSpread(spread);
+			condition_[i].setSpread(spread);
 		}
 	}
 	return (*this);
@@ -207,36 +207,36 @@ bool Rule::generalizes(Rule &rule) const {
 	// immediately return false if the rules' classes are different or
 	// if they have the same ID number (that is, if they are *literally*
 	// the same rule)
-	if ((classification != rule.getClass()) || (id == rule.getID()))
+	if ((classification_ != rule.classification()) || (id_ == rule.id()))
 		return false;
 
 	// iterate over the conditions of both rules
-	int condition_length = condition.size();
+	int condition_length = condition_.size();
 	for (size_t i=0; i<condition_length; i++) {
 
 		// only want to check attributes that aren't "don't cares"
 		// (if this rule has the "don't care" variable set for a
 		// particular attribute, it is at least as general as the
 		// other rule with respect to that attribute).
-		if (condition[i].getDontCare() == false) {
+		if (condition_[i].dont_care() == false) {
 
 			// if this rule has a specific value for an
 			// attribute for which the other rule has the
 			// "don't care" variable set, then the former
 			// cannot be more general than the latter
-			if (rule.condition[i].getDontCare() == true)
+			if (rule.condition_[i].dont_care() == true)
 				return false;
 
 			// determine the intervals over the current attribute
 			// that each rule covers
-			double r1LowerBound = condition[i].getCenter() -
-				condition[i].getSpread();
-			double r1UpperBound = condition[i].getCenter() +
-				condition[i].getSpread();
-			double r2LowerBound = rule.condition[i].getCenter() -
-				rule.condition[i].getSpread();
-			double r2UpperBound = rule.condition[i].getCenter() +
-				rule.condition[i].getSpread();
+			double r1LowerBound = condition_[i].center() -
+				condition_[i].spread();
+			double r1UpperBound = condition_[i].center() +
+				condition_[i].spread();
+			double r2LowerBound = rule.condition_[i].center() -
+				rule.condition_[i].spread();
+			double r2UpperBound = rule.condition_[i].center() +
+				rule.condition_[i].spread();
 
 			// return false if the interval described by rule 2
 			// does not fall within that described by rule 1
@@ -265,17 +265,17 @@ bool Rule::matches(vector<double> &input) const {
 	double spread = 0;
 
 	// iterate over the attributes of the rule's condition
-	int condition_length = condition.size();
+	int condition_length = condition_.size();
 	for (size_t i=0; i<condition_length; i++) {
 
 		// evaluate only if the current attribute is not set to
 		// "don't care" in the condition
-		if (condition[i].getDontCare() == false) {
+		if (condition_[i].dont_care() == false) {
 
 			// get the center and spread of the current 
 			// attribute in the condition
-			center = condition[i].getCenter();
-			spread = condition[i].getSpread();
+			center = condition_[i].center();
+			spread = condition_[i].spread();
 
 			// check whether the input value for the current
 			// attribute falls within the range [center - spread,
@@ -306,10 +306,10 @@ Rule Rule::getRandom(int num_attributes) {
 	// random attributes
 	Attribute a("");
 	for (int i=0; i<num_attributes; i++) {
-		a = Attribute::getRandom();
-		if (a.getDontCare() == true)
-			r.numDontCare++;
-		r.condition.push_back(a);
+		a = Attribute::random();
+		if (a.dont_care() == true)
+			r.num_dont_care_++;
+		r.condition_.push_back(a);
 	}
 
 	// random accuracy and fitness
@@ -327,28 +327,28 @@ Rule Rule::getRandom(int num_attributes) {
  ****************************************************************************/ 
 void Rule::print() {
 
-	printf("\nRule %d\n--------\n", id);
+	printf("\nRule %d\n--------\n", id_);
 	printf("\nAttribute:  ");
-	int condition_length = condition.size();
+	int condition_length = condition_.size();
 	for (size_t i=0; i<condition_length; i++)
 		printf("[ %d ] ", (int) i);
 	printf("\nDon't Care: ");
 	for (size_t i=0; i<condition_length; i++)
-		printf("[ %d ] ", (int) condition[i].getDontCare());
+		printf("[ %d ] ", (int) condition_[i].dont_care());
 	printf("\n  Center:   ");
 	for (size_t i=0; i<condition_length; i++)
-		printf("%.3f ", condition[i].getCenter()); 
+		printf("%.3f ", condition_[i].center()); 
 	printf("\n  Spread:   ");
 	for (size_t i=0; i<condition_length; i++)
-		printf("%.3f ", condition[i].getSpread());
+		printf("%.3f ", condition_[i].spread());
 
 	printf("\n");
 
-	printf("Class:      %d\n", classification);
-	printf("Experience: %d\n", exp);
-	printf("Numerosity: %d\n", numerosity);
-	printf("Accuracy:   %.3f\n", accuracy);
-	printf("Fitness:    %.3f\n", fitness);
+	printf("Class:      %d\n", classification_);
+	printf("Experience: %d\n", exp_);
+	printf("Numerosity: %d\n", numerosity_);
+	printf("Accuracy:   %.3f\n", accuracy_);
+	printf("Fitness:    %.3f\n", fitness_);
 
 } // end printRule
 

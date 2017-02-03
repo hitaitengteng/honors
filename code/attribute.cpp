@@ -12,11 +12,11 @@
  * Outputs:
  * Description:
  ****************************************************************************/ 
-Attribute Attribute::getRandom() {
+Attribute Attribute::random() {
 
 	// generate a name for the attribute type
 	int index = rng() % NUM_TEST_NAMES;
-	string name = TEST_NAMES[index];
+	std::string name = TEST_NAMES[index];
 	
 	// create the attribute
 	Attribute a(name);
@@ -44,14 +44,14 @@ Attribute Attribute::getRandom() {
  ****************************************************************************/ 
 void Attribute::print() {
 
-	string dc = "";
-	if (dontCare == false)
+	std::string dc = "";
+	if (dont_care_ == false)
 		dc = "false";
 	else
 		dc = "true";
 
-	printf("Name:     %s\n", name.c_str());
-	printf("Center:   %.3f\n", center);
-	printf("Spread:   %.3f\n", spread);
+	printf("Name:     %s\n", name_.c_str());
+	printf("Center:   %.3f\n", center_);
+	printf("Spread:   %.3f\n", spread_);
 	printf("dontCare: %s\n", dc.c_str());
 }

@@ -9,48 +9,46 @@
  * Description: Defines the Attribute class. [Description]
  ****************************************************************************/ 
 
-using namespace std;
-
 class Attribute {
 
 	public:
-		Attribute(string name): 
-			name(name), center(0), spread(0), dontCare(false) {
+		// create an attribute with just a name
+		Attribute(std::string name): 
+			name_(name), center_(0), spread_(0), dont_care_(false) {
 		}
 
-		Attribute(string name, double center, double spread, bool dontCare) {
+		// fully specify an attribute
+		Attribute(std::string name, double center, double spread, bool dont_care) {
 			setName(name);
 			setCenter(center);
 			setSpread(spread);
-			setDontCare(dontCare);
+			setDontCare(dont_care);
 		}
 
-		~Attribute(){}
-
 		// generates a random attribute
-		static Attribute getRandom();
+		static Attribute random();
 
 		// prints info about an attribute
 		void print();
 
 		// getters 
-		string getName() const {return name;}
-		double getCenter() const {return center;}
-		double getSpread() const {return spread;}
-		bool getDontCare() const {return dontCare;}
+		std::string name() const {return name_;}
+		double center() const {return center_;}
+		double spread() const {return spread_;}
+		bool dont_care() const {return dont_care_;}
 
 		// setters
-		void setName(string name) {this->name = name;}
-		void setCenter(double center) {this->center = center;}
-		void setSpread(double spread) {this->spread = spread;}
-		void setDontCare(bool dontCare) {this->dontCare = dontCare;}
+		void setName(std::string name) {name_ = name;}
+		void setCenter(double center) {center_ = center;}
+		void setSpread(double spread) {spread_ = spread;}
+		void setDontCare(bool dont_care) {dont_care_ = dont_care;}
 
 	private:
-		string name;   // the name of the attribute
-		double center; // the midpoint of the interval covered by the attribute
-		double spread; // this defines the size of the interval
-		bool dontCare; // indicates whether this attribute is a relevant component
-			       // of a given rule (true = 'we don't care'; false = 'we do care')
+		std::string name_; // the name of the attribute
+		double center_;    // the midpoint of the interval covered by the attribute
+		double spread_;    // this defines the size of the interval
+		bool dont_care_;   // indicates whether this attribute is a relevant component
+			           // of a given rule (true = 'we don't care'; false = 'we do care')
 };
 
 #endif
