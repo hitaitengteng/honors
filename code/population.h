@@ -59,7 +59,7 @@ class Population {
 		std::pair<Rule,Rule> crossover(int i, int j);
 
 		// generates a random population
-		static Population random(int size);
+		static Population random(int pop_size, int attributes_per_rule);
 
 		// set the time stamps of all rules back to 0
 		void resetTimeStamps() {

@@ -7,9 +7,15 @@
 class LCS {
 
 	public:
-		// default constructor
-		// complete constructor
-		// getters and setters
+		LCS(int pop_size): p_crossover_(0.8), p_mutate_(0.04), p_dont_care_(0.33), 
+				   theta_sub_(25), theta_del_(20), theta_ga_(25),
+       				   do_ga_subsumption_(true), do_correct_set_subsumption_(true)	{
+
+			pop_.setMaxSize(pop_size);
+			match_set_.setMaxSize(pop_size);
+			correct_set_.setMaxSize(pop_size);
+
+		}
 
 	// MEMBER FUNCTIONS 
 	
@@ -31,7 +37,7 @@ class LCS {
 		void cover();
 
 		// eliminates superfluous rules
-		void gaSubsume();
+		void gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_child);
 
 		// determines whether the GA should be invoked
 		bool doGA() {
@@ -64,6 +70,14 @@ class LCS {
 
 		// the data set used to test the LCS
 		Dataset testing_set_;
+
+		// getters
+		std::vector<double> curr_data_point() {return curr_data_point_;}
+
+		// setters
+		void setCurrDataPoint(std::vector<double> curr_data_point) {
+			curr_data_point_ = curr_data_point;
+		}
 
 	private:
 		// the maximum allowable number of rules in the population

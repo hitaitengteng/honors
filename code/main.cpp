@@ -1,5 +1,4 @@
-#include "rule.h"
-#include "dataset.h"
+#include "lcs.h"
 #include <time.h>
 
 /****************************************************************************
@@ -33,6 +32,11 @@ uniform_int_distribution<int> int_dist(1,10);
 int main(int argc, char **argv) {
    
 	rng.seed(rd());
+
+	LCS lcs(10);
+	lcs.pop_ = Population::random(10,10);
+	lcs.setCurrDataPoint(Dataset::randomDataPoint(10));
+	lcs.reproduceAndReplace();
 
 	return 0;
 	

@@ -8,7 +8,10 @@
  *
  * TODO:
  * 	- Need a separate function, maybe "evaluateInput," for testing mode.
+ * 	- Implement gaSubsume function (first write out pseudocode)
  ****************************************************************************/
+
+using namespace std;
 
 /****************************************************************************
  * Inputs:      The current input's index in the vector of all inputs
@@ -80,14 +83,16 @@ void LCS::createMatchAndCorrectSets() {
 		// if the current rule matches the input, add
 		// the current rule to the match set
 		if (pop_.rules_[i].matches(curr_data_point_)) {
-			curr_rule.num_matches_++; // this is not valid
+			int num_matches = curr_rule.num_matches();
+			curr_rule.setNumMatches(num_matches + 1);
 			match_set_.add(curr_rule);
 
 			// if the current rule's class matches
 			// that of the input, add the current
 			// rule to the correct set
 			if (curr_rule.classification() == curr_data_point_.back()) {
-				curr_rule.num_correct_++;
+				int num_correct = curr_rule.num_correct();
+				curr_rule.setNumCorrect(num_correct + 1);
 				correct_set_.add(curr_rule);
 				// update correct set fitness sum
 			}
@@ -105,15 +110,32 @@ void LCS::createMatchAndCorrectSets() {
  ****************************************************************************/
 void LCS::reproduceAndReplace() {
 
-	// p1 = p->rouletteWheelSelect();
-	// p2 = p->rouletteWheelSelect();
+	// select the first parent
+	int p1_index = pop_.rouletteWheelSelect();
+
+	// make sure a different rule is selected for the second parent
+	int p2_index;
+	do {
+		p2_index = pop_.rouletteWheelSelect();
+	} while (p1_index == p2_index);
+
+	pop_.rules_[p1_index].print();
+	pop_.rules_[p2_index].print();
 	
-	// children = pop->crossover(p1, p2);
+	// generate a pair of offspring
+	pair<Rule,Rule> children = pop_.crossover(p1_index, p2_index);
 	
-	// children.first.mutate();
-	// children.second.mutate();
-	
-	// if (doGaSubusme)
+	// temporary
+	vector<pair<double,double> > ranges;
+	for (int i=0; i<NUM_TEST_ATTRIBUTES; i++)
+		ranges.push_back(make_pair(0,1));
+
+	// mutate the offspring (NOTE: ultimately, we want 'ranges' to be
+	// d.attribute_ranges_ (where d is the member dataset)
+	children.first.mutate(p_mutate_, p_dont_care_, ranges, range_scalar_);
+	children.second.mutate(p_mutate_, p_dont_care_, ranges, range_scalar_);
+
+	// if (do_ga_subsumption_)
 	//       gaSubsume();
 	
 } // end reproduceAndReplace
@@ -137,6 +159,30 @@ void LCS::cover() {
 	
 } // end cover
 
+/****************************************************************************
+ * Inputs:      
+ * Outputs:    
+ * Description:
+ ****************************************************************************/
+void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_child) {
+
+	// bool subsume_first = false;
+	// bool subsume_second = false;
+	
+	// get the fitter of the two parents (p)
+	
+	// if ((p.exp > theta_sub) && (p.accuracy > theta_acc))
+	// 	if (p.generalizes(first_child))
+	// 		[increase numerosity of p]
+	// 		subsume_first = true;
+	// 	else
+	// 		
+	// 	
+	// 	if (p.generalizes(second_child)
+	// 		[increase numerosity of p]
+	// 		subsume_second = true;
+	
+} // end gaSubsume
 
 /****************************************************************************
  * Inputs:      

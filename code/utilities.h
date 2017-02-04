@@ -35,6 +35,8 @@ static const int LOW_NEG = 2;
 static const int LOW_POS = 3;
 static const int HIGH_POS = 4;
 
+static const int NO_ID = -1;
+
 static const int NUM_CLASSES = 5;
 static const int NUM_TEST_NAMES = 10;
 static const int NUM_TEST_ATTRIBUTES = 10;

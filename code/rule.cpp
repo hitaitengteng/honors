@@ -4,6 +4,10 @@
  * File:        Rule.cpp
  * Author:      William Gantt
  * Description: Implements functions for the Rule class.
+ *
+ * TODO:
+ * 	- change print function to print out name of class
+ * 	- correct print_verbose function (and its name)
  ****************************************************************************/ 
 using namespace std;
 
@@ -109,12 +113,17 @@ void Rule::mutate(double p_mutate, double p_dont_care,
 
 			if (result2 <= p_dont_care) { // change to "don't care"
 
-				if (condition_[i].dont_care() == true)
+				if (condition_[i].dont_care() == true) {
 					condition_[i].setDontCare(false);
-				else
+					num_dont_care_--;
+				} else {
 					condition_[i].setDontCare(true);
+					num_dont_care_++;
+				}
 
 			} else {                    // move center
+
+				cout << "here" << endl;
 
 				// get the range of values for the current attribute
 				double range = ranges[i].second - ranges[i].first;
@@ -171,6 +180,7 @@ Rule Rule::specify(vector<double> input, vector<pair<double,double> > ranges,
 			// specify its value 
 			condition_[i].setDontCare(false);
 			condition_[i].setCenter(input[i]);
+			num_dont_care_--;
 
 			// and specify its spread (generate a random spread
 			// within a particular range)
@@ -296,7 +306,7 @@ bool Rule::matches(vector<double> &input) const {
  * Description: Generates a random rule with a condition of a specified
  * 		length.
  ****************************************************************************/ 
-Rule Rule::getRandom(int num_attributes) {
+Rule Rule::random(int num_attributes) {
 
 	Rule r;
 
@@ -318,7 +328,7 @@ Rule Rule::getRandom(int num_attributes) {
 
 	return r;
 
-} // end getRandom
+} // end random
 
 /****************************************************************************
  * Inputs:      None.
@@ -326,6 +336,51 @@ Rule Rule::getRandom(int num_attributes) {
  * Description: Prints important information about a rule.
  ****************************************************************************/ 
 void Rule::print() {
+
+	char dc[] = "[DC]";
+	char space[] = " ";
+
+	printf("\nRule %d\n--------\n", id_);
+	printf("\nAttribute:  ");
+	int condition_length = condition_.size();
+	for (size_t i=0; i<condition_length; i++)
+		printf("%-7d", (int) i);
+	printf("\nDon't Care: ");
+	for (size_t i=0; i<condition_length; i++) {
+		if (condition_[i].dont_care())
+			printf("%-7s",dc);
+		else
+			printf("%-7s", space);
+	}
+	printf("\n  Center:   ");
+	for (size_t i=0; i<condition_length; i++) {
+		if (!condition_[i].dont_care())
+			printf("%-7.3f", condition_[i].center()); 
+		else 
+			printf("%-7s", space);
+	}
+	printf("\n  Spread:   ");
+	for (size_t i=0; i<condition_length; i++) {
+		if (!condition_[i].dont_care())
+			printf("%-7.3f", condition_[i].spread()); 
+		else 
+			printf("%-7s", space);
+	}
+
+	printf("\n");
+	printf("Accuracy:        %.3f\n", accuracy_);
+	printf("Fitness:         %.3f\n", fitness_);
+	printf("Class:           %d\n", classification_);
+
+} // end printRule
+
+
+/****************************************************************************
+ * Inputs:      None.
+ * Outputs:     None.
+ * Description: Prints important information about a rule.
+ ****************************************************************************/ 
+void Rule::print_verbose() {
 
 	printf("\nRule %d\n--------\n", id_);
 	printf("\nAttribute:  ");
@@ -344,11 +399,16 @@ void Rule::print() {
 
 	printf("\n");
 
-	printf("Class:      %d\n", classification_);
-	printf("Experience: %d\n", exp_);
-	printf("Numerosity: %d\n", numerosity_);
-	printf("Accuracy:   %.3f\n", accuracy_);
-	printf("Fitness:    %.3f\n", fitness_);
+	printf("Class:           %d\n", classification_);
+	printf("Time stamp:      %d\n", time_stamp_);
+	printf("Experience:      %d\n", exp_);
+	printf("Numerosity:      %d\n", numerosity_);
+	printf("# Matches:       %d\n", num_matches_);
+	printf("# Correct:       %d\n", num_correct_);
+	printf("# Niches:        %d\n", num_niches_);
+	printf("Avg Niche Size:  %.2f\n", avg_niche_size_);
+	printf("Accuracy:        %.3f\n", accuracy_);
+	printf("Fitness:         %.3f\n", fitness_);
 
 } // end printRule
 

@@ -24,7 +24,7 @@ class Rule {
 	// FUNCTIONS
 	
 		// constructor
-		Rule() : id_(0), classification_(0), time_stamp_(0), exp_(0), numerosity_(1),
+		Rule() : id_(NO_ID), classification_(0), time_stamp_(0), exp_(0), numerosity_(1),
 		         num_matches_(0), num_correct_(0), num_dont_care_(0), num_niches_(0),
 			 niche_sizes_sum_(0), avg_niche_size_(0), accuracy_(0), fitness_(0) { }
 
@@ -51,10 +51,13 @@ class Rule {
 		bool matches(std::vector<double> &input) const;
 
 		// generate a random rule
-		static Rule getRandom(int num_attributes);
+		static Rule random(int num_attributes);
 
-		// prints out information about a rule
+		// prints out some information about a rule
 		void print();
+
+		// prints out complete information about a rule
+		void print_verbose();
 	
 		// getters 
 		std::vector<Attribute> condition() const {return condition_;}

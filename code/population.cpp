@@ -26,9 +26,11 @@ void Population::add(Rule r) {
 		return;
 	}
 
-	// give the rule an ID number
-	r.setID(id_count_);
-	id_count_++;
+	// give the rule an ID number (if it doesn't already have one)
+	if (r.id() == NO_ID) {
+		r.setID(id_count_);
+		id_count_++;
+	}
 
 	// if this is either the first rule added to the population,
 	// or else is more general than the current most general
@@ -61,6 +63,9 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
 
 	// select a point in [1,condition.size()] for 1-pt crossover
 	int cross_point = (rng() % p1.condition_.size()) + 1;
+
+	// DELETE AFTER DEBUGGING
+	printf("Crossover Point: %d\n", cross_point);
 
 	// create the offspring
 	Rule off1;
@@ -157,10 +162,29 @@ bool Population::matchExists(vector<double> &input) const {
 } // end matchExists
 
 /****************************************************************************
- *
- *
- *
+ * Input:
+ * Output:
+ * Description:
  ****************************************************************************/ 
-Population Population::random(int size) {
+Population Population::random(int pop_size, int attributes_per_rule) {
+
+	// initialize a population with a maximum size of 'size'
+	Population p(pop_size);
+
+	// generate a random set of rules
+	for (size_t i=0; i<pop_size; i++) {
+		p.add(Rule::random(attributes_per_rule));
+		p.fitness_sum_+=p.rules_[i].fitness();
+
+		// update the most general rule in the population
+		// (if necessary)
+		if (i==0) {
+			p.most_general_ = p.rules_[i];
+		} else if (p.rules_[i].generalizes(p.most_general_)) {
+			p.most_general_ = p.rules_[i];
+		}
+	}
+
+	return p;
 
 } // end random
