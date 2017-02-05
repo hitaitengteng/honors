@@ -17,6 +17,7 @@
 #include <random>
 #include <utility>
 #include <chrono>
+#include <math.h>
 
 // a random number generator
 extern std::mt19937 rng;
@@ -35,13 +36,17 @@ static const int LOW_NEG = 2;
 static const int LOW_POS = 3;
 static const int HIGH_POS = 4;
 
+// population types
+static const int GENERAL = 1;
+static const int MATCH_SET = 2;
+static const int CORRECT_SET = 3;
+
 static const int NO_ID = -1;
 
+// for testing
 static const int NUM_CLASSES = 5;
 static const int NUM_TEST_NAMES = 10;
 static const int NUM_TEST_ATTRIBUTES = 10;
-
-// for testing
 static const std::string TEST_NAMES[] = {"Alpha", "Beta", "Gamma", "Delta", "Epsilon",
 			           "Zeta", "Eta", "Theta", "Iota", "Kappa"};
 static const std::string CLASS_NAMES[] = {"NO_CLASS", "HIGH_NEG", "LOW_NEG", "LOW_POS", "HIGH_POS"};

@@ -53,6 +53,9 @@ class LCS {
 		// processes a single input from the dataset
 		void processInput(int i);
 	
+		// evaluates a rule and adds it to the appropriate sets
+		void processRule(Rule r);
+
 	// MEMBER VARIABLES (these should probably be private)
 
 		// the population of rules

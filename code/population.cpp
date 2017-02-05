@@ -45,8 +45,9 @@ void Population::add(Rule r) {
 	// add the rule to the vector of all rules
 	rules_.push_back(r);
 
-	// increment the fitness sum of the population
+	// increment the fitness and experience sums of the population
 	fitness_sum_ += r.fitness();
+	exp_sum_ += r.exp();
 
 } // end add
 
@@ -117,6 +118,19 @@ int Population::rouletteWheelSelect() {
 	return rules_.size() - 1;
 
 } // end rouletteWheelSelect
+
+/****************************************************************************
+ * Inputs:      none
+ * Outputs:     
+ * Description: 
+ ****************************************************************************/ 
+int Population::subsumptionSelect() {
+
+	// if there are somehow rounding errors,
+	// we still return the last rule in the population
+	return rules_.size() - 1;
+
+} // end subsumptionSelect
 
 /****************************************************************************
  * Inputs:      none
