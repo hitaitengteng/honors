@@ -60,9 +60,11 @@ void LCS::applyGA() {
 } // end applyGA
 
 /****************************************************************************
- * Inputs:      
- * Outputs:    
- * Description:
+ * Inputs:      None.
+ * Outputs:     None.
+ * Description: Creates the match set [M] and the correct set [C] from the
+ * 		rules in the general population that (a) match the current
+ * 		input and (b) correctly classify it, respectively.
  ****************************************************************************/
 void LCS::createMatchAndCorrectSets() {
 
@@ -70,77 +72,94 @@ void LCS::createMatchAndCorrectSets() {
 	match_set_.clear();
 	correct_set_.clear();
 	
+	// these keep track of what rules belong
+	// in the match and correct sets
 	vector<int> rules_in_match_set;
 	vector<int> rules_in_correct_set;
 
+	// the current rule
+	Rule r;
+
 	// iterate over all the rules in the population
+	int pop_size = pop_.rules_.size();
 	for (int i=0; i<pop_size; i++) {
+
+		// get the current rule
+		r = pop_.rules_[i];
 
 		// if the current rule matches the input, then
 		// the rule belongs in the match set
-		if (pop_.rules_[i].matches(curr_data_point_)) {
+		if (r.matches(curr_data_point_)) {
 
-			int num_matches = pop.rules_[i].num_matches();
-			pop.rules_[i].setNumMatches(num_matches + 1);
+			// update the number of data instances this rule matches
+			r.setNumMatches(r.num_matches() + 1);
 
-			int exp = pop.rules_[i].exp();
-			pop.rules_[i].setExp(exp + 1);
+			// update the rule's experience
+			r.setExp(r.exp() + 1);
+			rules_in_match_set.push_back(i);
 
 			// if the current rule's class matches that of the input,
 			// then the rule also belongs in the correct set
-			if (curr_rule.classification() == curr_data_point_.back()) {
+			if (r.classification() == curr_data_point_.back()) {
 
-				int num_correct = pop.rules_[i].num_correct();
-				pop.rules_[i].setNumCorrect(num_correct + 1);
+				// update the number of data instances this rule
+				// correctly identifies
+				r.setNumCorrect(r.num_correct() + 1);
 
-				int num_niches = pop.rules_[i].num_niches();
-				pop.rules_[i].setNumNiches(num_niches + 1);
+				// update the number of niches
+				// to which this rule belongs
+				r.setNumNiches(r.num_niches() + 1);
+				rules_in_correct_set.push_back(i);
 			}
 
-			// update the rule's accuracy and fitness
-			pop.rules_[i].updateAccuracyAndFitness(fitness_exponent_);
+			// update the rule's accuracy and fitness and
+			// copy it back into the population vector
+			r.updateAccuracyAndFitness(0);
 		}
 	}
 
 	// get the sizes of the match and correct sets
-	int correct_set_size = rules_in_correct_set.size();
-	int match_set_size = rules_in_match_set.size();
+	int c_size = rules_in_correct_set.size();
+	int m_size = rules_in_match_set.size();
 
 	// the index of the current rule
-	int curr_rule = 0;
+	int r_i = 0;
 
 	// a counter for the rules_in_correct_set vector
-	int correct_counter = 0;
+	int c = 0;
 
-	// the sum of the sizes of the 
-	int niche_sizes_sum;
+	// the sum of the sizes of the niches to which a rule belongs
+	int ns_sum;
 
 	// iterate over all the rules that were found to match the input
-	for (int i=0; i<match_set_size; i++) {
+	for (int i=0; i<m_size; i++) {
 
 		// get the index of the current rule in the general population
-		curr_rule = rules_in_match_set[i];
+		r_i = rules_in_match_set[i];
 
 		// if the current rule is also in the correct set, update niche information
-		if (curr_rule == rules_in_correct_set[correct_counter]) {
-			niche_sizes_sum = pop.rules_[curr_rule].niche_sizes_sum();
-			pop.rules_[curr_rule].setNicheSizesSum(niche_sizes_sum + correct_set_size);
-			pop.rules_[curr_rule].updateAvgNicheSize;
-			correct_set_.add(pop.rules_[curr_rule]);
-			correct_counter++;
+		if ((c < c_size) && (r_i == rules_in_correct_set[c])) {
+
+			ns_sum = pop_.rules_[r_i].niche_sizes_sum();
+			pop_.rules_[r_i].setNicheSizesSum(ns_sum + c_size);
+			pop_.rules_[r_i].updateAvgNicheSize();
+
+			correct_set_.add(pop_.rules_[r_i]);
+			c++;
 		}
 
 		// add the rule to the match set
-		match_set_.add(pop.rules_[curr_rule]);
+		match_set_.add(pop_.rules_[r_i]);
 	}
 
+/*
 	// if the match set is empty or if not all of the classes are
 	// represented in the match set, a new rule is created and
 	// added to both the population and the match set (and the
 	// correct set, if applicable)
 	if (doCover())
 		cover();
-
+*/
 } // end createMatchAndCorrectSets
 
 /****************************************************************************
@@ -165,15 +184,13 @@ void LCS::reproduceAndReplace() {
 	// generate a pair of offspring
 	pair<Rule,Rule> children = pop_.crossover(p1_index, p2_index);
 	
-	// TEMPORARY!!!!!!!!!
-	vector<pair<double,double> > ranges;
-	for (int i=0; i<NUM_TEST_ATTRIBUTES; i++)
-		ranges.push_back(make_pair(0,0.5));
-
 	// mutate the offspring (NOTE: ultimately, we want 'ranges' to be
 	// d.attribute_ranges_ (where d is the member dataset)
-	children.first.mutate(p_mutate_, p_dont_care_, ranges, range_scalar_);
-	children.second.mutate(p_mutate_, p_dont_care_, ranges, range_scalar_);
+	children.first.mutate(p_mutate_, p_dont_care_, 
+			training_set_.attribute_ranges_, range_scalar_);
+	children.second.mutate(p_mutate_, p_dont_care_, 
+			training_set_.attribute_ranges_, range_scalar_);
+	children.first.print();
 
 	// if (do_ga_subsumption_)
 	//       gaSubsume();
@@ -181,9 +198,16 @@ void LCS::reproduceAndReplace() {
 } // end reproduceAndReplace
 
 /****************************************************************************
- * Inputs:      
- * Outputs:    
- * Description:
+ * Inputs:       None.
+ * Outputs:      None.
+ * Description: 
+ *
+ * NOTE: the correct set and the rules in the correct set will not update
+ * properly when the covering operator is invoked. This needs to be fixed.
+ *
+ * NOTE 2: what if the population is already at capacity? Is the covering
+ * operator still invoked, and if so, is a rule selected for deletion in
+ * the same manner as in GA subsumption?
  ****************************************************************************/
 void LCS::cover() {
 
@@ -193,16 +217,33 @@ void LCS::cover() {
 	// set the class
 	r.setClass(curr_data_point_.back());
 
+	Attribute a;
 	int cond_length = curr_data_point_.size() - 1;
-	for (int i=0; i<cond_length; i++)
-		r.condition_.push_back(curr_data_point_[i]);
+	for (int i=0; i<cond_length; i++) {
+
+		// set the center value of the attribute using the value of
+		// the current element in the data point
+		a.setCenter(curr_data_point_[i]);
+
+		// set the spread and "don't care" values
+		double curr_att_range = training_set_.attribute_ranges_[i].second - 
+			training_set_.attribute_ranges_[i].first;
+		double spread = curr_att_range * range_scalar_ * real_dist(rng);
+		a.setSpread(spread);
+		a.setDontCare(false);
+
+		// add the attribute to the vector
+		r.condition_.push_back(a);
+	}
 
 	// add it to the population and the match set
 	pop_.add(r);
 	match_set_.add(r);
 
 	// check if it belongs in the correct set as well
-	
+	if (r.classification() == curr_data_point_.back())
+		correct_set_.add(r);
+
 } // end cover
 
 /****************************************************************************
@@ -230,23 +271,23 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 	
 	// determine which of the two parents is fitter
 	int fitter;
-	if (pop_[p1_index].fitness() > pop_[p2].fitness)
+	if (pop_.rules_[p1_index].fitness() > pop_.rules_[p2_index].fitness())
 		fitter = p1_index;
 	else
 		fitter = p2_index;
 
 	// a parent may subsume a child rule only if its experience exceeds a threshold
 	// value theta_sub, and only if its accuracy exceeds a threshold value theta_acc
-	if ((pop_[fitter].exp() > theta_sub) && (pop_[fitter].accuracy() > theta_acc)) {
+	if ((pop_.rules_[fitter].exp() > theta_sub_) && (pop_.rules_[fitter].accuracy() > theta_acc_)) {
 
 		// if the fitter parent meets both of the above criteria, it will
 		// subsume a child rule only if it generalizes the child rule.
-	 	if (pop_[fitter].generalizes(first_child)) {
-			pop_[fitter].setNumerosity(pop_[fitter].numerosity() + 1);
+	 	if (pop_.rules_[fitter].generalizes(first_child)) {
+			pop_.rules_[fitter].setNumerosity(pop_.rules_[fitter].numerosity() + 1);
 			subsume_first = true;
 		} 
-	 	if (pop_[fitter].generalizes(second_child)) {
-			pop_[fitter].setNumerosity(pop_[fitter].numerosity() + 1);
+	 	if (pop_.rules_[fitter].generalizes(second_child)) {
+			pop_.rules_[fitter].setNumerosity(pop_.rules_[fitter].numerosity() + 1);
 			subsume_second = true;
 		}
 	}
@@ -256,27 +297,36 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 	// deletion (NOTE: the rule(s) selected for deletion may be the parent(s)
 	if (!subsume_first) {
 		rule_to_remove1 = pop_.subsumptionSelect();
-	 	pop_[rule_to_remove1] = first_child;
+	 	pop_.rules_[rule_to_remove1] = first_child;
 	}
 	if (!subsume_second) {
-		rule_to_remove2 = pop_subsumptionSelect();
-	 	pop_[rule_to_remove2] = second_child;
+		rule_to_remove2 = pop_.subsumptionSelect();
+	 	pop_.rules_[rule_to_remove2] = second_child;
 	}
 	
 } // end gaSubsume
 
 /****************************************************************************
- * Inputs:      
- * Outputs:    
- * Description:
+ * Inputs:      None.
+ * Outputs:     A boolean indicating whether the covering operator should
+ * 		be invoked.
+ * Description: Decides whether the covering operator should be invoked.
+ * 		Returns true only if one of the following is true:
+ * 			1. the match set is empty
+ * 			2. Not all of the possible classes are represented
+ * 			   in the match set.
  ****************************************************************************/
 bool LCS::doCover() {
 
-	// if the match set is empty or not all classes
-	// are represented in the match set, return true
-	// Q: How are you going to determine whether all
-	// of the classes are present in the match set?
-	return (match_set_.empty() || /* all classes present */);
+	if (match_set_.empty())
+		return true;
+
+	for (int i=0; i<NUM_CLASSES; i++) {
+		if (classes_in_match_set_[i] == false)
+			return true;
+	}
+
+	return false;
 
 } // end doCover
 

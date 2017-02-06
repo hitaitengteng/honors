@@ -33,9 +33,11 @@ int main(int argc, char **argv) {
    
 	rng.seed(rd());
 
-	LCS lcs(10);
-	lcs.pop_ = Population::random(10,10);
-	lcs.setCurrDataPoint(Dataset::randomDataPoint(10));
+	LCS lcs(25);
+	lcs.pop_ = Population::random(25,10);
+	lcs.training_set_ = Dataset::random(50);
+	lcs.setCurrDataPoint(lcs.training_set_.data_points_[0]);
+	Dataset::printDataPoint(lcs.curr_data_point(), 10);
 	lcs.reproduceAndReplace();
 
 	return 0;

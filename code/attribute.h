@@ -13,8 +13,8 @@ class Attribute {
 
 	public:
 		// create an attribute with just a name
-		Attribute(std::string name): 
-			name_(name), center_(0), spread_(0), dont_care_(false) {
+		Attribute(): 
+			name_(""), center_(0), spread_(0), dont_care_(false) {
 		}
 
 		// fully specify an attribute

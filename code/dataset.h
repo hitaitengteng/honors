@@ -76,7 +76,7 @@ class Dataset {
 		}
 
 		// create a random data set
-		static Dataset randomDataset(int num_data_points);
+		static Dataset random(int num_data_points);
 
 		// create a random data point
 		static std::vector<double> randomDataPoint(int num_attributes);

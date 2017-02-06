@@ -15,11 +15,11 @@
 Attribute Attribute::random() {
 
 	// generate a name for the attribute type
-	int index = rng() % NUM_TEST_NAMES;
-	std::string name = TEST_NAMES[index];
+	// int index = rng() % NUM_TEST_NAMES;
+	// std::string name = TEST_NAMES[index];
 	
 	// create the attribute
-	Attribute a(name);
+	Attribute a;
 
 	// set the dontCare value
 	int dc = (rng() % 2);

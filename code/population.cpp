@@ -109,8 +109,9 @@ int Population::rouletteWheelSelect() {
 	int num_rules = rules_.size();
 	for (size_t i=0; i<num_rules; i++) {
 		random -= rules_[i].fitness();
-		if (random <= 0)
+		if (random <= 0) {
 			return i;
+		}
 	}
 
 	// if there are somehow rounding errors
@@ -188,7 +189,6 @@ Population Population::random(int pop_size, int attributes_per_rule) {
 	// generate a random set of rules
 	for (size_t i=0; i<pop_size; i++) {
 		p.add(Rule::random(attributes_per_rule));
-		p.fitness_sum_+=p.rules_[i].fitness();
 
 		// update the most general rule in the population
 		// (if necessary)

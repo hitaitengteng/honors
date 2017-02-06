@@ -52,13 +52,17 @@ class Rule {
 
 		// updates accuracy and fitness
 		void updateAccuracyAndFitness(int fitness_exponent) {
-			accuracy_ = num_matches_ / num_correct_;
-			fitness_ = pow(accuracy_, fitness_exponent);
+			if (num_correct_ != 0) {
+				accuracy_ = num_matches_ / num_correct_;
+				fitness_ = pow(accuracy_, fitness_exponent);
+			}
 		}
 
 		// updates average niche size
 		void updateAvgNicheSize() {
-			avg_niche_size_ = niche_sizes_sum_ / num_niches_;
+			if (num_niches_ != 0) {
+				avg_niche_size_ = niche_sizes_sum_ / num_niches_;
+			}
 		}
 
 		// generate a random rule

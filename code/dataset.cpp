@@ -160,7 +160,7 @@ void Dataset::printDataset() {
  * Outputs;
  * Description:
  ****************************************************************************/ 
-Dataset Dataset::randomDataset(int num_data_points) {
+Dataset Dataset::random(int num_data_points) {
 
 	// all ranges for randomly generated data are [0,1]
 	pair<double,double> range_pair = make_pair(0,1);
@@ -196,7 +196,7 @@ Dataset Dataset::randomDataset(int num_data_points) {
 			class_ranges, data_points);
 	return d;
 
-} // end randomDataSet
+} // end random
 
 /****************************************************************************
  * Inputs:

@@ -123,8 +123,6 @@ void Rule::mutate(double p_mutate, double p_dont_care,
 
 			} else {                    // move center
 
-				cout << "here" << endl;
-
 				// get the range of values for the current attribute
 				double range = ranges[i].second - ranges[i].first;
 
@@ -314,7 +312,7 @@ Rule Rule::random(int num_attributes) {
 	r.setClass(rng() % NUM_CLASSES);
 
 	// random attributes
-	Attribute a("");
+	Attribute a;
 	for (int i=0; i<num_attributes; i++) {
 		a = Attribute::random();
 		if (a.dont_care() == true)

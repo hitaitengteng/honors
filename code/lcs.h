@@ -7,8 +7,8 @@
 class LCS {
 
 	public:
-		LCS(int pop_size): p_crossover_(0.8), p_mutate_(0.04), p_dont_care_(0.33), 
-				   theta_sub_(25), theta_del_(20), theta_ga_(25),
+		LCS(int pop_size): fitness_exponent_(0), p_crossover_(0.8), p_mutate_(1), p_dont_care_(0.33), 
+				   theta_sub_(25), theta_del_(20), theta_ga_(25), range_scalar_(0.25),
        				   do_ga_subsumption_(true), do_correct_set_subsumption_(true)	{
 
 			pop_.setMaxSize(pop_size);
@@ -136,6 +136,9 @@ class LCS {
 		// indicates whether the correct set subsumption operator should
 		// be used
 		bool do_correct_set_subsumption_;
+
+		// keeps track of the classes represented in the match set
+		bool classes_in_match_set_[NUM_CLASSES];
 };
 
 #endif
