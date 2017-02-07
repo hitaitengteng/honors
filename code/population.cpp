@@ -8,7 +8,6 @@
  * TODO:
  * 	- method descriptions
  * 	- unit test all functions
- * 	- implement random function
  ****************************************************************************/ 
 
 using namespace std;
@@ -74,12 +73,27 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
 
 	// copy parent conditions into offspring
 	for (int i=0; i<cross_point; i++) {
+
+		// add the appropriate attribute values to the rules
 		off1.condition_.push_back(p1.condition_[i]);
 		off2.condition_.push_back(p2.condition_[i]);
+
+		// update the number of "don't cares," if necessary
+		if (p1.condition_[i].dont_care())
+			off1.setNumDontCare(off1.num_dont_care() + 1);
+		if (p2.condition_[i].dont_care())
+			off2.setNumDontCare(off2.num_dont_care() + 1);
 	}
+
 	for (size_t i=cross_point; i<p1.condition_.size(); i++) {
+
 		off1.condition_.push_back(p2.condition_[i]);
 		off2.condition_.push_back(p1.condition_[i]);
+
+		if (p1.condition_[i].dont_care())
+			off2.setNumDontCare(off2.num_dont_care() + 1);
+		if (p2.condition_[i].dont_care())
+			off1.setNumDontCare(off1.num_dont_care() + 1);
 	}
 
 	// copy classes

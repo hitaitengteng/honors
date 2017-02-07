@@ -65,6 +65,9 @@ void LCS::applyGA() {
  * Description: Creates the match set [M] and the correct set [C] from the
  * 		rules in the general population that (a) match the current
  * 		input and (b) correctly classify it, respectively.
+ *
+ * TODO:
+ * 		Mark which classes are represented in the match set
  ****************************************************************************/
 void LCS::createMatchAndCorrectSets() {
 
@@ -191,6 +194,7 @@ void LCS::reproduceAndReplace() {
 	children.second.mutate(p_mutate_, p_dont_care_, 
 			training_set_.attribute_ranges_, range_scalar_);
 	children.first.print();
+	cout << "Num don't care: " << children.first.num_dont_care() << endl;
 
 	// if (do_ga_subsumption_)
 	//       gaSubsume();
