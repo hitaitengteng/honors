@@ -7,12 +7,10 @@
  * Description: 
  *
  * TODO:
- * 	- fix member variable names in all necessary files
  * 	- make member variables private that should be private
  * 	- add comments to the population and LCS files (esp function 
  * 	  descriptions)
  * 	- Update Crisp_LCS_Schema.txt
- * 	- remove using namespace from header files
  *
  ****************************************************************************/ 
   
@@ -35,9 +33,9 @@ int main(int argc, char **argv) {
 
 	LCS lcs(25);
 	lcs.pop_ = Population::random(25,10);
-	lcs.training_set_ = Dataset::random(50);
-	lcs.setCurrDataPoint(lcs.training_set_.data_points_[0]);
-	Dataset::printDataPoint(lcs.curr_data_point(), 10);
+	lcs.pop_.setMaxSize(30);
+	lcs.training_set_ = Dataset::random(25);
+	lcs.setCurrDataPoint(Dataset::randomDataPoint(10));
 	lcs.reproduceAndReplace();
 
 	return 0;

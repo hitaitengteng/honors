@@ -324,6 +324,9 @@ Rule Rule::random(int num_attributes) {
 	r.setAccuracy(real_dist(rng));
 	r.setFitness(real_dist(rng));
 
+	// random average niche size (not a realistic value)
+	r.setAvgNicheSize(real_dist(rng));
+
 	return r;
 
 } // end random

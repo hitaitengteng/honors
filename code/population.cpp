@@ -54,6 +54,31 @@ void Population::add(Rule r) {
  * Inputs:
  * Outputs:
  * Description:
+ *
+ * TODO: take care of the case where the rule to be removed is the most
+ * 	 general rule
+ ****************************************************************************/ 
+void Population::remove(int index) {
+
+	// if the population is empty, return an error
+	if (rules_.size() == 0) {
+		printf("Population is empty; rule could not be deleted\n");
+		return;
+	}
+
+	// decrement the fitness and experience sums of the population
+	fitness_sum_ -= rules_[index].fitness();
+	exp_sum_ -= rules_[index].exp();
+
+	// delete the rule
+	rules_.erase(rules_.begin() + index);
+
+} // end remove
+
+/****************************************************************************
+ * Inputs:
+ * Outputs:
+ * Description:
  ****************************************************************************/ 
 pair<Rule,Rule> Population::crossover(int i, int j) {
 	
@@ -61,8 +86,8 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
 	Rule p1 = rules_[i];
 	Rule p2 = rules_[j];
 
-	// select a point in [1,condition.size()] for 1-pt crossover
-	int cross_point = (rng() % p1.condition_.size()) + 1;
+	// select a point in [0,condition.size() - 1] for 1-pt crossover
+	int cross_point = (rng() % p1.condition_.size());
 
 	// DELETE AFTER DEBUGGING
 	printf("Crossover Point: %d\n", cross_point);
@@ -137,13 +162,38 @@ int Population::rouletteWheelSelect() {
 /****************************************************************************
  * Inputs:      none
  * Outputs:     
- * Description: 
+ * Description: Horribly inefficient. Fix.
  ****************************************************************************/ 
-int Population::subsumptionSelect() {
+int Population::deletionSelect(double theta_fit) {
 
-	// if there are somehow rounding errors,
-	// we still return the last rule in the population
-	return rules_.size() - 1;
+	// sum the average niche sizes of all the rules
+	double avg_niche_size_sum = 0;
+	int pop_size = rules_.size();
+	for (int i=0; i<pop_size; i++) {
+		avg_niche_size_sum += rules_[i].avg_niche_size();
+	}
+
+	// select a random rule for deletion. A rule may not be deleted if its
+	// fitness exceeds a threshold value theta_fit, hence the do-while loop
+	double random;
+	int to_delete;
+	do {
+		// generate a random value in the range [0,avg_niche_size_sum]
+		random = real_dist(rng) * avg_niche_size_sum;
+
+		// using the random value generated above, this loop selects a rule
+		// for deletion from the population. A rule's chance of being
+		// selected is directly proportional to its average niche size.
+		for (int i=0; i<pop_size; i++) {
+			random -= rules_[i].avg_niche_size();
+			if (random <= 0) {
+				to_delete = i;
+				break;
+			}
+		}
+	} while (rules_[to_delete].accuracy() > theta_fit);
+
+	return to_delete;
 
 } // end subsumptionSelect
 

@@ -30,13 +30,16 @@ class Population {
 		Population(int max_size) : 
 			id_count_(0), max_size_(max_size), fitness_sum_(0), exp_sum_(0) {  }
 
-		// function for adding a rule to the population
+		// adds a rule to the population
 		void add(Rule r);
+
+		// removes a rule from the population
+		void remove(int index);
 
 		// deletes superfluous rules
 		int subsume();
 
-		// reset the population
+		// resets the population
 		void clear() {
 			rules_.clear();
 			fitness_sum_ = 0;
@@ -55,7 +58,7 @@ class Population {
 
 		// selects a rule from the population using roulette
 		// wheel selection based on average niche size
-		int subsumptionSelect();
+		int deletionSelect(double theta_fit);
 
 		// indicates whether at least one rule in the population
 		// matches a given input

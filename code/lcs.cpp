@@ -10,7 +10,6 @@
  * 	- Need a separate function, maybe "evaluateInput," for testing mode.
  * 	- Implement gaSubsume function (first write out pseudocode)
  * 	- Figure out how to update niche_sizes_sum variable for rules
- * 	- How are you going to keep track of niches?
  ****************************************************************************/
 
 using namespace std;
@@ -97,6 +96,9 @@ void LCS::createMatchAndCorrectSets() {
 			// update the number of data instances this rule matches
 			r.setNumMatches(r.num_matches() + 1);
 
+			// update which classes are represented in the match set
+			classes_in_match_set_[r.classification()] = true;
+
 			// update the rule's experience
 			r.setExp(r.exp() + 1);
 			rules_in_match_set.push_back(i);
@@ -155,14 +157,13 @@ void LCS::createMatchAndCorrectSets() {
 		match_set_.add(pop_.rules_[r_i]);
 	}
 
-/*
 	// if the match set is empty or if not all of the classes are
 	// represented in the match set, a new rule is created and
 	// added to both the population and the match set (and the
 	// correct set, if applicable)
 	if (doCover())
 		cover();
-*/
+
 } // end createMatchAndCorrectSets
 
 /****************************************************************************
@@ -181,23 +182,21 @@ void LCS::reproduceAndReplace() {
 		p2_index = pop_.rouletteWheelSelect();
 	} while (p1_index == p2_index);
 
-	pop_.rules_[p1_index].print();
-	pop_.rules_[p2_index].print();
-	
 	// generate a pair of offspring
 	pair<Rule,Rule> children = pop_.crossover(p1_index, p2_index);
 	
-	// mutate the offspring (NOTE: ultimately, we want 'ranges' to be
-	// d.attribute_ranges_ (where d is the member dataset)
+	// mutate the offspring 
 	children.first.mutate(p_mutate_, p_dont_care_, 
 			training_set_.attribute_ranges_, range_scalar_);
 	children.second.mutate(p_mutate_, p_dont_care_, 
 			training_set_.attribute_ranges_, range_scalar_);
-	children.first.print();
-	cout << "Num don't care: " << children.first.num_dont_care() << endl;
 
-	// if (do_ga_subsumption_)
-	//       gaSubsume();
+	// REMOVE AFTER DEBUGGING
+	pop_.rules_[p1_index].setExp(30);
+	pop_.rules_[p2_index].setExp(30);
+
+	if (do_ga_subsumption_)
+		gaSubsume(p1_index, p2_index, children.first, children.second);
 	
 } // end reproduceAndReplace
 
@@ -255,10 +254,7 @@ void LCS::cover() {
  * Outputs:    
  * Description:
  *
- * NOTE: the the likelihood that a rule is to be replaced by one of the
- * offspring rules should be inversely proportional to its average niche
- * size. This means wherever we see a "rouletteWheelSelect" below, we actually
- * need a different selection function.
+ * TODO: fix so that child is subsumed more often?
  ****************************************************************************/
 void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_child) {
 
@@ -280,9 +276,11 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 	else
 		fitter = p2_index;
 
-	// a parent may subsume a child rule only if its experience exceeds a threshold
-	// value theta_sub, and only if its accuracy exceeds a threshold value theta_acc
-	if ((pop_.rules_[fitter].exp() > theta_sub_) && (pop_.rules_[fitter].accuracy() > theta_acc_)) {
+	// A parent may subsume a child rule only if its experience exceeds a threshold
+	// value theta_sub, and only if its accuracy exceeds a threshold value theta_acc.
+	// If this is not the case, then nothing happens.
+	if ((pop_.rules_[fitter].exp() > theta_sub_) && 
+			(pop_.rules_[fitter].accuracy() > theta_acc_)) {
 
 		// if the fitter parent meets both of the above criteria, it will
 		// subsume a child rule only if it generalizes the child rule.
@@ -294,18 +292,20 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 			pop_.rules_[fitter].setNumerosity(pop_.rules_[fitter].numerosity() + 1);
 			subsume_second = true;
 		}
-	}
 	
-	// if a child rule was NOT subsumed, it is added to the population. In order
-	// to maintain a constant population size, another rule must be selected for
-	// deletion (NOTE: the rule(s) selected for deletion may be the parent(s)
-	if (!subsume_first) {
-		rule_to_remove1 = pop_.subsumptionSelect();
-	 	pop_.rules_[rule_to_remove1] = first_child;
-	}
-	if (!subsume_second) {
-		rule_to_remove2 = pop_.subsumptionSelect();
-	 	pop_.rules_[rule_to_remove2] = second_child;
+		// if a child rule was NOT subsumed, it is added to the population. In order
+		// to maintain a constant population size, another rule must be selected for
+		// deletion (NOTE: the rule(s) selected for deletion may be the parent(s)).
+		if (!subsume_first) {
+			rule_to_remove1 = pop_.deletionSelect(theta_fit_);
+	 		pop_.rules_[rule_to_remove1] = first_child;
+		}
+		if (!subsume_second) {
+			do {
+				rule_to_remove2 = pop_.deletionSelect(theta_fit_);
+	 			pop_.rules_[rule_to_remove2] = second_child;
+			} while (rule_to_remove2 == rule_to_remove1);
+		}
 	}
 	
 } // end gaSubsume
@@ -325,10 +325,14 @@ bool LCS::doCover() {
 	if (match_set_.empty())
 		return true;
 
+	int num_classes_represented = 0;
 	for (int i=0; i<NUM_CLASSES; i++) {
-		if (classes_in_match_set_[i] == false)
-			return true;
+		if (classes_in_match_set_[i] == true)
+			num_classes_represented++;
 	}
+
+	if (num_classes_represented < theta_mna_)
+		return true;
 
 	return false;
 

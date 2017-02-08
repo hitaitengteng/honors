@@ -26,7 +26,7 @@ class Rule {
 		// constructor
 		Rule() : id_(NO_ID), classification_(0), time_stamp_(0), exp_(0), numerosity_(1),
 		         num_matches_(0), num_correct_(0), num_dont_care_(0), num_niches_(0),
-			 niche_sizes_sum_(0), avg_niche_size_(0), accuracy_(0), fitness_(0) { }
+			 niche_sizes_sum_(0), avg_niche_size_(real_dist(rng)), accuracy_(0), fitness_(0) { }
 
 		// equality operator
 		bool operator==(const Rule &rule) const;
