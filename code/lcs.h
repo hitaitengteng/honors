@@ -7,8 +7,8 @@
 class LCS {
 
 	public:
-		LCS(int pop_size): fitness_exponent_(0), p_crossover_(0.8), p_mutate_(1), p_dont_care_(0.33), 
-				   theta_acc_(0), theta_sub_(25), theta_del_(20), theta_fit_(1), theta_ga_(25), 
+		LCS(int pop_size): fitness_exponent_(0), p_crossover_(0.8), p_mutate_(0.1), p_dont_care_(0.33), 
+				   theta_acc_(0), theta_sub_(0), theta_del_(20), theta_fit_(1), theta_ga_(25), 
        				   range_scalar_(0.25), do_ga_subsumption_(true), 
 				   do_correct_set_subsumption_(true)	{
 
@@ -103,7 +103,8 @@ class LCS {
 		// it is mutated to a "don't care" value
 		double p_dont_care_;
 
-		// the threshold accuracy value for a rule to be considered accurate
+		// the threshold accuracy value for a rule to be considered 
+		// accurate
 		double theta_acc_;
 
 		// a rule's experience must exceed this value in order to

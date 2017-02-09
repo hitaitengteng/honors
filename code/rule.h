@@ -36,12 +36,15 @@ class Rule {
 
 		// mutates the class and attribute ranges in the condition with
 		// some probability
-		void mutate(double p_mutate, double p_dont_care, std::vector<std::pair<double,double> > ranges, 
+		void mutate(double p_mutate, 
+				double p_dont_care, 
+				std::vector<std::pair<double,double> > ranges, 
 				double range_scalar);
 
 		// assigns particular values to all "don't care" attributes based
 		// on the passed input vector
-		Rule specify(std::vector<double> input, std::vector<std::pair<double,double> > ranges, 
+		Rule specify(std::vector<double> input, 
+				std::vector<std::pair<double,double> > ranges, 
 				double range_scalar);
 	
 		// checks whether this rule is a more general version of another

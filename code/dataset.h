@@ -12,6 +12,8 @@
  * 	  wrapper functions are such a pain to write.
  * 	- Fix printDataPoint so that the number of attributes are not
  *  	  required as a parameter.
+ *  	- Fix readFromCSVFile so that the range of values for each attribute
+ *  	  is accurate
  ****************************************************************************/ 
 
 class Dataset {

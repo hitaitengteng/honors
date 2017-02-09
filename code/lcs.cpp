@@ -8,8 +8,8 @@
  *
  * TODO:
  * 	- Need a separate function, maybe "evaluateInput," for testing mode.
- * 	- Implement gaSubsume function (first write out pseudocode)
  * 	- Figure out how to update niche_sizes_sum variable for rules
+ * 	- Implement specify operator
  ****************************************************************************/
 
 using namespace std;
@@ -26,6 +26,8 @@ void LCS::processInput(int i) {
 	// and assign it to curr_data_point_
 	curr_data_point_ = training_set_.data_points_[i];
 
+	// determine which rules match the input and, of these, which
+	// correctly classify it
 	createMatchAndCorrectSets();
 
 	if (doSpecify()) {
@@ -34,6 +36,10 @@ void LCS::processInput(int i) {
 		// specify it
 	}
 	
+	// the GA is invoked on the correct set only if the average
+	// number of iterations that have passed since a rule in the
+	// correct set participated in a GA call exceeds a threshold
+	// value theta_ga_
 	if (doGA())
 		applyGA();
 
@@ -46,7 +52,7 @@ void LCS::processInput(int i) {
  ****************************************************************************/
 void LCS::applyGA() {
 
-	// rouletteWheelSelect
+	// rouletteWheelSelect [What's this about?]
 	correct_set_.rouletteWheelSelect();
 
 	// reproduceAndReplace (this does crossover,
@@ -64,9 +70,6 @@ void LCS::applyGA() {
  * Description: Creates the match set [M] and the correct set [C] from the
  * 		rules in the general population that (a) match the current
  * 		input and (b) correctly classify it, respectively.
- *
- * TODO:
- * 		Mark which classes are represented in the match set
  ****************************************************************************/
 void LCS::createMatchAndCorrectSets() {
 
@@ -191,12 +194,12 @@ void LCS::reproduceAndReplace() {
 	children.second.mutate(p_mutate_, p_dont_care_, 
 			training_set_.attribute_ranges_, range_scalar_);
 
-	// REMOVE AFTER DEBUGGING
-	pop_.rules_[p1_index].setExp(30);
-	pop_.rules_[p2_index].setExp(30);
-
-	if (do_ga_subsumption_)
+	if (do_ga_subsumption_) {
 		gaSubsume(p1_index, p2_index, children.first, children.second);
+	} else {
+		pop_.remove(pop_.deletionSelect(theta_fit_));
+		pop_.remove(pop_.deletionSelect(theta_fit_));
+	}
 	
 } // end reproduceAndReplace
 
@@ -279,18 +282,20 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 	// A parent may subsume a child rule only if its experience exceeds a threshold
 	// value theta_sub, and only if its accuracy exceeds a threshold value theta_acc.
 	// If this is not the case, then nothing happens.
-	if ((pop_.rules_[fitter].exp() > theta_sub_) && 
-			(pop_.rules_[fitter].accuracy() > theta_acc_)) {
+	if ((pop_.rules_[fitter].exp() >= theta_sub_) && 
+			(pop_.rules_[fitter].accuracy() >= theta_acc_)) {
 
 		// if the fitter parent meets both of the above criteria, it will
 		// subsume a child rule only if it generalizes the child rule.
 	 	if (pop_.rules_[fitter].generalizes(first_child)) {
 			pop_.rules_[fitter].setNumerosity(pop_.rules_[fitter].numerosity() + 1);
 			subsume_first = true;
+			cout << "First child was subsumed" << endl;
 		} 
 	 	if (pop_.rules_[fitter].generalizes(second_child)) {
 			pop_.rules_[fitter].setNumerosity(pop_.rules_[fitter].numerosity() + 1);
 			subsume_second = true;
+			cout << "Second child was subsumed" << endl;
 		}
 	
 		// if a child rule was NOT subsumed, it is added to the population. In order
@@ -299,12 +304,14 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 		if (!subsume_first) {
 			rule_to_remove1 = pop_.deletionSelect(theta_fit_);
 	 		pop_.rules_[rule_to_remove1] = first_child;
+			cout << "First child was added to the population" << endl;
 		}
 		if (!subsume_second) {
 			do {
 				rule_to_remove2 = pop_.deletionSelect(theta_fit_);
 	 			pop_.rules_[rule_to_remove2] = second_child;
 			} while (rule_to_remove2 == rule_to_remove1);
+			cout << "Second child was added to the population" << endl;
 		}
 	}
 	
