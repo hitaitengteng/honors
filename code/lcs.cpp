@@ -77,11 +77,6 @@ void LCS::createMatchAndCorrectSets() {
 	match_set_.clear();
 	correct_set_.clear();
 	
-	// these keep track of what rules belong
-	// in the match and correct sets
-	vector<int> rules_in_match_set;
-	vector<int> rules_in_correct_set;
-
 	// the current rule
 	Rule r;
 
@@ -95,69 +90,21 @@ void LCS::createMatchAndCorrectSets() {
 		// if the current rule matches the input, then
 		// the rule belongs in the match set
 		if (r.matches(curr_data_point_)) {
-
-			// update the number of data instances this rule matches
-			r.setNumMatches(r.num_matches() + 1);
-
-			// update which classes are represented in the match set
-			classes_in_match_set_[r.classification()] = true;
-
-			// update the rule's experience
-			r.setExp(r.exp() + 1);
-			rules_in_match_set.push_back(i);
+			match_set_.add(i);
 
 			// if the current rule's class matches that of the input,
 			// then the rule also belongs in the correct set
 			if (r.classification() == curr_data_point_.back()) {
+				correct_set_.add(i);
 
-				// update the number of data instances this rule
-				// correctly identifies
-				r.setNumCorrect(r.num_correct() + 1);
-
-				// update the number of niches
-				// to which this rule belongs
-				r.setNumNiches(r.num_niches() + 1);
-				rules_in_correct_set.push_back(i);
 			}
 
 			// update the rule's accuracy and fitness and
 			// copy it back into the population vector
 			r.updateAccuracyAndFitness(0);
+
+			// also need to update average niche size
 		}
-	}
-
-	// get the sizes of the match and correct sets
-	int c_size = rules_in_correct_set.size();
-	int m_size = rules_in_match_set.size();
-
-	// the index of the current rule
-	int r_i = 0;
-
-	// a counter for the rules_in_correct_set vector
-	int c = 0;
-
-	// the sum of the sizes of the niches to which a rule belongs
-	int ns_sum;
-
-	// iterate over all the rules that were found to match the input
-	for (int i=0; i<m_size; i++) {
-
-		// get the index of the current rule in the general population
-		r_i = rules_in_match_set[i];
-
-		// if the current rule is also in the correct set, update niche information
-		if ((c < c_size) && (r_i == rules_in_correct_set[c])) {
-
-			ns_sum = pop_.rules_[r_i].niche_sizes_sum();
-			pop_.rules_[r_i].setNicheSizesSum(ns_sum + c_size);
-			pop_.rules_[r_i].updateAvgNicheSize();
-
-			correct_set_.add(pop_.rules_[r_i]);
-			c++;
-		}
-
-		// add the rule to the match set
-		match_set_.add(pop_.rules_[r_i]);
 	}
 
 	// if the match set is empty or if not all of the classes are
@@ -173,6 +120,12 @@ void LCS::createMatchAndCorrectSets() {
  * Inputs:      
  * Outputs:    
  * Description:
+ *
+ * TODO: fix so that it operates on the correct set. This entails:
+ *
+ * 	1. Fixing rouletteWheelSelect so it operates only on [C].
+ * 	2. Fixing gaSubsume so that it places adds children to [C]?
+ * 	3. Fixing remove so that rules are also removed from [M] and [C].
  ****************************************************************************/
 void LCS::reproduceAndReplace() {
 
@@ -210,10 +163,6 @@ void LCS::reproduceAndReplace() {
  *
  * NOTE: the correct set and the rules in the correct set will not update
  * properly when the covering operator is invoked. This needs to be fixed.
- *
- * NOTE 2: what if the population is already at capacity? Is the covering
- * operator still invoked, and if so, is a rule selected for deletion in
- * the same manner as in GA subsumption?
  ****************************************************************************/
 void LCS::cover() {
 
@@ -242,13 +191,11 @@ void LCS::cover() {
 		r.condition_.push_back(a);
 	}
 
-	// add it to the population and the match set
+	// add it to the population, match, and correct sets 
 	pop_.add(r);
-	match_set_.add(r);
+	match_set_.add(pop_.size() - 1);
+	correct_set_.add(pop_.size() - 1);
 
-	// check if it belongs in the correct set as well
-	if (r.classification() == curr_data_point_.back())
-		correct_set_.add(r);
 
 } // end cover
 
@@ -257,7 +204,7 @@ void LCS::cover() {
  * Outputs:    
  * Description:
  *
- * TODO: fix so that child is subsumed more often?
+ * TODO: fix so that it operates on the correct set
  ****************************************************************************/
 void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_child) {
 
@@ -331,12 +278,6 @@ bool LCS::doCover() {
 
 	if (match_set_.empty())
 		return true;
-
-	int num_classes_represented = 0;
-	for (int i=0; i<NUM_CLASSES; i++) {
-		if (classes_in_match_set_[i] == true)
-			num_classes_represented++;
-	}
 
 	if (num_classes_represented < theta_mna_)
 		return true;

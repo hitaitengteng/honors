@@ -7,7 +7,6 @@
  *
  * TODO:
  * 	- change print function to print out name of class
- * 	- correct print_verbose function (and its name)
  ****************************************************************************/ 
 using namespace std;
 
@@ -353,14 +352,14 @@ void Rule::print() {
 		else
 			printf("%-7s", space);
 	}
-	printf("\n  Center:   ");
+	printf("\nCenter:     ");
 	for (size_t i=0; i<condition_length; i++) {
 		if (!condition_[i].dont_care())
 			printf("%-7.3f", condition_[i].center()); 
 		else 
 			printf("%-7s", space);
 	}
-	printf("\n  Spread:   ");
+	printf("\nSpread:     ");
 	for (size_t i=0; i<condition_length; i++) {
 		if (!condition_[i].dont_care())
 			printf("%-7.3f", condition_[i].spread()); 
@@ -371,7 +370,7 @@ void Rule::print() {
 	printf("\n");
 	printf("Accuracy:        %.3f\n", accuracy_);
 	printf("Fitness:         %.3f\n", fitness_);
-	printf("Class:           %d\n", classification_);
+	printf("Class:           %s\n", CLASS_NAMES[classification_].c_str());
 
 } // end printRule
 
@@ -381,26 +380,40 @@ void Rule::print() {
  * Outputs:     None.
  * Description: Prints important information about a rule.
  ****************************************************************************/ 
-void Rule::print_verbose() {
+void Rule::printVerbose() {
+
+	char dc[] = "[DC]";
+	char space[] = " ";
 
 	printf("\nRule %d\n--------\n", id_);
 	printf("\nAttribute:  ");
 	int condition_length = condition_.size();
 	for (size_t i=0; i<condition_length; i++)
-		printf("[ %d ] ", (int) i);
+		printf("%-7d", (int) i);
 	printf("\nDon't Care: ");
-	for (size_t i=0; i<condition_length; i++)
-		printf("[ %d ] ", (int) condition_[i].dont_care());
-	printf("\n  Center:   ");
-	for (size_t i=0; i<condition_length; i++)
-		printf("%.3f ", condition_[i].center()); 
-	printf("\n  Spread:   ");
-	for (size_t i=0; i<condition_length; i++)
-		printf("%.3f ", condition_[i].spread());
+	for (size_t i=0; i<condition_length; i++) {
+		if (condition_[i].dont_care())
+			printf("%-7s",dc);
+		else
+			printf("%-7s", space);
+	}
+	printf("\nCenter:     ");
+	for (size_t i=0; i<condition_length; i++) {
+		if (!condition_[i].dont_care())
+			printf("%-7.3f", condition_[i].center()); 
+		else 
+			printf("%-7s", space);
+	}
+	printf("\nSpread:     ");
+	for (size_t i=0; i<condition_length; i++) {
+		if (!condition_[i].dont_care())
+			printf("%-7.3f", condition_[i].spread()); 
+		else 
+			printf("%-7s", space);
+	}
 
-	printf("\n");
-
-	printf("Class:           %d\n", classification_);
+	printf("\n\n");
+	printf("Class:           %s\n", CLASS_NAMES[classification_].c_str());
 	printf("Time stamp:      %d\n", time_stamp_);
 	printf("Experience:      %d\n", exp_);
 	printf("Numerosity:      %d\n", numerosity_);
@@ -410,6 +423,7 @@ void Rule::print_verbose() {
 	printf("Avg Niche Size:  %.2f\n", avg_niche_size_);
 	printf("Accuracy:        %.3f\n", accuracy_);
 	printf("Fitness:         %.3f\n", fitness_);
+	printf("\n");
 
 } // end printRule
 

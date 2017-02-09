@@ -75,7 +75,7 @@ class Rule {
 		void print();
 
 		// prints out complete information about a rule
-		void print_verbose();
+		void printVerbose();
 	
 		// getters 
 		std::vector<Attribute> condition() const {return condition_;}

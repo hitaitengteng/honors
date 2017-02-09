@@ -3,6 +3,8 @@
 
 #include "population.h"
 #include "dataset.h"
+#include "matchSet.h"
+#include "correctSet.h"
 
 class LCS {
 
@@ -13,9 +15,6 @@ class LCS {
 				   do_correct_set_subsumption_(true)	{
 
 			pop_.setMaxSize(pop_size);
-			match_set_.setMaxSize(pop_size);
-			correct_set_.setMaxSize(pop_size);
-
 		}
 
 	// MEMBER FUNCTIONS 
@@ -63,11 +62,11 @@ class LCS {
 		Population pop_;
 
 		// the set of all rules matching a given input
-		Population match_set_;
+		MatchSet match_set_;
 
 		// the set of all rules that both match a given input AND
 		// correctly classify it
-		Population correct_set_;
+		CorrectSet correct_set_;
 
 		// the data set used to train the LCS
 		Dataset training_set_;
@@ -138,9 +137,6 @@ class LCS {
 		// indicates whether the correct set subsumption operator should
 		// be used
 		bool do_correct_set_subsumption_;
-
-		// keeps track of the classes represented in the match set
-		bool classes_in_match_set_[NUM_CLASSES];
 };
 
 #endif
