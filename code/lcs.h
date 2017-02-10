@@ -9,12 +9,16 @@
 class LCS {
 
 	public:
-		LCS(int pop_size): fitness_exponent_(0), p_crossover_(0.8), p_mutate_(0.1), p_dont_care_(0.33), 
+		// should eventually be initialized with a dataset too
+		LCS(Population p): fitness_exponent_(0), p_crossover_(0.8), p_mutate_(0.1), p_dont_care_(0.33), 
 				   theta_acc_(0), theta_sub_(0), theta_del_(20), theta_fit_(1), theta_ga_(25), 
        				   range_scalar_(0.25), do_ga_subsumption_(true), 
 				   do_correct_set_subsumption_(true)	{
 
-			pop_.setMaxSize(pop_size);
+			// set max size
+			pop_ = p;
+			match_set_ = MatchSet(&p);
+			correct_set_ = CorrectSet(&p);
 		}
 
 	// MEMBER FUNCTIONS 
@@ -31,6 +35,9 @@ class LCS {
 		// runs the crossover, mutation, and subsumption operators
 		// as appropriate
 		void reproduceAndReplace();
+
+		// selects a rule from the correct set using roulette wheel selection
+		int rouletteWheelSelect();
 
 		// when no rule in the population matches an input, this function
 		// creates one that does
@@ -83,8 +90,6 @@ class LCS {
 		}
 
 	private:
-		// the maximum allowable number of rules in the population
-		int max_pop_size_;
 
 		// the exponent to which accuracy is raised in order to
 		// compute fitness

@@ -6,10 +6,12 @@ CPPFLAGS =  -g # Debugging
 CPPFLAGS += -Wall # Show all warnings
 CPPFLAGS += -std=c++11 # Must use C++11
 
-classify: main.o lcs.o dataset.o population.o rule.o attribute.o
-	$(CXX) $(CPPFLAGS) main.o lcs.o dataset.o population.o rule.o attribute.o -o $@
+OBJS = lcs.o dataset.o population.o rule.o attribute.o matchSet.o correctSet.o main.o
 
-lcs.o: lcs.cpp lcs.h
+classify: $(OBJS)
+	$(CXX) $(CPPFLAGS) $(OBJS) -o $@
+
+lcs.o: lcs.cpp lcs.h matchSet.cpp correctSet.cpp
 	$(CXX) $(CPPFLAGS) -c lcs.cpp -o $@
 
 main.o: main.cpp lcs.cpp
@@ -17,6 +19,12 @@ main.o: main.cpp lcs.cpp
 
 dataset.o: dataset.cpp dataset.h
 	$(CXX) $(CPPFLAGS) -c dataset.cpp -o $@
+
+correctSet.o: correctSet.cpp correctSet.h
+	$(CXX) $(CPPFLAGS) -c correctSet.cpp -o $@
+
+matchSet.o: matchSet.cpp matchSet.h
+	$(CXX) $(CPPFLAGS) -c matchSet.cpp -o $@
 
 population.o: population.cpp population.h
 	$(CXX) $(CPPFLAGS) -c population.cpp -o $@

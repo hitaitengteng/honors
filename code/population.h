@@ -53,10 +53,6 @@ class Population {
 		}
 
 		// selects a rule from the population using roulette
-		// wheel selection and returns its index
-		int rouletteWheelSelect();
-
-		// selects a rule from the population using roulette
 		// wheel selection based on average niche size
 		int deletionSelect(double theta_fit);
 

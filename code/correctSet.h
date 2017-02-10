@@ -1,13 +1,20 @@
 #ifndef CORRECTSET_H
 #define CORRECTSET_H
 
+#include "utilities.h"
+#include "population.h"
+#include "rule.h"
+
 class CorrectSet {
 
 	public:
 
-		// constructor
-		CorrectSet(Population *p) : p_(p), exp_sum_(0), fitness_sum_(0), 
-			avg_niche_size_sum_(0) { }
+		// default constructor
+		CorrectSet() { };
+
+		// custom constructor
+		CorrectSet(Population *p) : p_(p), fitness_sum_(0), 
+			avg_niche_size_sum_(0), exp_sum_(0) { }
 
 		// the population from which the correct set is created
 		Population *p_;
@@ -18,22 +25,28 @@ class CorrectSet {
 
 		// adds a rule's index to the correct set and
 		// updates the relevant member variables
-		void add(int index) {
-			if (p_) {
-				Rule r = p_->rules_[index];
-				p_->rules_[index].setNumCorrect(r.num_correct() + 1);
-				p_->rules_[index].setNumNiches(r.num_niches() + 1);
-				// need to update niche sizes sum of the rule
-				members_.push_back(index);
-				exp_sum_ += r.exp();
-				fitness_sum_ += r.fitness();
-				avg_niche_size_sum_ += r.avg_niche_size;
-			}
-		}
+		void add(int index); 
 
 		// indicates whether the correct set is empty
 		bool isEmpty() {
 			return members_.empty();
+		}
+
+		// resets the correct set (but maintains the pointer to the population
+		void clear() {
+			members_.clear();
+			exp_sum_ = 0;
+			fitness_sum_ = 0;
+			avg_niche_size_sum_ = 0;
+		}
+
+		// prints the correct set
+		void print() {
+			int num_members = members_.size();
+			printf("\nCORRECT SET\n-----------\n");
+			for (int i=0; i<num_members; i++) {
+				(p_->rules_[members_[i]]).print();
+			}
 		}
 
 		// getters

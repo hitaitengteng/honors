@@ -4,9 +4,6 @@
  * File:        Rule.cpp
  * Author:      William Gantt
  * Description: Implements functions for the Rule class.
- *
- * TODO:
- * 	- change print function to print out name of class
  ****************************************************************************/ 
 using namespace std;
 

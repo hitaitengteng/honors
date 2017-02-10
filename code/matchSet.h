@@ -1,15 +1,20 @@
 #ifndef MATCHSET_H
 #define MATCHSET_H
 
+#include "rule.h"
+#include "population.h"
 #include "utilities.h"
 
 class MatchSet {
 
 	public:
 
-		// constructor
-		MatchSet(Population *p) : exp_sum_(0), avg_exp_(0), 
-			num_classes_represented_(0) p_(p) { }
+		// default constructor
+		MatchSet() { };
+
+		// custom constructor
+		MatchSet(Population *p) : p_(p), exp_sum_(0), avg_exp_(0), 
+			num_classes_represented_(0) { };
 
 		// the population from which the match set is created
 		Population *p_;
@@ -24,29 +29,15 @@ class MatchSet {
 
 		// adds a rule's index to the match set and
 		// updates the relevant member variables
-		void add(int index) {
-			if (p_) {
-				Rule r = p_->rules_[index];
-				p_->rules_[index].setExp(r.exp() + 1);
-				p_->rules_[index].setNumMatches(r.num_matches() + 1);
-				members_.push_back(index);
-				exp_sum_ += r.exp();
-				avg_exp_ = exp_sum_ / members_.size();
+		void add(int index);
 
-				int r_class = r.classification();
-				if (classes_represented_[r_class] == false) {
-					num_classes_represented_++;
-					classes_represented_[r_class]
-			}
-		}
-
-		// resets the match set
-		void reset() {
+		// resets the match set (but maintains the pointer to the population)
+		void clear() {
 			exp_sum_ = 0;
 			avg_exp_ = 0;
 			members_.clear();
 			for (int i=0; i<NUM_CLASSES; i++)
-				classes_in_match_set_[i] = false;
+				classes_represented_[i] = false;
 		}
 
 		// indicates whether the match set is empty
@@ -54,6 +45,14 @@ class MatchSet {
 			return members_.empty();
 		}
 			
+		// prints the match set
+		void print() {
+			printf("\nMATCH SET\n---------\n");
+			int num_members = members_.size();
+			for (int i=0; i<num_members; i++)
+				(p_->rules_[members_[i]]).print();
+		}
+
 		// getters
 		double exp_sum() {return exp_sum_;}
 		double avg_exp() {return avg_exp_;}

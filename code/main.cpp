@@ -31,12 +31,18 @@ int main(int argc, char **argv) {
    
 	rng.seed(rd());
 
-	LCS lcs(25);
-	lcs.pop_ = Population::random(25,10);
-	lcs.pop_.setMaxSize(30);
+	Population p = Population::random(15,10);
+	p.setMaxSize(20);
+	LCS lcs(p);
 	lcs.training_set_ = Dataset::random(25);
 	lcs.setCurrDataPoint(Dataset::randomDataPoint(10));
-	lcs.reproduceAndReplace();
+	lcs.createMatchAndCorrectSets();
+	cout << lcs.match_set_.members_.size() << endl;
+	if (lcs.correct_set_.members_.size() >= 2)
+		lcs.reproduceAndReplace();
+	lcs.pop_.print();
+	cout << lcs.match_set_.members_.size() << endl;
+	cout << lcs.correct_set_.members_.size() << endl;
 
 	return 0;
 	

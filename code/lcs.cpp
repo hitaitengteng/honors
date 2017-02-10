@@ -53,14 +53,14 @@ void LCS::processInput(int i) {
 void LCS::applyGA() {
 
 	// rouletteWheelSelect [What's this about?]
-	correct_set_.rouletteWheelSelect();
+	// rouletteWheelSelect();
 
 	// reproduceAndReplace (this does crossover,
 	// mutation, and parent-child subsumption)
 	reproduceAndReplace();
 
 	// reset time stamps of rules
-	correct_set_.resetTimeStamps();
+	// correct_set_.resetTimeStamps();
 
 } // end applyGA
 
@@ -107,12 +107,17 @@ void LCS::createMatchAndCorrectSets() {
 		}
 	}
 
+	match_set_.print();
+	correct_set_.print();
+
 	// if the match set is empty or if not all of the classes are
 	// represented in the match set, a new rule is created and
 	// added to both the population and the match set (and the
 	// correct set, if applicable)
-	if (doCover())
+	if (doCover()) {
+		cout << "cover executed" << endl;
 		cover();
+	}
 
 } // end createMatchAndCorrectSets
 
@@ -123,19 +128,18 @@ void LCS::createMatchAndCorrectSets() {
  *
  * TODO: fix so that it operates on the correct set. This entails:
  *
- * 	1. Fixing rouletteWheelSelect so it operates only on [C].
- * 	2. Fixing gaSubsume so that it places adds children to [C]?
+ * 	2. Fixing gaSubsume so that it adds children to [C]?
  * 	3. Fixing remove so that rules are also removed from [M] and [C].
  ****************************************************************************/
 void LCS::reproduceAndReplace() {
 
 	// select the first parent
-	int p1_index = pop_.rouletteWheelSelect();
+	int p1_index = rouletteWheelSelect();
 
 	// make sure a different rule is selected for the second parent
 	int p2_index;
 	do {
-		p2_index = pop_.rouletteWheelSelect();
+		p2_index = rouletteWheelSelect();
 	} while (p1_index == p2_index);
 
 	// generate a pair of offspring
@@ -157,12 +161,41 @@ void LCS::reproduceAndReplace() {
 } // end reproduceAndReplace
 
 /****************************************************************************
+ * Inputs:
+ * Outputs:
+ * Description:
+ ****************************************************************************/ 
+int LCS::rouletteWheelSelect() {
+
+	// select a random number in the range [0,correct_set_.fitness_sum()]
+	double random = real_dist(rng) * correct_set_.fitness_sum();
+
+	/*
+	 * we determine the individual selected by subtracting
+	 * the individual fitnesses from the random value generated
+	 * above until that value falls to or below 0. In this way,
+	 * an individual's likelihood of being selected is directly
+	 * proportional to its fitness
+	 */
+	int num_rules = correct_set_.members_.size();
+	int curr_index;
+	for (int i=0; i<num_rules; i++) {
+		curr_index = correct_set_.members_[i];
+		random -= pop_.rules_[curr_index].fitness();
+		if (random <= 0) {
+			return i;
+		}
+	}
+
+	// if there are somehow rounding errors, we
+	// return the last rule in the correct set
+	return correct_set_.members_[num_rules - 1];
+
+} // end rouletteWheelSelect
+/****************************************************************************
  * Inputs:       None.
  * Outputs:      None.
  * Description: 
- *
- * NOTE: the correct set and the rules in the correct set will not update
- * properly when the covering operator is invoked. This needs to be fixed.
  ****************************************************************************/
 void LCS::cover() {
 
@@ -195,7 +228,6 @@ void LCS::cover() {
 	pop_.add(r);
 	match_set_.add(pop_.size() - 1);
 	correct_set_.add(pop_.size() - 1);
-
 
 } // end cover
 
@@ -276,10 +308,10 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
  ****************************************************************************/
 bool LCS::doCover() {
 
-	if (match_set_.empty())
+	if (match_set_.isEmpty())
 		return true;
 
-	if (num_classes_represented < theta_mna_)
+	if (match_set_.num_classes_represented() < theta_mna_)
 		return true;
 
 	return false;

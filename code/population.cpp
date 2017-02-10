@@ -131,35 +131,6 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
 } // end crossover
 
 /****************************************************************************
- * Inputs:
- * Outputs:
- * Description:
- ****************************************************************************/ 
-int Population::rouletteWheelSelect() {
-
-	// select a random number in the range [0,fitness_sum_]
-	double random = real_dist(rng) * fitness_sum_;
-
-	// we determine the individual selected by subtracting
-	// the individual fitnesses from the random value generated
-	// above until that value falls to or below 0. In this way,
-	// an individual's likelihood of being selected is directly
-	// proportional to its fitness. 
-	int num_rules = rules_.size();
-	for (size_t i=0; i<num_rules; i++) {
-		random -= rules_[i].fitness();
-		if (random <= 0) {
-			return i;
-		}
-	}
-
-	// if there are somehow rounding errors
-	// we still return the last rule in the population
-	return rules_.size() - 1;
-
-} // end rouletteWheelSelect
-
-/****************************************************************************
  * Inputs:      none
  * Outputs:     
  * Description: Horribly inefficient. Fix.
