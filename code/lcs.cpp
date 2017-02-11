@@ -103,11 +103,18 @@ void LCS::createMatchAndCorrectSets() {
 			// copy it back into the population vector
 			r.updateAccuracyAndFitness(0);
 
-			// also need to update average niche size
 		}
 	}
 
 	match_set_.print();
+
+	// There is certain information about the correct set (such as
+	// the number of members it contains) that each rule must have,
+	// but which cannot be known until after the correct set has
+	// already been created. That's the information that gets
+	// updated here.
+	correct_set_.updateNicheInfo();
+
 	correct_set_.print();
 
 	// if the match set is empty or if not all of the classes are
@@ -115,7 +122,6 @@ void LCS::createMatchAndCorrectSets() {
 	// added to both the population and the match set (and the
 	// correct set, if applicable)
 	if (doCover()) {
-		cout << "cover executed" << endl;
 		cover();
 	}
 
@@ -128,8 +134,8 @@ void LCS::createMatchAndCorrectSets() {
  *
  * TODO: fix so that it operates on the correct set. This entails:
  *
- * 	2. Fixing gaSubsume so that it adds children to [C]?
- * 	3. Fixing remove so that rules are also removed from [M] and [C].
+ * 	1. Fixing gaSubsume so that it adds children to [C]. What if the
+ * 	   child doesn't belong in [C] (i.e. it doesn't match the input)?
  ****************************************************************************/
 void LCS::reproduceAndReplace() {
 
@@ -151,11 +157,17 @@ void LCS::reproduceAndReplace() {
 	children.second.mutate(p_mutate_, p_dont_care_, 
 			training_set_.attribute_ranges_, range_scalar_);
 
+	// see documentation for gaSubsume below. If gaSubsume is not used,
+	// then two existing rules are deleted and the two offspring are
+	// added to the population. A rule's likelihood of being chosen
+	// for deletion is proportional to its average niche size.
 	if (do_ga_subsumption_) {
 		gaSubsume(p1_index, p2_index, children.first, children.second);
 	} else {
 		pop_.remove(pop_.deletionSelect(theta_fit_));
 		pop_.remove(pop_.deletionSelect(theta_fit_));
+		pop_.add(children.first);
+		pop_.add(children.second);
 	}
 	
 } // end reproduceAndReplace
@@ -192,6 +204,7 @@ int LCS::rouletteWheelSelect() {
 	return correct_set_.members_[num_rules - 1];
 
 } // end rouletteWheelSelect
+
 /****************************************************************************
  * Inputs:       None.
  * Outputs:      None.
@@ -235,8 +248,6 @@ void LCS::cover() {
  * Inputs:      
  * Outputs:    
  * Description:
- *
- * TODO: fix so that it operates on the correct set
  ****************************************************************************/
 void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_child) {
 
@@ -269,11 +280,13 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 	 	if (pop_.rules_[fitter].generalizes(first_child)) {
 			pop_.rules_[fitter].setNumerosity(pop_.rules_[fitter].numerosity() + 1);
 			subsume_first = true;
+			pop_.rules_[fitter].printVerbose();
 			cout << "First child was subsumed" << endl;
 		} 
 	 	if (pop_.rules_[fitter].generalizes(second_child)) {
 			pop_.rules_[fitter].setNumerosity(pop_.rules_[fitter].numerosity() + 1);
 			subsume_second = true;
+			pop_.rules_[fitter].printVerbose();
 			cout << "Second child was subsumed" << endl;
 		}
 	
@@ -282,6 +295,8 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 		// deletion (NOTE: the rule(s) selected for deletion may be the parent(s)).
 		if (!subsume_first) {
 			rule_to_remove1 = pop_.deletionSelect(theta_fit_);
+			first_child.setID(pop_.id_count_);
+			pop_.id_count_++;
 	 		pop_.rules_[rule_to_remove1] = first_child;
 			cout << "First child was added to the population" << endl;
 		}
@@ -290,6 +305,8 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 				rule_to_remove2 = pop_.deletionSelect(theta_fit_);
 	 			pop_.rules_[rule_to_remove2] = second_child;
 			} while (rule_to_remove2 == rule_to_remove1);
+			second_child.setID(pop_.id_count_);
+			pop_.id_count_++;
 			cout << "Second child was added to the population" << endl;
 		}
 	}

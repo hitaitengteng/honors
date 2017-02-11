@@ -50,7 +50,7 @@ class MatchSet {
 			printf("\nMATCH SET\n---------\n");
 			int num_members = members_.size();
 			for (int i=0; i<num_members; i++)
-				(p_->rules_[members_[i]]).print();
+				(p_->rules_[members_[i]]).printVerbose();
 		}
 
 		// getters

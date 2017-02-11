@@ -21,6 +21,10 @@ class Rule {
 		// functions)
 		std::vector<Attribute> condition_;
 
+		// Keeps track of the number of generations that have passed.
+		// Note that this should not exceed the number of input data
+		// instances, for obvious reasons.
+
 	// FUNCTIONS
 	
 		// constructor
@@ -112,10 +116,12 @@ class Rule {
 	private:
 
 		// a number that uniquely identifies the rule
+		// UPDATES CORRECTLY
 		int id_;
 
 		// the class into which any input matching the condition is
 		// to be categorized, according to the rule
+		// UPDATES CORRECTLY
 		int classification_;
 
 		// the last generation on which this rule participated in an
@@ -123,16 +129,20 @@ class Rule {
 		int time_stamp_;
 
 		// the number of times this rule's parameters have been updated
+		// UPDATES CORRECTLY
 		int exp_;
 
 		// the number of copies of this rule in the population set [P]
+		// UPDATES CORRECTLY
 		int numerosity_;
 
 		// the number of inputs that this rule matches
+		// UPDATES CORRECTLY
 		int num_matches_;
 
 		// the number of inputs that this rule both matches AND correctly
 		// classifies
+		// UPDATES CORRECTLY
 		int num_correct_;
 
 		// the number of attributes in the condition of this rule whose
@@ -141,14 +151,17 @@ class Rule {
 
 		// the number of distinct correct sets to which this rule has
 		// belonged
+		// UPDATES CORRECTLY
 		int num_niches_;
 
 		// the sum of the sizes of all niches to which this rule has
 		// belonged
+		// UPDATES CORRECTLY
 		int niche_sizes_sum_;
 
 		// the average size of the correct sets to which this rule has
 		// belonged
+		// UPDATES CORRECTLY
 		double avg_niche_size_;
 
 		// the rule's accuracy in correctly classifying inputs

@@ -11,6 +11,7 @@
  * 	- add comments to the population and LCS files (esp function 
  * 	  descriptions)
  * 	- Update Crisp_LCS_Schema.txt
+ * 	- Should population size increase when a child is subsumed?
  *
  ****************************************************************************/ 
   
@@ -31,18 +32,15 @@ int main(int argc, char **argv) {
    
 	rng.seed(rd());
 
-	Population p = Population::random(15,10);
-	p.setMaxSize(20);
+	Population p = Population::random(20,10);
+	p.setMaxSize(30);
 	LCS lcs(p);
+	// lcs.pop_.printVerbose();
 	lcs.training_set_ = Dataset::random(25);
 	lcs.setCurrDataPoint(Dataset::randomDataPoint(10));
 	lcs.createMatchAndCorrectSets();
-	cout << lcs.match_set_.members_.size() << endl;
 	if (lcs.correct_set_.members_.size() >= 2)
 		lcs.reproduceAndReplace();
-	lcs.pop_.print();
-	cout << lcs.match_set_.members_.size() << endl;
-	cout << lcs.correct_set_.members_.size() << endl;
 
 	return 0;
 	

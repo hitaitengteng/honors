@@ -82,6 +82,14 @@ class Population {
 			}
 		}
 
+		// prints all the rules in the population with additional detail
+		void printVerbose() {
+			int num_rules = rules_.size();
+			for (size_t i=0; i<num_rules; i++) {
+				rules_[i].printVerbose();	
+			}
+		}
+
 		// getters
 		int size() const {return rules_.size();}
 		double fitness_sum() const {return fitness_sum_;}

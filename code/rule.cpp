@@ -417,6 +417,7 @@ void Rule::printVerbose() {
 	printf("# Matches:       %d\n", num_matches_);
 	printf("# Correct:       %d\n", num_correct_);
 	printf("# Niches:        %d\n", num_niches_);
+	printf("Niche sizes sum: %d\n", niche_sizes_sum_);
 	printf("Avg Niche Size:  %.2f\n", avg_niche_size_);
 	printf("Accuracy:        %.3f\n", accuracy_);
 	printf("Fitness:         %.3f\n", fitness_);

@@ -27,6 +27,10 @@ class CorrectSet {
 		// updates the relevant member variables
 		void add(int index); 
 
+		// update niche information for all
+		// of the rules in the correct set
+		void updateNicheInfo();
+
 		// indicates whether the correct set is empty
 		bool isEmpty() {
 			return members_.empty();
@@ -45,7 +49,7 @@ class CorrectSet {
 			int num_members = members_.size();
 			printf("\nCORRECT SET\n-----------\n");
 			for (int i=0; i<num_members; i++) {
-				(p_->rules_[members_[i]]).print();
+				(p_->rules_[members_[i]]).printVerbose();
 			}
 		}
 

@@ -70,7 +70,9 @@ void Population::remove(int index) {
 	fitness_sum_ -= rules_[index].fitness();
 	exp_sum_ -= rules_[index].exp();
 
-	// delete the rule
+	// Delete the rule. Note that we do not have to delete it from
+	// the match or correct sets because those are reset at every
+	// iteration anyway. 
 	rules_.erase(rules_.begin() + index);
 
 } // end remove
@@ -88,9 +90,6 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
 
 	// select a point in [0,condition.size() - 1] for 1-pt crossover
 	int cross_point = (rng() % p1.condition_.size());
-
-	// DELETE AFTER DEBUGGING
-	printf("Crossover Point: %d\n", cross_point);
 
 	// create the offspring
 	Rule off1;
