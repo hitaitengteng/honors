@@ -14,10 +14,9 @@
 using namespace std;
 
 /****************************************************************************
- * Inputs:      The current input's index in the vector of all inputs
+ * Inputs:      The current input's index in the training set.
  * Outputs:     None.
- * Description: [For training set only; should eventually be called in a
- * 		 for-loop in main.cpp]
+ * Description: Presents a single data instance to the LCS for processing.
  ****************************************************************************/
 void LCS::processInput(int i) {
 
@@ -101,9 +100,9 @@ void LCS::createMatchAndCorrectSets() {
 } // end createMatchAndCorrectSets
 
 /****************************************************************************
- * Inputs:      
- * Outputs:    
- * Description:
+ * Inputs:      None. 
+ * Outputs:     None.
+ * Description: Executes a single iteration of the genetic algorithm.
  ****************************************************************************/
 void LCS::applyGA() {
 
@@ -144,9 +143,10 @@ void LCS::applyGA() {
 } // end applyGA
 
 /****************************************************************************
- * Inputs:
- * Outputs:
- * Description:
+ * Inputs:      None.
+ * Outputs:     None.
+ * Description: Randomly selects a rule from [C]. A rule's likelihood of
+ * 		being selected is directly proportional to its fitness.
  ****************************************************************************/ 
 int LCS::rouletteWheelSelect() {
 
@@ -177,9 +177,15 @@ int LCS::rouletteWheelSelect() {
 } // end rouletteWheelSelect
 
 /****************************************************************************
- * Inputs:       None.
- * Outputs:      None.
- * Description: 
+ * Inputs:      None.
+ * Outputs:     None.
+ * Description: If [C] is empty on a given iteration of the LCS, or if not
+ * 		all of the classes are represented in [M], this function is
+ * 		called. Cover creates a new rule whose attribute values are
+ * 		centered at the corresponding attribute values of the input,
+ * 		and whose class is the same as the input's class. The new
+ * 		rule is then added to the general population, and to [M] and
+ * 		[C].
  ****************************************************************************/
 void LCS::cover() {
 
@@ -216,9 +222,24 @@ void LCS::cover() {
 } // end cover
 
 /****************************************************************************
- * Inputs:      
- * Outputs:    
- * Description:
+ * Inputs:     
+ * 	p1_index:    the index of the first parent rule in the general
+ * 		     population.
+ * 	p2_index:    the index of the second parent rule in the general
+ * 		     population.
+ * 	first_child: the first of the two offspring rules.
+ * 	second_child: the second of the two offspring rules. 
+ *
+ * Outputs:     None.
+ * Description: After crossover and mutation occur, and if do_ga_subsume is
+ * 		set to true, it must be determined whether the offspring
+ * 		rules are to be added to the population. If it is found that
+ * 		the fitter of the two parent rules is more general than one
+ * 		of the offspring, that offspring is not added to the
+ * 		population, and the parent's numerosity parameter is
+ * 		incremented. Otherwise, the offspring is added to
+ * 		the population and a rule is selected from the general
+ * 		population at random for deletion.
  ****************************************************************************/
 void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_child) {
 
@@ -341,9 +362,12 @@ bool LCS::doGA() {
 
 /****************************************************************************
  * Inputs:      None.
- * Outputs:     Determines whether the specify operator should be invoked
+ * Outputs:     A boolean indicating whether the specify operator should be
+ * 		invoked.
+ * Description: Determines whether the specify operator should be invoked
  * 		on [C].
- * Description:
+ *
+ * TODO: implement specify
  ****************************************************************************/
 bool LCS::doSpecify() {
 
