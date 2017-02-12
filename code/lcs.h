@@ -10,15 +10,18 @@ class LCS {
 
 	public:
 		// should eventually be initialized with a dataset too
-		LCS(Population p): fitness_exponent_(0), p_crossover_(0.8), p_mutate_(0.1), p_dont_care_(0.33), 
-				   theta_acc_(0), theta_sub_(0), theta_del_(20), theta_fit_(1), theta_ga_(25), 
-       				   range_scalar_(0.25), do_ga_subsumption_(true), 
+		LCS(Population p): curr_gen_(0), fitness_exponent_(1), 
+				   p_crossover_(0.8), p_mutate_(0.1), 
+				   p_dont_care_(0.33), theta_acc_(0.9), 
+				   theta_sub_(0), theta_ga_(5), 
+				   range_scalar_(0.25), 
+				   do_ga_subsumption_(true), 
 				   do_correct_set_subsumption_(true)	{
 
 			// set max size
 			pop_ = p;
-			match_set_ = MatchSet(&p);
-			correct_set_ = CorrectSet(&p);
+			match_set_ = MatchSet(&pop_);
+			correct_set_ = CorrectSet(&pop_);
 		}
 
 	// MEMBER FUNCTIONS 
@@ -32,10 +35,6 @@ class LCS {
 		// input.
 		void createMatchAndCorrectSets();
 
-		// runs the crossover, mutation, and subsumption operators
-		// as appropriate
-		void reproduceAndReplace();
-
 		// selects a rule from the correct set using roulette wheel selection
 		int rouletteWheelSelect();
 
@@ -47,9 +46,7 @@ class LCS {
 		void gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_child);
 
 		// determines whether the GA should be invoked
-		bool doGA() {
-			return (correct_set_.fitness_sum() > theta_ga_);
-		}
+		bool doGA(); 
 
 		// determines whether the covering operator should be invoked
 		bool doCover();
@@ -64,6 +61,11 @@ class LCS {
 		void processRule(Rule r);
 
 	// MEMBER VARIABLES (these should probably be private)
+
+		// Keeps track of the number of generations that have passed.
+		// Note that this should never exceed the number of entries
+		// in the data set, for obvious reasons
+		int curr_gen_;
 
 		// the population of rules
 		Population pop_;
@@ -115,18 +117,12 @@ class LCS {
 		// be able to subsume another rule
 		double theta_sub_;
 
-		// NEEDS A DESCRIPTION
-		double theta_del_;
-
-		// the fitness value above which a rule may not be deleted
-		double theta_fit_;
-
 		// the number of actions represented in the match set below
 		// which the covering operator may be invoked
 		double theta_mna_;
 
 		// the maximum number of time steps that may pass before the
-		// GA is invoked
+		// GA is invoked [FIX THIS DESCRIPTION]
 		double theta_ga_;
 
 		// a scalar that determines the range from which random attribute

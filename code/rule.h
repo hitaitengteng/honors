@@ -21,10 +21,6 @@ class Rule {
 		// functions)
 		std::vector<Attribute> condition_;
 
-		// Keeps track of the number of generations that have passed.
-		// Note that this should not exceed the number of input data
-		// instances, for obvious reasons.
-
 	// FUNCTIONS
 	
 		// constructor
@@ -59,8 +55,8 @@ class Rule {
 
 		// updates accuracy and fitness
 		void updateAccuracyAndFitness(int fitness_exponent) {
-			if (num_correct_ != 0) {
-				accuracy_ = num_matches_ / num_correct_;
+			if (num_matches_ != 0) {
+				accuracy_ = ((double) num_correct_) / ((double) num_matches_);
 				fitness_ = pow(accuracy_, fitness_exponent);
 			}
 		}

@@ -12,7 +12,8 @@
  * 	  descriptions)
  * 	- Update Crisp_LCS_Schema.txt
  * 	- Should population size increase when a child is subsumed?
- *
+ * 	- Figure out how to modify methods so that numerosity parameter
+ * 	  is taken into account (or just don't use the numerosity parameter)
  ****************************************************************************/ 
   
 using namespace std;
@@ -35,12 +36,11 @@ int main(int argc, char **argv) {
 	Population p = Population::random(20,10);
 	p.setMaxSize(30);
 	LCS lcs(p);
-	// lcs.pop_.printVerbose();
 	lcs.training_set_ = Dataset::random(25);
-	lcs.setCurrDataPoint(Dataset::randomDataPoint(10));
-	lcs.createMatchAndCorrectSets();
-	if (lcs.correct_set_.members_.size() >= 2)
-		lcs.reproduceAndReplace();
+	for (int i=0; i<20; i++) {
+		cout << lcs.curr_gen_ << endl;
+		lcs.processInput(i);
+	}
 
 	return 0;
 	

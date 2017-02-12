@@ -8,7 +8,6 @@
  *
  * TODO:
  * 	- Need a separate function, maybe "evaluateInput," for testing mode.
- * 	- Figure out how to update niche_sizes_sum variable for rules
  * 	- Implement specify operator
  ****************************************************************************/
 
@@ -30,39 +29,17 @@ void LCS::processInput(int i) {
 	// correctly classify it
 	createMatchAndCorrectSets();
 
-	if (doSpecify()) {
-		// select a random rule from the population
-		//
-		// specify it
-	}
-	
+	// specify
+
 	// the GA is invoked on the correct set only if the average
 	// number of iterations that have passed since a rule in the
 	// correct set participated in a GA call exceeds a threshold
 	// value theta_ga_
-	if (doGA())
+	if (doGA()) {
 		applyGA();
+	}
 
 } // end processInput
-
-/****************************************************************************
- * Inputs:      None.
- * Outputs:     None.
- * Description: Runs the genetic algorithm.
- ****************************************************************************/
-void LCS::applyGA() {
-
-	// rouletteWheelSelect [What's this about?]
-	// rouletteWheelSelect();
-
-	// reproduceAndReplace (this does crossover,
-	// mutation, and parent-child subsumption)
-	reproduceAndReplace();
-
-	// reset time stamps of rules
-	// correct_set_.resetTimeStamps();
-
-} // end applyGA
 
 /****************************************************************************
  * Inputs:      None.
@@ -73,40 +50,35 @@ void LCS::applyGA() {
  ****************************************************************************/
 void LCS::createMatchAndCorrectSets() {
 
+	// increment the current generation
+	curr_gen_++;
+
 	// clear the old match and correct sets
 	match_set_.clear();
 	correct_set_.clear();
 	
-	// the current rule
-	Rule r;
-
 	// iterate over all the rules in the population
 	int pop_size = pop_.rules_.size();
 	for (int i=0; i<pop_size; i++) {
 
-		// get the current rule
-		r = pop_.rules_[i];
-
 		// if the current rule matches the input, then
 		// the rule belongs in the match set
-		if (r.matches(curr_data_point_)) {
+		if (pop_.rules_[i].matches(curr_data_point_)) {
 			match_set_.add(i);
 
 			// if the current rule's class matches that of the input,
 			// then the rule also belongs in the correct set
-			if (r.classification() == curr_data_point_.back()) {
+			if (pop_.rules_[i].classification() == curr_data_point_.back()) {
 				correct_set_.add(i);
 
 			}
 
 			// update the rule's accuracy and fitness and
 			// copy it back into the population vector
-			r.updateAccuracyAndFitness(0);
+			pop_.rules_[i].updateAccuracyAndFitness(fitness_exponent_);
 
 		}
 	}
-
-	match_set_.print();
 
 	// There is certain information about the correct set (such as
 	// the number of members it contains) that each rule must have,
@@ -115,15 +87,16 @@ void LCS::createMatchAndCorrectSets() {
 	// updated here.
 	correct_set_.updateNicheInfo();
 
+	match_set_.print();
 	correct_set_.print();
 
 	// if the match set is empty or if not all of the classes are
 	// represented in the match set, a new rule is created and
 	// added to both the population and the match set (and the
 	// correct set, if applicable)
-	if (doCover()) {
-		cover();
-	}
+	// if (doCover()) {
+	//	cover();
+	// }
 
 } // end createMatchAndCorrectSets
 
@@ -131,13 +104,8 @@ void LCS::createMatchAndCorrectSets() {
  * Inputs:      
  * Outputs:    
  * Description:
- *
- * TODO: fix so that it operates on the correct set. This entails:
- *
- * 	1. Fixing gaSubsume so that it adds children to [C]. What if the
- * 	   child doesn't belong in [C] (i.e. it doesn't match the input)?
  ****************************************************************************/
-void LCS::reproduceAndReplace() {
+void LCS::applyGA() {
 
 	// select the first parent
 	int p1_index = rouletteWheelSelect();
@@ -164,13 +132,16 @@ void LCS::reproduceAndReplace() {
 	if (do_ga_subsumption_) {
 		gaSubsume(p1_index, p2_index, children.first, children.second);
 	} else {
-		pop_.remove(pop_.deletionSelect(theta_fit_));
-		pop_.remove(pop_.deletionSelect(theta_fit_));
+		pop_.remove(pop_.deletionSelect(theta_acc_));
+		pop_.remove(pop_.deletionSelect(theta_acc_));
 		pop_.add(children.first);
 		pop_.add(children.second);
 	}
+
+	// update the time stamps of the rules in [C]
+	correct_set_.updateTimeStamps(curr_gen_);
 	
-} // end reproduceAndReplace
+} // end applyGA
 
 /****************************************************************************
  * Inputs:
@@ -280,13 +251,11 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 	 	if (pop_.rules_[fitter].generalizes(first_child)) {
 			pop_.rules_[fitter].setNumerosity(pop_.rules_[fitter].numerosity() + 1);
 			subsume_first = true;
-			pop_.rules_[fitter].printVerbose();
 			cout << "First child was subsumed" << endl;
 		} 
 	 	if (pop_.rules_[fitter].generalizes(second_child)) {
 			pop_.rules_[fitter].setNumerosity(pop_.rules_[fitter].numerosity() + 1);
 			subsume_second = true;
-			pop_.rules_[fitter].printVerbose();
 			cout << "Second child was subsumed" << endl;
 		}
 	
@@ -294,7 +263,7 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 		// to maintain a constant population size, another rule must be selected for
 		// deletion (NOTE: the rule(s) selected for deletion may be the parent(s)).
 		if (!subsume_first) {
-			rule_to_remove1 = pop_.deletionSelect(theta_fit_);
+			rule_to_remove1 = pop_.deletionSelect(theta_acc_);
 			first_child.setID(pop_.id_count_);
 			pop_.id_count_++;
 	 		pop_.rules_[rule_to_remove1] = first_child;
@@ -302,7 +271,7 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 		}
 		if (!subsume_second) {
 			do {
-				rule_to_remove2 = pop_.deletionSelect(theta_fit_);
+				rule_to_remove2 = pop_.deletionSelect(theta_acc_);
 	 			pop_.rules_[rule_to_remove2] = second_child;
 			} while (rule_to_remove2 == rule_to_remove1);
 			second_child.setID(pop_.id_count_);
@@ -319,13 +288,13 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
  * 		be invoked.
  * Description: Decides whether the covering operator should be invoked.
  * 		Returns true only if one of the following is true:
- * 			1. the match set is empty
+ * 			1. the correct set is empty
  * 			2. Not all of the possible classes are represented
  * 			   in the match set.
  ****************************************************************************/
 bool LCS::doCover() {
 
-	if (match_set_.isEmpty())
+	if (correct_set_.isEmpty())
 		return true;
 
 	if (match_set_.num_classes_represented() < theta_mna_)
@@ -336,13 +305,49 @@ bool LCS::doCover() {
 } // end doCover
 
 /****************************************************************************
- * Inputs:      
- * Outputs:    
+ * Inputs:      None.
+ * Outputs:     A boolean indicating whether the GA should be invoked.
+ * Description: At each iteration of the LCS, determines whether the GA
+ * 		should be invoked. The GA is invoked if the average number
+ * 		of iterations since the rules in [C] last participated in
+ * 		a run of the GA exceeds some threshold value theta_ga.
+ ****************************************************************************/
+bool LCS::doGA() {
+
+	int correct_set_size = correct_set_.members_.size();
+
+	// if there are fewer than two rules in [C], the GA cannot be executed
+	if (correct_set_size < 2)
+		return false;
+
+	// the sum of the number of iterations since each rule last
+	// participated in a correct set to which the GA was applied
+	int sum_iters_since_last_ga = 0;
+
+	// the index of the current rule in the general population
+	int r_i;
+
+	// iterate over all the rules in the correct set
+	for (int i=0; i<correct_set_size; i++) {
+
+		r_i = correct_set_.members_[i];
+		sum_iters_since_last_ga += 
+			curr_gen_ - pop_.rules_[r_i].time_stamp();
+	}
+
+	return (sum_iters_since_last_ga / correct_set_size) > theta_ga_;
+
+} // end doGA
+
+/****************************************************************************
+ * Inputs:      None.
+ * Outputs:     Determines whether the specify operator should be invoked
+ * 		on [C].
  * Description:
  ****************************************************************************/
 bool LCS::doSpecify() {
 
-	// the specify operator is invoked on the correct
+	// in XCS, the specify operator is invoked on the correct
 	// set when the rules in the correct set are "sufficiently
 	// experienced" and the average error exceeds some threshold
 	

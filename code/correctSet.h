@@ -31,6 +31,13 @@ class CorrectSet {
 		// of the rules in the correct set
 		void updateNicheInfo();
 
+		// update the time stamps of all the rules in [C]
+		void updateTimeStamps(int curr_gen) {
+			int num_members = members_.size();
+			for (int i=0; i<num_members; i++)
+				p_->rules_[members_[i]].setTimeStamp(curr_gen);
+		}
+
 		// indicates whether the correct set is empty
 		bool isEmpty() {
 			return members_.empty();

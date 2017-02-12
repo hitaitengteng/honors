@@ -132,9 +132,11 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
 /****************************************************************************
  * Inputs:      none
  * Outputs:     
- * Description: Horribly inefficient. Fix.
+ * Description: Horribly inefficient---Fix. Also: the metrics used to
+ * 		determine which rule is to be deleted should be more
+ * 		sophisticated.
  ****************************************************************************/ 
-int Population::deletionSelect(double theta_fit) {
+int Population::deletionSelect(double theta_acc) {
 
 	// sum the average niche sizes of all the rules
 	double avg_niche_size_sum = 0;
@@ -144,7 +146,7 @@ int Population::deletionSelect(double theta_fit) {
 	}
 
 	// select a random rule for deletion. A rule may not be deleted if its
-	// fitness exceeds a threshold value theta_fit, hence the do-while loop
+	// fitness exceeds a threshold value theta_acc, hence the do-while loop
 	double random;
 	int to_delete;
 	do {
@@ -161,7 +163,7 @@ int Population::deletionSelect(double theta_fit) {
 				break;
 			}
 		}
-	} while (rules_[to_delete].accuracy() > theta_fit);
+	} while (rules_[to_delete].accuracy() > theta_acc);
 
 	return to_delete;
 

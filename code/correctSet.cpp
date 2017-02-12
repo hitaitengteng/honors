@@ -9,13 +9,27 @@
  ****************************************************************************/ 
 void CorrectSet::add(int index) {
 
+	// try to add the rule only if the population exists
 	if (p_) {
+
+		// the current rule
 		Rule r = p_->rules_[index];
+
+		// increment the number of correctly identified data points
+		// and the number of niches to which the rule belongs
 		p_->rules_[index].setNumCorrect(r.num_correct() + 1);
 		p_->rules_[index].setNumNiches(r.num_niches() + 1);
+
+		// add the rule to [C]
 		members_.push_back(index);
+
+		// update the sum of the experience and 
+		// fitness values of all the rules in [C]
 		exp_sum_ += r.exp();
 		fitness_sum_ += r.fitness();
+
+		// update the sum of the average niche
+		// size of all the rules in [C]
 		avg_niche_size_sum_ += r.avg_niche_size();
 	}
 
@@ -49,6 +63,5 @@ void CorrectSet::updateNicheInfo() {
 	}
 
 } // end updateNicheInfo
-
 
 
