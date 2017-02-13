@@ -8,16 +8,16 @@ The following is my ideal timeline for my honors project.
 Implementing & Testing:
 -----------------------
 
-Feb. 13: 
+Feb. 20: 
 	Get a preliminary version of the LCS up and running.
 
-Feb. 20:
+Feb. 27:
 	Test the LCS on Erik's data and debug as necessary.
 
-Feb. 27:
+Mar. 6:
 	Write at least two variations on the initial implementation.
 
-Mar. 6:
+Mar 13  (Spring break):
 	Test the variations and debug as necessary.
 
 Mar. 27 (end of spring break):
@@ -53,3 +53,25 @@ Apr. 17:
 Apr. 24:
 	Make any final revisions necessary. Polish up the document and the code.
 
+
+--------------------------------------------------------------------------------
+
+I believe the CS department's policy concerning honors project submission deadlines
+would put the due date at May 14th. Thus, I have allowed myself a considerable
+buffer to accommodate whatever snags and delays may arise. Of course, Hofstadter's
+Law states that
+
+	"It takes longer than you expect, even when you take into account
+	 Hofstadter's Law."
+
+and Parkinson's Law that
+
+	"Work expands so as to fill the time available for its completion."
+
+So even though I fully expect that there will be more difficulties along the way 
+and that I will be working right up to the deadline, I have put down these dates
+as a guideline mostly for myself. That said, do let me know if you think any of
+this is overly optimistic.
+
+
+Will

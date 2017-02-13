@@ -1,0 +1,22 @@
+Week of 1/30/17
+Will Gantt
+
+This week:
+
+I have continued work on implementing my LCS. Last week, I mentioned
+some concerns about certain design choices. Some of these seem to
+have come back to bite me, and I am working to resolve them. Happily,
+I have found that I've been able to get through work for my other
+classes quickly enough that the majority of my working hours can be
+devoted to the project.
+
+I have also written up a roadmap for the remainder of the semester,
+which can be found in the "write_ups_etc" directory. 
+
+Next week:
+
+I will continue implementing, paying particular attention to
+assembling the GA component and fixing some bugs that have cropped
+up there. 
+
+

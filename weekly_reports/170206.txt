@@ -1,0 +1,23 @@
+Week of 2/6/17
+Will Gantt
+
+This week:
+
+I have continued work on the LCS. I did my first trial run of the
+whole system on some artificial data merely to see whether it would
+run and without much of an eye toward the accuracy of the output.
+Unfortunately, even for small numbers of generations, the program
+segfaulted. 
+
+I have resolved most of the design problems that I was worried
+about last week, and have turned my focus toward more fine-grained
+debugging with the help of Valgrind.
+
+Next week:
+
+I wrote a battery of unit tests a few weeks back for some of the more
+basic functions of the LCS, which helped a good deal in the earlier 
+phases of development. My goal for this week is to write similar tests
+for the more complicated functions and to do some good debugging
+using those tests.
+
