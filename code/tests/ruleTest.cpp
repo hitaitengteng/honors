@@ -39,7 +39,22 @@ static const double RANGE_SCALAR = 0.1;
 int main(int argc, char **argv) {
 
 	rng.seed(rd());
-	testMutate();
+
+	printf("Running tests on equality operator...\n");
+	testEquality();
+	printf("Rule equality operator tests complete.\n\n");
+
+	printf("Running tests on 'matches' function...\n");
+	testMatches();
+	printf("'Matches' function tests complete.\n\n");
+
+	printf("Running tests on 'generalizes' function...\n");
+	testGeneralizes();
+	printf("'Generalizes' function tests complete.\n\n");
+
+	printf("Running tests on 'specify' function...\n");
+	testSpecify();
+	printf("'Specify' function tests complete.\n\n");
 
 	return 0;
 }
@@ -89,14 +104,14 @@ bool testEquality() {
 	for (int i=0; i<NUM_TEST_ATTRIBUTES; i++) {
 		
 		// add a random attribute to the condition
-		r1.condition.push_back(Attribute::getRandom());
-		r2.condition.push_back(Attribute::getRandom());
+		r1.condition_.push_back(Attribute::random());
+		r2.condition_.push_back(Attribute::random());
 
 		// make sure its "don't care" variable is set to false
 		// (when an attribute is generated randomly as above,
 		// this value is also selected randomly)
-		r1.condition[i].setDontCare(false);
-		r2.condition[i].setDontCare(false);
+		r1.condition_[i].setDontCare(false);
+		r2.condition_[i].setDontCare(false);
 
 		// get a random center and spread
 		center = real_dist(rng);
@@ -104,10 +119,10 @@ bool testEquality() {
 
 		// assign the same center and spread to the
 		// current attribute in both rules
-		r1.condition[i].setCenter(center);
-		r1.condition[i].setSpread(spread);
-		r2.condition[i].setCenter(center);
-		r2.condition[i].setSpread(spread);
+		r1.condition_[i].setCenter(center);
+		r1.condition_[i].setSpread(spread);
+		r2.condition_[i].setCenter(center);
+		r2.condition_[i].setSpread(spread);
 	}
 
 	// check equality
@@ -127,7 +142,7 @@ bool testEquality() {
 
 		// change the spread values for the 
 		// attributes in the condition of rule 2
-		r2.condition[i].setSpread(real_dist(rng));
+		r2.condition_[i].setSpread(real_dist(rng));
 	}
 
 	// check equality
@@ -147,10 +162,10 @@ bool testEquality() {
 
 		// reset the spread of the attributes in rule 2, which was
 		// altered for the previous test...
-		r2.condition[i].setSpread(spread);
+		r2.condition_[i].setSpread(spread);
 
 		// ...and change the centers
-		r2.condition[i].setCenter(real_dist(rng));
+		r2.condition_[i].setCenter(real_dist(rng));
 	}
 
 	// check equality
@@ -170,14 +185,14 @@ bool testEquality() {
 
 		// reset the center of the attributes in rule 2,
 		// which was altered for the previous test
-		r2.condition[i].setCenter(center);
+		r2.condition_[i].setCenter(center);
 	}
 
 	// give the rules different classes
 	do {
 		r2.setClass(rng() % NUM_CLASSES);
 
-	} while (r1.getClass() == r2.getClass());
+	} while (r1.classification() == r2.classification());
 
 	// check equality
 	printf("Rule Equality Test 5 (same center and spread, different classes): ");
@@ -193,10 +208,10 @@ bool testEquality() {
 	// ---------------------------------------------------------------------
 
 	// make the classes equivalent again
-	r1.setClass(r2.getClass());
+	r1.setClass(r2.classification());
 
 	// make one of the attributes in rule 1 a "don't care"
-	r1.condition[rng() % NUM_TEST_ATTRIBUTES].setDontCare(true);
+	r1.condition_[rng() % NUM_TEST_ATTRIBUTES].setDontCare(true);
 
 	// check equality
 	printf("Rule Equality Test 6 (one rule generalizes the other) ");
@@ -219,21 +234,15 @@ bool testEquality() {
  ****************************************************************************/ 
 bool testSpecify() {
 
-	// create a random input vector
-	printf("    Input\n");
-	printf("-------------\n");
-
-	for (int i=0; i<NUM_TEST_ATTRIBUTES; i++)
-		printf("[ %d ] ", i);
-	printf("\n");
-
+	// create random input and range vectors
 	vector<double> input;
 	vector<pair<double,double> > ranges;
 	pair<double,double> range = make_pair(0,1);
 	double a;
+
+	// create some random attribute values for the input
 	for (int i=0; i<NUM_TEST_ATTRIBUTES; i++) {
 		a = real_dist(rng);
-		printf("%.3f ", a);
 		input.push_back(a);
 		ranges.push_back(range);
 	}
@@ -242,19 +251,22 @@ bool testSpecify() {
 	double range_scalar = real_dist(rng);
 
 	// generate a random rule
-	Rule r = Rule::getRandom(NUM_TEST_ATTRIBUTES);
-
-	printf("\n\nOriginal Rule\n");
-	printf("-------------");
-	r.print();
+	Rule r = Rule::random(NUM_TEST_ATTRIBUTES);
+	Rule original_r = r;
 
 	// run specify
-	r.specify(input, ranges, range_scalar);
+	Rule new_r = r.specify(input, ranges, range_scalar);
 
-	printf("\n  New Rule\n");
-	printf("-------------");
-	r.print();
-
+	printf("Specify Test 1: ");
+	// make sure that all of the don't care attributes in the original
+	// rule have been specified
+	for (int i=0; i<NUM_TEST_ATTRIBUTES; i++) {
+		if (new_r.condition_[i].dont_care()) {
+			printf("Failed.\n");
+			return false;
+		}
+	}
+	printf("Passed.\n");
 	return true;
 
 } // end testSpecify
@@ -278,12 +290,13 @@ bool testGeneralizes() {
 
 	// generate a random rule for r1, then specify
 	// r1 and assign the resulting rule to r2
-	Rule r1 = Rule::getRandom(NUM_TEST_ATTRIBUTES);
+	Rule r1 = Rule::random(NUM_TEST_ATTRIBUTES);
 	r1.setID(0);
 	Rule temp = r1;
 	Rule r2 = r1.specify(input, ranges, range_scalar); 
 	r2.setID(1);
 	r1 = temp;
+	r1.setClass(r2.classification());
 
 	// ----------------------------------------------------------------------
 	// TEST 1: one rule is a specified version of another; should return true
@@ -304,7 +317,7 @@ bool testGeneralizes() {
 	// ----------------------------------------------------------------------
 	
 	// change r2
-	r2 = Rule::getRandom(NUM_TEST_ATTRIBUTES);
+	r2 = Rule::random(NUM_TEST_ATTRIBUTES);
 
 	// check equality
 	printf("Generalization Test 2 (two completely different rules): ");
@@ -340,10 +353,10 @@ bool testGeneralizes() {
 
 	// set all of rule 1's attributes to "don't care"
 	for (int i=0; i<NUM_TEST_ATTRIBUTES; i++)
-		r1.condition[i].setDontCare(true);
+		r1.condition_[i].setDontCare(true);
 
 	// make sure the rules have the same class
-	r1.setClass(r2.getClass());
+	r1.setClass(r2.classification());
 
 	// check equality
 	printf("Generalization Test 4 (first rule is all don't cares): ");
@@ -394,12 +407,12 @@ bool testMatches() {
 
 	// generate the rule by specifying attribute values based
 	// on the data point
-	Rule r = Rule::getRandom(NUM_TEST_ATTRIBUTES);
+	Rule r = Rule::random(NUM_TEST_ATTRIBUTES);
 	for (int i=0; i<NUM_TEST_ATTRIBUTES; i++)
-		r.condition[i].setCenter(data_instance[i]);
+		r.condition_[i].setCenter(data_instance[i]);
 
 	// evaluate
-	printf("Test 1 (should return true): ");
+	printf("Matches Test 1 (should return true): ");
 	is_a_match = r.matches(data_instance);
 	if (is_a_match) {
 		printf("Passed.\n");
@@ -414,16 +427,12 @@ bool testMatches() {
 
 	// here, we are guaranteeing that the value of the first attribute
 	// in the data instance is *not* covered by the rule
-	double first_att_spread = r.condition[0].getSpread();
-	r.condition[0].setCenter(data_instance[0] - first_att_spread - 0.01);
-	r.condition[0].setDontCare(false);
-
-	r.print();
-	printf("\n");
-	Dataset::printDataPoint(data_instance, NUM_TEST_ATTRIBUTES);
+	double first_att_spread = r.condition_[0].spread();
+	r.condition_[0].setCenter(data_instance[0] - first_att_spread - 0.01);
+	r.condition_[0].setDontCare(false);
 
 	// evaluate
-	printf("Test 2 (should return false): ");
+	printf("Matches Test 2 (should return false): ");
 	is_a_match = r.matches(data_instance);
 	if (is_a_match) {
 		printf("Failed.\n");
@@ -444,7 +453,7 @@ bool testMatches() {
 void testMutate() {
 
 	// generate a random rule
-	Rule r = Rule::getRandom(NUM_TEST_ATTRIBUTES);
+	Rule r = Rule::random(NUM_TEST_ATTRIBUTES);
 
 	// create a vector of ranges
 	vector<pair<double,double> > ranges;

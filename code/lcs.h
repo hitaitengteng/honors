@@ -10,7 +10,7 @@ class LCS {
 
 	public:
 		// should eventually be initialized with a dataset too
-		LCS(Population p): curr_gen_(0), fitness_exponent_(1), 
+		LCS(Population p, Dataset d): curr_gen_(0), fitness_exponent_(1), 
 				   p_crossover_(0.8), p_mutate_(0.1), 
 				   p_dont_care_(0.33), theta_acc_(0.9), 
 				   theta_sub_(0), theta_ga_(5), 
@@ -18,10 +18,10 @@ class LCS {
 				   do_ga_subsumption_(true), 
 				   do_correct_set_subsumption_(true)	{
 
-			// set max size
 			pop_ = p;
 			match_set_ = MatchSet(&pop_);
 			correct_set_ = CorrectSet(&pop_);
+			training_set_ = d;
 		}
 
 	// MEMBER FUNCTIONS 
@@ -57,9 +57,6 @@ class LCS {
 		// processes a single input from the dataset
 		void processInput(int i);
 	
-		// evaluates a rule and adds it to the appropriate sets
-		void processRule(Rule r);
-
 	// MEMBER VARIABLES (these should probably be private)
 
 		// Keeps track of the number of generations that have passed.

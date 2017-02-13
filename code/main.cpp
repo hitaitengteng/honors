@@ -35,8 +35,8 @@ int main(int argc, char **argv) {
 
 	Population p = Population::random(20,10);
 	p.setMaxSize(30);
-	LCS lcs(p);
-	lcs.training_set_ = Dataset::random(25);
+	Dataset d = Dataset::random(10);
+	LCS lcs(p,d);
 	for (int i=0; i<20; i++) {
 		cout << lcs.curr_gen_ << endl;
 		lcs.processInput(i);

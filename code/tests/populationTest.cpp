@@ -1,4 +1,5 @@
 #include "../population.h"
+#include "../dataset.h"
 
 /****************************************************************************
  * File:        populationTest.cpp
@@ -7,17 +8,16 @@
  * 		class.
  *
  * TODO:
- *
- * 	- Tell user what the crossover point is in testCrossover and
- * 	  testSubsume.
- * 	- Implement a test for the matchExists, clear, and empty functions 
+ * 	- Fix the matchExists test.
  ****************************************************************************/ 
 using namespace std;
 
 // advance function declarations
 bool testCrossover(Population *p);
-bool testRouletteWheelSelect(Population *p);
 bool testSubsume(Population *p);
+bool testMatchExists(Population *p);
+bool testClearAndEmpty(Population p);
+void testDeletionSelect(Population *p);
 
 // named constants (these should ultimately 
 // be passed as parameters)
@@ -31,6 +31,7 @@ random_device rd;
 // uniform distributions
 uniform_real_distribution<double> real_dist(0,1);
 uniform_int_distribution<int> int_dist(0,1);
+uniform_int_distribution<int> int_dist2(1,25);
 
 int main(int argc, char **argv) {
 
@@ -40,17 +41,22 @@ int main(int argc, char **argv) {
 	Rule r;
 	Population *p = new Population(MAX_POP_SIZE);
 	for (int i=0; i<MAX_POP_SIZE; i++) {
-		r = Rule::getRandom(NUM_ATTRIBUTES);
+		r = Rule::random(NUM_ATTRIBUTES);
 		p->add(r);
 	}
 
+	// test
 	testSubsume(p);
+	testMatchExists(p);
+	testClearAndEmpty(*p);
+	testDeletionSelect(p);
+
 	delete p;
 	return 0;
 }
 
 /****************************************************************************
- * Inputs:      the population on which the crossover operator will be tested
+ * Inputs:      p: the population to be tested.
  * Outputs:     a boolean indicating whether all tests of the crossover
  * 		function on the given population were passed
  * Description: runs various tests of the crossover function
@@ -63,9 +69,9 @@ bool testCrossover(Population *p) {
 
 	// print info on parents
 	printf("\nParent 1\n--------");
-	p->rules[p1_index].print();
+	p->rules_[p1_index].print();
 	printf("\nParent 2\n--------");
-	p->rules[p2_index].print();
+	p->rules_[p2_index].print();
 
 	// the offspring
 	pair<Rule,Rule> offspring;
@@ -85,72 +91,6 @@ bool testCrossover(Population *p) {
 }
 
 /****************************************************************************
- * Inputs:      the population on which the roulette wheel selection operator
- * 		is to be tested
- * Outputs:     a boolean indicating whether all of the tests of the
- * 		roulette wheel selection on the given population were passed
- * Description: runs various tests of the roulette wheel selection operator
- ****************************************************************************/ 
-bool testRouletteWheelSelect(Population *p) {
-
-	// print info on the fitnesses of all the rules
-	// in the population
-	printf("Rule         Fitness\n");
-	printf("----         -------\n");
-	for (int i=0; i<MAX_POP_SIZE; i++)
-		printf("%d           %.3f\n", i, p->rules[i].getFitness());
-
-	// select three rules randomly from the population
-	int r1_index = p->rouletteWheelSelect();
-	int r2_index = p->rouletteWheelSelect();
-	int r3_index = p->rouletteWheelSelect();
-
-	// get their fitnesses
-	double r1_fitness = p->rules[r1_index].getFitness();
-	double r2_fitness = p->rules[r2_index].getFitness();
-	double r3_fitness = p->rules[r3_index].getFitness();
-
-	// the fitness rank of each of the three rules
-	int r1FitnessRank = MAX_POP_SIZE;
-	int r2FitnessRank = MAX_POP_SIZE;
-	int r3FitnessRank = MAX_POP_SIZE;
-
-	// a rule iterator variable and the rule's fitness
-	Rule curr_rule;
-	double curr_fitness;
-
-	// iterate over the population
-	for (int i=0; i<MAX_POP_SIZE; i++) {
-		curr_rule = p->rules[i];
-		curr_fitness = curr_rule.getFitness();
-
-	// the fitness rank of each of the three rules
-	// above is decremented every time we encounter
-	// a rule in the population whose fitness is less
-	// than that of the selected rule (in other words,
-	// the higher a rule's fitness, the smaller the
-	// value of its fitness rank)
-	if (curr_fitness < r1_fitness)
-		r1FitnessRank--;
-	if (curr_fitness < r2_fitness)
-		r2FitnessRank--;
-	if (curr_fitness < r3_fitness)
-		r3FitnessRank--;
-	}
-
-	// Tell user which rules were selected and their fitness ranks. The user
-	// should not often expect to see rules with fitness ranks close to
-	// MAX_POP_SIZE, and should expect to frequently see rules with fitness
-	// ranks closer to 1.
-	printf("Selected rule %d with fitness rank %d\n",r1_index, r1FitnessRank);
-	printf("Selected rule %d with fitness rank %d\n",r2_index, r2FitnessRank);
-	printf("Selected rule %d with fitness rank %d\n",r3_index, r3FitnessRank);
-
-	return true;
-
-} // end testRouletteWheelSelect
-
-/****************************************************************************
  * Inputs:      the population on which the subsume operator is to be tested
  * Outputs:     a boolean indicating whether all tests of the subsume
  * 		function on the given population were passed
@@ -166,7 +106,7 @@ bool testSubsume(Population *p) {
 	// the rule object that is actually in the population, but rather
 	// a copy of it. There are good reasons for this, which I present
 	// elsewhere [give location]
-	Rule most_general = p->getMostGeneral();
+	Rule most_general = p->most_general();
 
 	// -----------------------------------------------------------------
 	// TEST 1: no rules should be subsumed
@@ -175,8 +115,8 @@ bool testSubsume(Population *p) {
 	// by setting dontCare to false and the spread to 0, we guarantee
 	// that mostGeneral cannot generalize any other rule in the population
 	for (int i=0; i<NUM_ATTRIBUTES; i++) {
-		most_general.condition[i].setDontCare(false);
-		most_general.condition[i].setSpread(0);
+		most_general.condition_[i].setDontCare(false);
+		most_general.condition_[i].setSpread(0);
 	}
 
 	// reassign mostGeneral
@@ -201,7 +141,7 @@ bool testSubsume(Population *p) {
 	// Once this has been done, the most general rule should subsume
 	// all other rules that share its class.
 	for (int i=0; i<NUM_ATTRIBUTES; i++) 
-		most_general.condition[i].setDontCare(true);
+		most_general.condition_[i].setDontCare(true);
 
 	// compute the number of rules in the population that have the
 	// same class as the most general rule (so there should be at
@@ -212,14 +152,15 @@ bool testSubsume(Population *p) {
 	int tally = 0;
 
 	// variables for classes
-	int most_general_class = most_general.getClass();
+	int most_general_class = most_general.classification();
 	int curr_class = NO_CLASS;
 
 	// iterate over the rules and compare classes
-	for (size_t i=0; i<p->rules.size(); i++) {
-		curr_class = p->rules[i].getClass();
+	int pop_size = p->rules_.size();
+	for (size_t i=0; i<pop_size; i++) {
+		curr_class = p->rules_[i].classification();
 		if (most_general_class == curr_class) {
-			if (!(p->rules[i] == most_general))
+			if (!(p->rules_[i] == most_general))
 				tally++;
 		}
 	}
@@ -248,9 +189,9 @@ bool testSubsume(Population *p) {
 	Rule r;
 	do {
 		// select a random rule from the population
-		r = p->rules[rng() % p->rules.size()];
+		r = p->rules_[rng() % p->rules_.size()];
 
-	} while (r == p->getMostGeneral()); // make sure it isn't the most
+	} while (r == p->most_general()); // make sure it isn't the most
 					    // general rule
 
 	// the center and spread of the current
@@ -263,22 +204,22 @@ bool testSubsume(Population *p) {
 
 		// get the center and spread of the current  
 		// attribute for the randomly chosen rule
-		ri_center = r.condition[i].getCenter(); 
-		ri_spread = r.condition[i].getSpread();
+		ri_center = r.condition_[i].center(); 
+		ri_spread = r.condition_[i].spread();
 
 		// set the center and spread of the current attribute in
 		// most_general so that it encompasses the range of
 		// values for the current attribute in r
-		if (r.condition[i].getDontCare() == false) {
-			most_general.condition[i].setDontCare(false);
-			most_general.condition[i].setCenter(ri_center);
-			most_general.condition[i].setSpread(ri_spread + 0.01);
+		if (r.condition_[i].dont_care() == false) {
+			most_general.condition_[i].setDontCare(false);
+			most_general.condition_[i].setCenter(ri_center);
+			most_general.condition_[i].setSpread(ri_spread + 0.01);
 		}
 	}
 
 	// make sure most_general has the same
 	// class as the randomly chosene rule
-	most_general.setClass(r.getClass());
+	most_general.setClass(r.classification());
 
 	// reassign most general
 	p->setMostGeneral(most_general);
@@ -297,3 +238,159 @@ bool testSubsume(Population *p) {
 	return true;
 
 } // end testSubsume
+
+/****************************************************************************
+ * Inputs:      p: a pointer to the population to be tested.
+ * Outputs:     A boolean indicating whether all tests have passed.
+ * Description: Tests the matchExists function from the Population class.
+ *
+ * NOTE: This test is incorrect as it stands. Fix.
+ ****************************************************************************/
+bool testMatchExists(Population *p) {
+
+	// generate a random data set
+	Dataset d = Dataset::random(1);
+
+	// the range scalar
+	double range_scalar = 0.1;
+
+	// get the class of the input
+	vector<double> input = d.data_points_[0];
+	int input_class = input.back();
+
+	// choose a random class that is different from that of the input
+	int new_class;
+	do {
+		new_class = int_dist(rng) % NUM_CLASSES;
+	} while (new_class == input_class);
+
+	// assign the random class to all of the rules in the population
+	// (to guarantee that they do not match the input)
+	int pop_size = p->rules_.size();
+	for (int i=0; i<pop_size; i++) {
+		p->rules_[i].setClass(new_class);
+	}
+
+	printf("MatchExists Test1: ");
+	// check for a match (there shouldn't be one)
+	bool result1 = p->matchExists(input);
+	if (result1) {
+		printf("Failed. (Found a match when there wasn't one.)\n");
+		return false;
+	}
+
+	// select a random rule from the population to be specified
+	// according to the input (so as to guarantee that ther *is*
+	// a match)
+	int index = int_dist(rng) % p->rules_.size();
+	p->rules_[index].specify(input,d.attribute_ranges_,range_scalar);
+
+	// check for a match (there should be one)
+	bool result2 = p->matchExists(input);
+	if (!result2) {
+		printf("Failed. (Did not find a match when there was one.)\n");
+		return false;
+	}
+
+	return true;
+	
+} // end testMatchExists
+
+/****************************************************************************
+ * Inputs:      p: the population to be tested.
+ * Outputs:     A boolean indicating whether all tests have passed.
+ * Description: Tests the clear and empty functions from the Population class.
+ ****************************************************************************/
+bool testClearAndEmpty(Population p) {
+
+	printf("Clear Test 1: ");
+
+	// clear the population
+	p.clear();
+	if (p.rules_.size() != 0) {
+		printf("Failed (some rules still in population).\n");
+		return false;
+	} else if (p.empty() == false) {
+		printf("Failed (empty function failed).\n");
+	} else if (p.fitness_sum() != 0) {
+		printf("Failed (fitness sum is non-zero).\n");
+		return false;
+	} else if (p.exp_sum() != 0) {
+		printf("Failed (experience sum is non-zero).\n");
+		return false;
+	} else if (p.most_general().classification() != NO_CLASS) {
+		printf("Failed (most general was not reset).\n");
+		return false;
+	}
+
+	printf("Passed.\n");
+	return true;
+
+} // end testClear
+
+/****************************************************************************
+ * Inputs:      p: the population to be tested.
+ * Outputs:     None.
+ * Description: Tests the deletionSelect function from the Population class.
+ ****************************************************************************/
+void testDeletionSelect(Population *p) {
+
+	// the accuracy value above which a rule may not be deleted
+	double theta_acc = 1;
+
+	// assign each rule in the population a random 
+	// average niche size in the range [1,25]
+	int pop_size = p->rules_.size();
+	for (int i=0; i<pop_size; i++)
+		p->rules_[i].setAvgNicheSize(int_dist2(rng));
+	
+	// print the avg niche size of every rule in the population
+	printf("Rule         Avg Niche Size\n");
+	printf("----         --------------\n");
+	for (int i=0; i<pop_size; i++)
+		printf("%d           %.3f\n", i, p->rules_[i].avg_niche_size());
+
+	// select three rules randomly from the population
+	int r1_index = p->deletionSelect(theta_acc);
+	int r2_index = p->deletionSelect(theta_acc);
+	int r3_index = p->deletionSelect(theta_acc);
+
+	// get their average niche sizes
+	double r1_avg_niche_size = p->rules_[r1_index].avg_niche_size();
+	double r2_avg_niche_size = p->rules_[r2_index].avg_niche_size();
+	double r3_avg_niche_size = p->rules_[r3_index].avg_niche_size();
+
+	// the rank of the three rules with respect to average niche size
+	int r1_rank = MAX_POP_SIZE;
+	int r2_rank = MAX_POP_SIZE;
+	int r3_rank = MAX_POP_SIZE;
+
+	// a rule iterator variable and the rule's average niche size
+	Rule curr_rule;
+	double curr_avg_niche_size;
+
+	// iterate over the population
+	for (int i=0; i<MAX_POP_SIZE; i++) {
+		curr_rule = p->rules_[i];
+		curr_avg_niche_size = curr_rule.avg_niche_size();
+
+	// the rank of each of the three rules above is decremented
+	// every time we encounter a rule in the population whose
+	// average niche size is less than that of the selected rule
+	if (curr_avg_niche_size < r1_avg_niche_size)
+		r1_rank--;
+	if (curr_avg_niche_size < r2_avg_niche_size)
+		r2_rank--;
+	if (curr_avg_niche_size < r3_avg_niche_size)
+		r3_rank--;
+	}
+
+	// Tell user which rules were selected and their fitness ranks. The user
+	// should not often expect to see rules with fitness ranks close to
+	// MAX_POP_SIZE, and should expect to frequently see rules with fitness
+	// ranks closer to 1.
+	printf("Selected rule %d with average niche size %.3f and rank %d\n", r1_index, r1_avg_niche_size, r1_rank);
+	printf("Selected rule %d with average niche size %.3f and rank %d\n", r2_index, r2_avg_niche_size, r2_rank);
+	printf("Selected rule %d with average niche size %.3f and rank %d\n", r3_index, r3_avg_niche_size, r3_rank);
+
+} // end testDeletionSelect
