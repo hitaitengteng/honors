@@ -8,14 +8,15 @@
  * TODO:
  * 	- method descriptions
  * 	- unit test all functions
+ * 	- resolve problems with most_general
  ****************************************************************************/ 
 
 using namespace std;
 
 /****************************************************************************
- * Inputs:
- * Outputs:
- * Description:
+ * Inputs:      r: the rule to be added to the population
+ * Outputs:     None.
+ * Description: Adds a rule to the population.
  ****************************************************************************/ 
 void Population::add(Rule r) {
 
@@ -51,9 +52,10 @@ void Population::add(Rule r) {
 } // end add
 
 /****************************************************************************
- * Inputs:
- * Outputs:
- * Description:
+ * Inputs:      index: the index in the general population of the rule to
+ * 		be removed.
+ * Outputs:     None.
+ * Description: Removes a rule from the population.
  *
  * TODO: take care of the case where the rule to be removed is the most
  * 	 general rule
@@ -78,9 +80,11 @@ void Population::remove(int index) {
 } // end remove
 
 /****************************************************************************
- * Inputs:
- * Outputs:
- * Description:
+ * Inputs:      i,j: the indices in the general population of the rules
+ * 		to be crossed.
+ * Outputs:     A pair of offspring rules
+ * Description: Creates two new rules via one-point crossover of the rules
+ * 		specified by the values i and j.
  ****************************************************************************/ 
 pair<Rule,Rule> Population::crossover(int i, int j) {
 	
@@ -130,11 +134,16 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
 } // end crossover
 
 /****************************************************************************
- * Inputs:      none
- * Outputs:     
- * Description: Horribly inefficient---Fix. Also: the metrics used to
- * 		determine which rule is to be deleted should be more
- * 		sophisticated.
+ * Inputs:      None.
+ * Outputs:     The index in [P] of the rule to be deleted.
+ * Description: Randomly selects a rule in [P] for deletion. A rule's
+ * 		likelihood of being selected is directly proportional to
+ * 		its average niche size.
+ *
+ * TODO:
+ * 	Horribly inefficient---Fix. Also: the metrics used to
+ * 	determine which rule is to be deleted should be more
+ * 	sophisticated.
  ****************************************************************************/ 
 int Population::deletionSelect(double theta_acc) {
 
@@ -170,9 +179,17 @@ int Population::deletionSelect(double theta_acc) {
 } // end subsumptionSelect
 
 /****************************************************************************
- * Inputs:      none
- * Outputs:     the number of rules subsumed
- * Description: 
+ * Inputs:      None.
+ * Outputs:     The number of rules subsumed
+ * Description: Checks the most general rule against every other rule in [P].
+ * 		If the most general rule generalizes another rule R, R is
+ * 		deleted and the numerosity of the most general rule is
+ * 		increased.
+ *
+ * TODO:
+ *
+ * 	- This needs to be updated to accommodate the addition of matchSet
+ * 	  and correctSet classes.
  ****************************************************************************/ 
 int Population::subsume() {
 
@@ -213,9 +230,10 @@ bool Population::matchExists(vector<double> &input) const {
 } // end matchExists
 
 /****************************************************************************
- * Input:
- * Output:
- * Description:
+ * Input:       pop_size: the number of rules to be generated.
+ * 		attributes_per_rule: the number of attributes in a rule
+ * Output:      A randomly generated population.
+ * Description: Generates a random population of rules.
  ****************************************************************************/ 
 Population Population::random(int pop_size, int attributes_per_rule) {
 

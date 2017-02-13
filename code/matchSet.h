@@ -5,6 +5,15 @@
 #include "population.h"
 #include "utilities.h"
 
+/****************************************************************************
+ * File:        matchSet.h
+ * Author:      Will Gantt
+ * Description: Defines the MatchSet class. The match set [M] is the set of
+ * 		all rules in [P] whose condition matches that of the current
+ * 		input. A rule is said to match an input when all of the
+ * 		input's attribute values fall within the range of the
+ * 		corresponding attribute in the rule's condition.
+ ****************************************************************************/ 
 class MatchSet {
 
 	public:
@@ -68,8 +77,13 @@ class MatchSet {
 
 	private:
 
+		// the sum of the experience values of all the rules in [M]
 		double exp_sum_;
+
+		// the average of the experience values of all the rules in [M]
 		double avg_exp_;
+
+		// the number of distinct classes represented by the rules in [M]
 		int num_classes_represented_;
 };
 
