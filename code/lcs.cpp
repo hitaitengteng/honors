@@ -87,8 +87,8 @@ void LCS::createMatchAndCorrectSets() {
 	// updated here.
 	correct_set_.updateNicheInfo();
 
-	match_set_.print();
-	correct_set_.print();
+	// match_set_.print();
+	// correct_set_.print();
 
 	// if the match set is empty or if not all of the classes are
 	// represented in the match set, a new rule is created and
@@ -331,13 +331,8 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
  ****************************************************************************/
 bool LCS::doCover() {
 
-	if (correct_set_.isEmpty())
-		return true;
-
-	if (match_set_.num_classes_represented() < theta_mna_)
-		return true;
-
-	return false;
+	return ((correct_set_.isEmpty()) || 
+			(match_set_.num_classes_represented() < theta_mna_));
 
 } // end doCover
 

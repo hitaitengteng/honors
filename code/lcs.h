@@ -82,11 +82,13 @@ class LCS {
 
 		// getters
 		std::vector<double> curr_data_point() {return curr_data_point_;}
+		int theta_mna() {return theta_mna_;}
 
 		// setters
 		void setCurrDataPoint(std::vector<double> curr_data_point) {
 			curr_data_point_ = curr_data_point;
 		}
+		void setThetaMNA(int theta_mna) {theta_mna_ = theta_mna;}
 
 	private:
 
