@@ -46,10 +46,10 @@ int main(int argc, char **argv) {
 	}
 
 	// test
-	testSubsume(p);
+	// testSubsume(p);
 	testMatchExists(p);
-	testClearAndEmpty(*p);
-	testDeletionSelect(p);
+	// testClearAndEmpty(*p);
+	// testDeletionSelect(p);
 
 	delete p;
 	return 0;
@@ -254,29 +254,30 @@ bool testMatchExists(Population *p) {
 	// the range scalar
 	double range_scalar = 0.1;
 
-	// get the class of the input
+	// get the the input
 	vector<double> input = d.data_points_[0];
-	int input_class = input.back();
 
-	// choose a random class that is different from that of the input
-	int new_class;
-	do {
-		new_class = int_dist(rng) % NUM_CLASSES;
-	} while (new_class == input_class);
+	// choose a random attribute
+	int att = int_dist(rng) % (input.size() - 1);
 
-	// assign the random class to all of the rules in the population
-	// (to guarantee that they do not match the input)
+	// for every rule in the population, specify the attribute selected
+	// above with a value different from that of the input (to guarantee
+	// that it won't match the input)
 	int pop_size = p->rules_.size();
 	for (int i=0; i<pop_size; i++) {
-		p->rules_[i].setClass(new_class);
+		p->rules_[i].condition_[att].setDontCare(false);
+		p->rules_[i].condition_[att].setCenter(input[att] + 0.01);
+		p->rules_[i].condition_[att].setSpread(0);
 	}
 
-	printf("MatchExists Test1: ");
+	printf("MatchExists Test 1: ");
 	// check for a match (there shouldn't be one)
 	bool result1 = p->matchExists(input);
 	if (result1) {
 		printf("Failed. (Found a match when there wasn't one.)\n");
 		return false;
+	} else {
+		printf("Passed.\n");
 	}
 
 	// select a random rule from the population to be specified
@@ -284,12 +285,18 @@ bool testMatchExists(Population *p) {
 	// a match)
 	int index = int_dist(rng) % p->rules_.size();
 	p->rules_[index].specify(input,d.attribute_ranges_,range_scalar);
+	p->rules_[index].print();
+	Dataset::printDataPoint(input, NUM_ATTRIBUTES);
+
+	printf("MatchExists Test 2: ");
 
 	// check for a match (there should be one)
 	bool result2 = p->matchExists(input);
 	if (!result2) {
 		printf("Failed. (Did not find a match when there was one.)\n");
 		return false;
+	} else {
+		printf("Passed.\n");
 	}
 
 	return true;
@@ -361,22 +368,22 @@ void testDeletionSelect(Population *p) {
 	double r3_avg_niche_size = p->rules_[r3_index].avg_niche_size();
 
 	// the rank of the three rules with respect to average niche size
-	int r1_rank = MAX_POP_SIZE;
-	int r2_rank = MAX_POP_SIZE;
-	int r3_rank = MAX_POP_SIZE;
+	int r1_rank = pop_size;
+	int r2_rank = pop_size;
+	int r3_rank = pop_size;
 
 	// a rule iterator variable and the rule's average niche size
 	Rule curr_rule;
 	double curr_avg_niche_size;
 
 	// iterate over the population
-	for (int i=0; i<MAX_POP_SIZE; i++) {
+	for (int i=0; i<pop_size; i++) {
 		curr_rule = p->rules_[i];
 		curr_avg_niche_size = curr_rule.avg_niche_size();
 
-	// the rank of each of the three rules above is decremented
+	// the rank of each of the three rules above is increased (decremented)
 	// every time we encounter a rule in the population whose
-	// average niche size is less than that of the selected rule
+	// average niche size is greater than that of the selected rule
 	if (curr_avg_niche_size < r1_avg_niche_size)
 		r1_rank--;
 	if (curr_avg_niche_size < r2_avg_niche_size)
@@ -387,7 +394,7 @@ void testDeletionSelect(Population *p) {
 
 	// Tell user which rules were selected and their fitness ranks. The user
 	// should not often expect to see rules with fitness ranks close to
-	// MAX_POP_SIZE, and should expect to frequently see rules with fitness
+	// pop_size, and should expect to frequently see rules with fitness
 	// ranks closer to 1.
 	printf("Selected rule %d with average niche size %.3f and rank %d\n", r1_index, r1_avg_niche_size, r1_rank);
 	printf("Selected rule %d with average niche size %.3f and rank %d\n", r2_index, r2_avg_niche_size, r2_rank);

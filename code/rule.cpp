@@ -4,6 +4,9 @@
  * File:        Rule.cpp
  * Author:      William Gantt
  * Description: Implements functions for the Rule class.
+ *
+ * TODO:
+ * 	Put num_dont_care_ in printVerbose
  ****************************************************************************/ 
 using namespace std;
 
@@ -411,6 +414,7 @@ void Rule::printVerbose() {
 
 	printf("\n\n");
 	printf("Class:           %s\n", CLASS_NAMES[classification_].c_str());
+	printf("# Don't Care:    %d\n", num_dont_care_);
 	printf("Time stamp:      %d\n", time_stamp_);
 	printf("Experience:      %d\n", exp_);
 	printf("Numerosity:      %d\n", numerosity_);

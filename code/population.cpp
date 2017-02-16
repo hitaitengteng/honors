@@ -189,7 +189,8 @@ int Population::deletionSelect(double theta_acc) {
  * TODO:
  *
  * 	- This needs to be updated to accommodate the addition of matchSet
- * 	  and correctSet classes.
+ * 	  and correctSet classes (should be implemented in either
+ * 	  correctSet.cpp or lcs.cpp)
  ****************************************************************************/ 
 int Population::subsume() {
 

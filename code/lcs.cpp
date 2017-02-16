@@ -34,6 +34,7 @@ void LCS::processInput(int i) {
 	// number of iterations that have passed since a rule in the
 	// correct set participated in a GA call exceeds a threshold
 	// value theta_ga_
+	
 	if (doGA()) {
 		applyGA();
 	}
@@ -115,14 +116,29 @@ void LCS::applyGA() {
 		p2_index = rouletteWheelSelect();
 	} while (p1_index == p2_index);
 
-	// generate a pair of offspring
-	pair<Rule,Rule> children = pop_.crossover(p1_index, p2_index);
+	// the offspring
+	pair<Rule,Rule> children;
+
+	// determine whether to apply crossover
+	double do_crossover = real_dist(rng);
+
+	// do crossover
+	if (do_crossover <= p_crossover_) {
+
+		// generate a pair of offspring
+		children = pop_.crossover(p1_index, p2_index);
+	
+	// don't do crossover
+	} else {
+		// otherwise, just create a copy of the parents
+		children = make_pair(pop_.rules_[p1_index], pop_.rules_[p2_index]);
+	}
 	
 	// mutate the offspring 
 	children.first.mutate(p_mutate_, p_dont_care_, 
-			training_set_.attribute_ranges_, range_scalar_);
+		training_set_.attribute_ranges_, range_scalar_);
 	children.second.mutate(p_mutate_, p_dont_care_, 
-			training_set_.attribute_ranges_, range_scalar_);
+		training_set_.attribute_ranges_, range_scalar_);
 
 	// see documentation for gaSubsume below. If gaSubsume is not used,
 	// then two existing rules are deleted and the two offspring are
@@ -366,8 +382,6 @@ bool LCS::doGA() {
  * 		invoked.
  * Description: Determines whether the specify operator should be invoked
  * 		on [C].
- *
- * TODO: implement specify
  ****************************************************************************/
 bool LCS::doSpecify() {
 

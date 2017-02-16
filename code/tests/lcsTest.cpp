@@ -38,13 +38,18 @@ uniform_int_distribution<int> int_dist2(1,25);
 
 int main(int argc, char **argv) {
 
+	rng.seed(rd());
+
 	// create a random population and data set and
 	// generate the LCS
-	Population p = Population::random(MAX_POP_SIZE);
+	Population p = Population::random(MAX_POP_SIZE, NUM_ATTRIBUTES);
 	Dataset d = Dataset::random(NUM_DATA_POINTS);
 	LCS lcs = LCS(p,d);
 	
 	// run the tests
+	lcs.setCurrDataPoint(d.data_points_[0]);
+	Dataset::printDataPoint(d.data_points_[0], NUM_ATTRIBUTES);
+	lcs.createMatchAndCorrectSets();
 
 	return 0;
 }
@@ -76,6 +81,7 @@ void testRouletteWheelSelect(LCS lcs) {
 	int r2_index = lcs.rouletteWheelSelect();
 	int r3_index = lcs.rouletteWheelSelect();
 
+	exit(0);
 	// get their fitnesses
 	double r1_fitness = lcs.pop_.rules_[r1_index].fitness();
 	double r2_fitness = lcs.pop_.rules_[r2_index].fitness();
