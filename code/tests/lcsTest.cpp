@@ -204,11 +204,6 @@ bool testCover(LCS lcs) {
 	// the output of the doCover function
 	bool doCover_result = false;
 
-	// the initial sizes of [P], [M], and [C]
-	int orig_pop_size = lcs.pop_.size();
-	int orig_match_set_size = lcs.match_set_.size();
-	int orig_correct_set_size = lcs.correct_set_.size();
-
 	// Keep iterating through the data set and constructing [M] and [C]
 	// for the current data point, until we find a data point that
 	// necessitates invoking the cover operator. Note that this loop
@@ -235,18 +230,27 @@ bool testCover(LCS lcs) {
 	// make sure there's enough room to add another rule to the population
 	lcs.pop_.setMaxSize(lcs.pop_.max_size() + 1);
 
+	// the initial sizes of [P], [M], and [C]
+	int orig_pop_size = lcs.pop_.size();
+	int orig_match_set_size = lcs.match_set_.size();
+	int orig_correct_set_size = lcs.correct_set_.size();
+
 	// run the cover operator
 	lcs.cover();
 
-	// ensure that the newly generated rule was added to [P], [M], and [C]
+	// the new sizes of [P], [M], and [C] (if things are working correctly,
+	// these should be just one greater than the initial sizes)
 	int new_pop_size = lcs.pop_.size();
 	int new_match_set_size = lcs.match_set_.size();
 	int new_correct_set_size = lcs.correct_set_.size();
 	
+	// get the number of rules added to [P], [M], and [C]. This should
+	// never be anything but 1.
 	int pop_num_added = new_pop_size - orig_pop_size;
 	int match_set_num_added = new_match_set_size - orig_match_set_size;
 	int correct_set_num_added = new_correct_set_size - orig_correct_set_size;
 
+	// ensure that the newly generated rule was added to [P], [M], and [C]
 	printf("Cover Test 1 of %d: ", num_tests);
 	if (pop_num_added != 1) {
 		printf("Failed. (Rule was not added to population.)\n");
@@ -260,6 +264,7 @@ bool testCover(LCS lcs) {
 	}
 
 	printf("Passed.\n");
+
 	// print the newly generated rule
 	lcs.correct_set_.print();
 
