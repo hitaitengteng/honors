@@ -11,7 +11,7 @@ using namespace std;
 
 bool testDoGA(LCS lcs);
 bool testDoCover(LCS lcs);
-bool testDoSpecify(LCS lcs);
+// bool testDoSpecify(LCS lcs);
 bool testCover(LCS lcs);
 void testRouletteWheelSelect(LCS lcs);
 bool testGaSubsume(LCS lcs);
@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
 	LCS lcs = LCS(p,d);
 	
 	// run the tests
-	testDoCover(lcs);
+	testCover(lcs);
 
 	return 0;
 }
@@ -59,6 +59,8 @@ int main(int argc, char **argv) {
  * 		GA should be invoked on a particular iteration.
  ****************************************************************************/
 bool testDoGA(LCS lcs) {
+
+	int num_tests = 1;
 
 	// set the current data point (this assumes a training set has
 	// already been initialized) and print it.
@@ -82,7 +84,7 @@ bool testDoGA(LCS lcs) {
 	// ----------------------------------------------------------------
 	// TEST 1
 	// ----------------------------------------------------------------
-	printf("DoGA Test 1: ");
+	printf("DoGA Test 1 of %d: ", num_tests);
 
 	// if there are fewer than two rules in [C], the GA should obviously
 	// not execute, as there are not enough rules to generate offspring
@@ -132,16 +134,20 @@ bool testDoGA(LCS lcs) {
 } // end testDoGA
 
 /****************************************************************************
- * Inputs:
- * Outputs:
- * Description:
+ * Inputs:      The LCS on which the test is to be run.
+ * Outputs:     A boolean indicating whether the test was passed.
+ * Description: Tests the doCover function, which indicates whether the
+ * 		covering operator should be invoked on a given iteration of
+ * 		the GA.
  ****************************************************************************/
 bool testDoCover(LCS lcs) {
+
+	// the number of tests that will be run
+	int num_tests = 1;
 
 	// set the current data point (this assumes a training set has
 	// already been initialized) and print it.
 	lcs.setCurrDataPoint(lcs.training_set_.data_points_[0]);
-	Dataset::printDataPoint(lcs.curr_data_point(), NUM_ATTRIBUTES);
 
 	// create the match set [M] and correct set [C]
 	lcs.createMatchAndCorrectSets();
@@ -153,7 +159,7 @@ bool testDoCover(LCS lcs) {
 	bool result = lcs.doCover();
 
 	// evaluate results
-	printf("DoCover Test 1: ");
+	printf("DoCover Test 1 of %d: ", num_tests);
 	if (((correct_set_size == 0) || 
 			(lcs.match_set_.num_classes_represented() < lcs.theta_mna())) && 
 			(result == false)) {
@@ -161,15 +167,105 @@ bool testDoCover(LCS lcs) {
 		return false;
 	} else if (((correct_set_size > 0) && 
 			(lcs.match_set_.num_classes_represented() >= lcs.theta_mna())) && 
-			(result = true)) {
+			(result == true)) {
 		printf("Failed. (Test returned true and should not have.)\n");
 		return false;
 	}
+
 
 	printf("Passed.\n");
 	return true;
 
 } // end testDoCover
+
+/****************************************************************************
+ * Inputs:      The LCS on which the test is to be run.
+ * Outputs:     A boolean indicating whether the test was passed.
+ * Description: Tests the cover function, which generates a rule to match
+ * 		the current input if and only if both of the following are
+ * 		true:
+ * 			1. [C] is empty.
+ * 			2. The number of actions represented in the match
+ * 			   set is less than the threshold value theta_mna_.
+ *
+ * 		It should be noted that this test relies on having working
+ * 		createMatchAndCorrectSets and doCover functions. Thus, it
+ * 		should be verified that these functions work before running
+ * 		this test.
+ ****************************************************************************/
+bool testCover(LCS lcs) {
+
+	// the number of tests that will be run
+	int num_tests = 1;
+
+	// a counter for the data point vector
+	int i = 0;
+
+	// the output of the doCover function
+	bool doCover_result = false;
+
+	// the initial sizes of [P], [M], and [C]
+	int orig_pop_size = lcs.pop_.size();
+	int orig_match_set_size = lcs.match_set_.size();
+	int orig_correct_set_size = lcs.correct_set_.size();
+
+	// Keep iterating through the data set and constructing [M] and [C]
+	// for the current data point, until we find a data point that
+	// necessitates invoking the cover operator. Note that this loop
+	// assumes that there will be *some* such data point.
+	do {
+		// set the current data point (this assumes a training set has
+		// already been initialized) and print it.
+		lcs.setCurrDataPoint(lcs.training_set_.data_points_[i]);
+
+		// create the match set [M] and correct set [C]
+		lcs.createMatchAndCorrectSets();
+
+		// check to see whether the covering operator should be invoked
+		doCover_result = lcs.doCover();
+
+		// increment the data point counter
+		i++;
+
+	} while (!doCover_result);
+
+	// print the data point
+	Dataset::printDataPoint(lcs.curr_data_point(), NUM_ATTRIBUTES);
+
+	// make sure there's enough room to add another rule to the population
+	lcs.pop_.setMaxSize(lcs.pop_.max_size() + 1);
+
+	// run the cover operator
+	lcs.cover();
+
+	// ensure that the newly generated rule was added to [P], [M], and [C]
+	int new_pop_size = lcs.pop_.size();
+	int new_match_set_size = lcs.match_set_.size();
+	int new_correct_set_size = lcs.correct_set_.size();
+	
+	int pop_num_added = new_pop_size - orig_pop_size;
+	int match_set_num_added = new_match_set_size - orig_match_set_size;
+	int correct_set_num_added = new_correct_set_size - orig_correct_set_size;
+
+	printf("Cover Test 1 of %d: ", num_tests);
+	if (pop_num_added != 1) {
+		printf("Failed. (Rule was not added to population.)\n");
+		return false;
+	} else if (match_set_num_added != 1) {
+		printf("Failed. (Rule was not added to [M].)\n");
+		return false;
+	} else if (correct_set_num_added != 1) {
+		printf("Failed. (Rule was not added to [C].)\n");
+		return false;
+	}
+
+	printf("Passed.\n");
+	// print the newly generated rule
+	lcs.correct_set_.print();
+
+	return true;
+
+} // end testCover
 
 /****************************************************************************
  * Inputs:      the LCS on which the roulette wheel selection operator

@@ -38,6 +38,9 @@ class CorrectSet {
 				p_->rules_[members_[i]].setTimeStamp(curr_gen);
 		}
 
+		// returns the size of the correct set
+		int size() {return members_.size();}
+
 		// indicates whether the correct set is empty
 		bool isEmpty() {
 			return members_.empty();

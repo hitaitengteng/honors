@@ -47,10 +47,11 @@ class Population {
 			most_general_ = Rule();
 		}
 
+		// returns the size of the population
+		int size() {return rules_.size();}
+
 		// indicates whether the population is empty
-		bool empty() {
-			return (rules_.size() == 0);
-		}
+		bool empty() {return (rules_.size() == 0);}
 
 		// selects a rule from the population using roulette
 		// wheel selection based on average niche size

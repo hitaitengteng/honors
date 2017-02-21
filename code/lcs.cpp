@@ -202,6 +202,8 @@ int LCS::rouletteWheelSelect() {
  * 		and whose class is the same as the input's class. The new
  * 		rule is then added to the general population, and to [M] and
  * 		[C].
+ *
+ * 		NOTE TO SELF: should this return the rule that it generates?
  ****************************************************************************/
 void LCS::cover() {
 

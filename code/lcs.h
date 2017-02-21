@@ -13,7 +13,7 @@ class LCS {
 		LCS(Population p, Dataset d): curr_gen_(0), fitness_exponent_(1), 
 				   p_crossover_(0.8), p_mutate_(0.1), 
 				   p_dont_care_(0.33), theta_acc_(0.9), 
-				   theta_sub_(0), theta_ga_(5), 
+				   theta_sub_(0), theta_mna_(4), theta_ga_(5), 
 				   range_scalar_(0.25), 
 				   do_ga_subsumption_(true), 
 				   do_correct_set_subsumption_(true)	{

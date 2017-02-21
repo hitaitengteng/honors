@@ -49,10 +49,11 @@ class MatchSet {
 				classes_represented_[i] = false;
 		}
 
+		// returns the size of the match set
+		int size() {return members_.size();}
+
 		// indicates whether the match set is empty
-		bool isEmpty() {
-			return members_.empty();
-		}
+		bool isEmpty() {return members_.empty();}
 			
 		// prints the match set
 		void print() {
@@ -65,7 +66,7 @@ class MatchSet {
 		// getters
 		double exp_sum() {return exp_sum_;}
 		double avg_exp() {return avg_exp_;}
-		double num_classes_represented() {return num_classes_represented_;}
+		int num_classes_represented() {return num_classes_represented_;}
 
 		// setters
 		void setExpSum(double exp_sum) {
