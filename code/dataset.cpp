@@ -26,12 +26,20 @@ int Dataset::readFromCSVFile(string file_name) {
 	fstream file_stream;                 // the file stream
 	file_stream.open(file_name.c_str()); // try to open the file
 
-	int num_data_points; // the number of attribute vectors read in
+	// a hashmap for keeping track of the number of classes
+	unordered_map<int,int> classes;       
+
+	// an array to keep track of the maximum and minimum
+	// values for an attribute across all data instances
+
+	// holds the class of the current data instance
+	int curr_class = NO_CLASS;            
 
 	// if it opened successfully, start reading
 	if (file_stream.is_open() && file_stream.good()) {
 
-            	string line;         // the current line being read in
+		// the current line being read in
+            	string line; 
 
 		// get the first line of the file (this tells us the
 		// names of the attributes)
@@ -70,15 +78,28 @@ int Dataset::readFromCSVFile(string file_name) {
 		  // all of the characters from the string
 		} while (line.size() > 0);
 
+		attribute_names_.pop_back();
+
 		// set the member variable containing the number of attributes
 		num_attributes_ = attribute_names_.size();
+
+		// initialize the vector containing the range of values for
+		// each attribute (except the class attribute)
+		for (int i=0; i<num_attributes_; i++)
+			attribute_ranges_.push_back(make_pair(FLT_MAX,FLT_MIN));
 
 		// a vector for storing attribute values
 		vector<double> curr_vect;
 
+		// an iterator for attributes
+		int curr_att;
+
 		// read until the end of the file is reached, or until
 		// some other error flag is set
-		for (num_data_points = 0; file_stream.good(); num_data_points++) {
+		while (file_stream.good()) {
+
+			// reset the attribute iterator
+			curr_att = 0;
 
 			// get the current line
 			getline(file_stream, line);
@@ -101,8 +122,21 @@ int Dataset::readFromCSVFile(string file_name) {
 
 				// we have to have this check here because otherwise the program
 				// will throw an exception when it reaches the end of the file.
-				if (token.compare("") != 0)
+				if (token.compare("") != 0) {
+
+					// add the attribute value to the current data point vector
 				       curr_vect.push_back(stof(token));
+
+				       // update the maximum and minimum values of this attribute across
+				       // all data points, if necessary
+				       if (curr_att < num_attributes_) {
+					       if (curr_vect.back() < attribute_ranges_[curr_att].first)
+						       attribute_ranges_[curr_att].first = curr_vect.back();
+					       if (curr_vect.back() > attribute_ranges_[curr_att].second)
+						       attribute_ranges_[curr_att].second = curr_vect.back();
+				       }
+				       curr_att++;
+				}
 
 			        // delete the substring you just created from "line," as
 			        // well as the delimiter that follows it
@@ -110,12 +144,29 @@ int Dataset::readFromCSVFile(string file_name) {
 
 			} // end for
 
-			// add the vector to the vector of data points, and then
-			// delete its contents so that it can be used again
-			data_points_.push_back(curr_vect);
-			curr_vect.clear();
+			// CHECK FOR CLASSES
+			if (file_stream.good()) {
 
-		} // end for 
+				// get the class of the current data instance
+				curr_class = (int) curr_vect.back();
+			
+				// if the class is not already in the hashmap, add it
+				// and update the number of classes
+				if (classes.find(curr_class) == classes.end()) {
+					classes.emplace(curr_class,curr_class);
+					num_classes_++;
+				}
+
+				// add the vector to the vector of data points, and then
+				// delete its contents so that it can be used again
+				data_points_.push_back(curr_vect);
+				curr_vect.clear();
+
+				// update the number of data points
+				num_data_points_++;
+
+			} // end if 
+		} // end while
 	} else {
 
 		// the file didn't open correctly, so print an error and quit
@@ -123,12 +174,10 @@ int Dataset::readFromCSVFile(string file_name) {
 		exit(0); 
 	}
 
-	// set the member variable containing the number 
-	// of data points to the appropriate value
-	num_data_points_ = num_data_points;
-
-	file_stream.close(); // close the file stream
-	return num_data_points;    // return the number of vectors read in
+	for (int i=0; i<num_attributes_; i++)
+		printf("Attribute %d: (%.2f, %.2f)\n", i, attribute_ranges_[i].first,attribute_ranges_[i].second);
+	file_stream.close();        // close the file stream
+	return num_data_points_;    // return the number of vectors read in
 
 } // end readFromCsvFile
 
@@ -141,7 +190,7 @@ void Dataset::printDataset() {
 
 	int i; // counter
 
-	printf("Number of attributes: %d\n", num_attributes_);
+	printf("Number of attributes (excluding class attribute): %d\n", num_attributes_);
 	printf("Number of classes: %d\n", num_classes_);
 	printf("Number of data points: %d\n", num_data_points_);
 
@@ -207,7 +256,7 @@ vector<double> Dataset::randomDataPoint(int num_attributes) {
 
 	// generate random values for the attributes
 	vector<double> data_point;
-	for (int i=0; i<(num_attributes-1); i++) 
+	for (int i=0; i<num_attributes; i++) 
 		data_point.push_back(real_dist(rng));
  
 	// add a random class

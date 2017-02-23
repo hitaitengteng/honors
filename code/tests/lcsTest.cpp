@@ -9,11 +9,11 @@
 
 using namespace std;
 
-bool testDoGA(LCS lcs);
-bool testDoCover(LCS lcs);
+bool testDoGA(LCS lcs);                      // implemented
+bool testDoCover(LCS lcs);                   // implemented
 // bool testDoSpecify(LCS lcs);
 bool testCover(LCS lcs);
-void testRouletteWheelSelect(LCS lcs);
+void testRouletteWheelSelect(LCS lcs);       // implemented
 bool testGaSubsume(LCS lcs);
 bool testCreateMatchAndCorrectSets(LCS lcs);
 bool testApplyGA(LCS lcs);
@@ -195,6 +195,9 @@ bool testDoCover(LCS lcs) {
  ****************************************************************************/
 bool testCover(LCS lcs) {
 
+	// make sure there's enough room to add another rule to the population
+	lcs.pop_.setMaxSize(lcs.pop_.max_size() + 1);
+
 	// the number of tests that will be run
 	int num_tests = 1;
 
@@ -224,11 +227,10 @@ bool testCover(LCS lcs) {
 
 	} while (!doCover_result);
 
+	exit(0);
+
 	// print the data point
 	Dataset::printDataPoint(lcs.curr_data_point(), NUM_ATTRIBUTES);
-
-	// make sure there's enough room to add another rule to the population
-	lcs.pop_.setMaxSize(lcs.pop_.max_size() + 1);
 
 	// the initial sizes of [P], [M], and [C]
 	int orig_pop_size = lcs.pop_.size();

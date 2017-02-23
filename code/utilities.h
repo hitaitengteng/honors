@@ -11,8 +11,10 @@
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
+#include <cfloat>
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include <algorithm>
 #include <random>
 #include <utility>

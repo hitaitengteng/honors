@@ -25,8 +25,9 @@ class Dataset {
 		// the names of all the attributes
 		std::vector<std::string> attribute_names_;
 
-		// the names for all the classes (i.e. the 
-		// values that the class attribute can take)
+		// the names for all the classes (i.e. the values that
+		// the class attribute can take). NOTE: this is currently
+		// not used. 
 		std::vector<std::string> class_names_;
 
 		// for each attribute, the range of 
@@ -34,7 +35,7 @@ class Dataset {
 		std::vector<std::pair<double,double> > attribute_ranges_;
 
 		// the range of values of the class attribute
-		// denoted by each class
+		// denoted by each class (not always relevant)
 		std::vector<std::pair<double,double> > class_ranges_;
 
 		// the set of all data points
@@ -43,7 +44,7 @@ class Dataset {
 	// FUNCTIONS
 	
 		// default constructor
-		Dataset() {}
+		Dataset() : num_attributes_(0), num_classes_(0), num_data_points_(0) {}
 
 		// custom constructor
 		Dataset(std::vector<std::string> attribute_names, 
