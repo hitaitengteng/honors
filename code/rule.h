@@ -2,8 +2,7 @@
 #define RULE_H
 
 #include "utilities.h"
-#include "dataset.h"
-
+#include "attribute.h"
 /****************************************************************************
  * File:        Rule.h
  * Author:      William Gantt
@@ -26,12 +25,12 @@ class Rule {
 		// first constructor
 		Rule() : id_(NO_ID), classification_(0), time_stamp_(0), exp_(0), numerosity_(1),
 		         num_matches_(0), num_correct_(0), num_dont_care_(0), num_niches_(0),
-			 niche_sizes_sum_(0), avg_niche_size_(real_dist(rng)), accuracy_(0), fitness_(0) { }
+			 niche_sizes_sum_(0), avg_niche_size_(0), accuracy_(0), fitness_(0) { }
 
 		// second constructor
 		Rule(int num_attributes) : id_(NO_ID), classification_(0), time_stamp_(0), exp_(0), numerosity_(1),
 		         num_matches_(0), num_correct_(0), num_dont_care_(0), num_niches_(0),
-			 niche_sizes_sum_(0), avg_niche_size_(real_dist(rng)), accuracy_(0), fitness_(0) { 
+			 niche_sizes_sum_(0), avg_niche_size_(0), accuracy_(0), fitness_(0) { 
 			 
 				 // initialize the condition vector
 				 Attribute a;
@@ -82,6 +81,12 @@ class Rule {
 
 		// generate a random rule
 		static Rule random(int num_attributes);
+		
+		// generate a random rule, supposing you already have some information
+		// about the dataset that you're working with
+		static Rule random(int num_attributes, int num_classes, 
+				std::vector<std::pair<double,double> > attribute_ranges, 
+				double range_scalar);
 
 		// prints out some information about a rule
 		void print();

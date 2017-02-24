@@ -14,10 +14,6 @@
  ****************************************************************************/ 
 Attribute Attribute::random() {
 
-	// generate a name for the attribute type
-	// int index = rng() % NUM_TEST_NAMES;
-	// std::string name = TEST_NAMES[index];
-	
 	// create the attribute
 	Attribute a;
 
@@ -32,6 +28,35 @@ Attribute Attribute::random() {
 	// set the center and spread
 	a.setCenter(real_dist(rng));
 	a.setSpread(real_dist(rng));
+
+	return a;
+
+} // end getRandom
+
+/****************************************************************************
+ * Inputs:     
+ * Outputs:
+ * Description:
+ ****************************************************************************/ 
+Attribute Attribute::random(std::pair<double,double> attribute_ranges, double range_scalar) {
+
+	// create the attribute
+	Attribute a;
+
+	// get the range of acceptable values
+	double range = attribute_ranges.second - attribute_ranges.first;
+
+	// set the dontCare value
+	int dc = (rng() % 2);
+	if (dc == 0) {
+		a.setDontCare(false);
+	} else {
+		a.setDontCare(true);
+	}
+
+	// set the center and spread
+	a.setCenter(real_dist(rng) * range);
+	a.setSpread(real_dist(rng) * range_scalar);
 
 	return a;
 

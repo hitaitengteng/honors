@@ -36,6 +36,7 @@ void LCS::processInput(int i) {
 	// value theta_ga_
 	
 	if (doGA()) {
+		printf("GA ran on iteration %d\n", curr_gen_);
 		applyGA();
 	}
 
@@ -87,16 +88,16 @@ void LCS::createMatchAndCorrectSets() {
 	// updated here.
 	correct_set_.updateNicheInfo();
 
-	// match_set_.print();
-	// correct_set_.print();
+	match_set_.print();
+	correct_set_.print();
 
 	// if the match set is empty or if not all of the classes are
 	// represented in the match set, a new rule is created and
 	// added to both the population and the match set (and the
 	// correct set, if applicable)
-	// if (doCover()) {
-	//	cover();
-	// }
+	if (doCover()) {
+		cover();
+	}
 
 } // end createMatchAndCorrectSets
 
@@ -107,14 +108,23 @@ void LCS::createMatchAndCorrectSets() {
  ****************************************************************************/
 void LCS::applyGA() {
 
-	// select the first parent
-	int p1_index = rouletteWheelSelect();
-
-	// make sure a different rule is selected for the second parent
+	int p1_index;
 	int p2_index;
-	do {
-		p2_index = rouletteWheelSelect();
-	} while (p1_index == p2_index);
+
+	if (correct_set_.fitness_sum() < 2) {
+		p1_index = correct_set_.members_[0];
+		p2_index = correct_set_.members_[1];
+
+	} else {
+
+		// select the first parent
+		p1_index = rouletteWheelSelect();
+
+		// make sure a different rule is selected for the second parent
+		do {
+			p2_index = rouletteWheelSelect();
+		} while (p1_index == p2_index);
+	}
 
 	// the offspring
 	pair<Rule,Rule> children;
@@ -186,8 +196,7 @@ int LCS::rouletteWheelSelect() {
 		}
 	}
 
-	// if there are somehow rounding errors, we
-	// return the last rule in the correct set
+	// control should never reach here
 	return correct_set_.members_[num_rules - 1];
 
 } // end rouletteWheelSelect
@@ -350,8 +359,10 @@ bool LCS::doGA() {
 
 	int correct_set_size = correct_set_.members_.size();
 
-	// if there are fewer than two rules in [C], the GA cannot be executed
-	if (correct_set_size < 2)
+	// if there are fewer than two rules in [C], the GA cannot be executed.
+	// Also: since selection in the GA is fitness-based, it makes little
+	// sense to run the GA if all of the candidate rules' fitness values are 0.
+	if ((correct_set_size < 2) || (correct_set_.fitness_sum() < 2))
 		return false;
 
 	// the sum of the number of iterations since each rule last

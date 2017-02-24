@@ -38,14 +38,21 @@ int main(int argc, char **argv) {
 	LCS lcs(p,d);
 
 	// generate rules based on instances in the data set
-	Rule r(d.num_attributes());
-	for (int i=0; i<max_pop_size; i++) {
-		r.specify(d.data_points_[i], d.attribute_ranges_, lcs.range_scalar());
-		lcs.pop_.add(r);
+	Rule r1 = lcs.training_set_.createRuleFromDataPoint(40,lcs.range_scalar());
+	Rule r2 = lcs.training_set_.createRuleFromDataPoint(50,lcs.range_scalar());
+	Rule r3 = lcs.training_set_.createRuleFromDataPoint(100,lcs.range_scalar());
+
+	// add the rules to the population
+	lcs.pop_.add(r1);
+	lcs.pop_.add(r2);
+	lcs.pop_.add(r3);
+
+	// run the LCS
+	for (int i=0; i<lcs.training_set_.num_data_points(); i++) {
+		lcs.processInput(i);
 	}
 
-	lcs.pop_.print();
+	// lcs.pop_.printVerbose();
 
 	return 0;
-	
 }

@@ -86,7 +86,7 @@ class Dataset {
 		static std::vector<double> randomDataPoint(int num_attributes);
 
 		// create a rule from a data point
-		static Rule createRuleFromDataPoint(int i);
+		Rule createRuleFromDataPoint(int i, double range_scalar);
 
 		// getters
 		int num_attributes() const {return num_attributes_;}

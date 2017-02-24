@@ -22,7 +22,7 @@ void Population::add(Rule r) {
 
 	// do not add the rule if the population limit has been reached
 	if (rules_.size() == max_size_) {
-		cout << "Unable to add rule: population limit reached." << endl;
+		// cout << "Unable to add rule: population limit reached." << endl;
 		return;
 	}
 

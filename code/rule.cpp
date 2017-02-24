@@ -6,7 +6,6 @@
  * Description: Implements functions for the Rule class.
  *
  * TODO:
- * 	Put num_dont_care_ in printVerbose
  ****************************************************************************/ 
 using namespace std;
 
@@ -295,6 +294,32 @@ bool Rule::matches(vector<double> &input) const {
 } // end matches
 
 /****************************************************************************
+ * Inputs:      
+ * Outputs:     
+ * Description: 
+ ****************************************************************************/ 
+Rule Rule::random(int num_attributes, int num_classes, 
+		vector<pair<double,double> > attribute_ranges,
+		double range_scalar) {
+
+	Rule r;
+
+	// random class (the '+1' is an artifice that needs to be removed)
+	r.setClass((rng() % num_classes) + 1);
+
+	// random attributes
+	Attribute a;
+	for (int i=0; i<num_attributes; i++) {
+		a = Attribute::random(attribute_ranges[i], range_scalar);
+		if (a.dont_care() == true)
+			r.num_dont_care_++;
+		r.condition_.push_back(a);
+	}
+
+	return r;
+}
+
+/****************************************************************************
  * Inputs:      num_attributes: the number of attributes that the rule is
  * 				is to have in its condition
  * Outputs:     A randomly generated rule.
@@ -411,7 +436,7 @@ void Rule::printVerbose() {
 	}
 
 	printf("\n\n");
-	printf("Class:           %s\n", CLASS_NAMES[classification_].c_str());
+	printf("Class:           %d\n", classification_);
 	printf("# Don't Care:    %d\n", num_dont_care_);
 	printf("Time stamp:      %d\n", time_stamp_);
 	printf("Experience:      %d\n", exp_);

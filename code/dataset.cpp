@@ -236,11 +236,40 @@ Dataset Dataset::random(int num_data_points) {
 } // end random
 
 /****************************************************************************
- * Inputs:
- * Outputs;
- * Description:
+ * Inputs:      The index in the training set of the data point to be used.
+ * Outputs;     A rule specified according to the values of the input.
+ * Description: Generates a rule based on a data point from the training set.
  ****************************************************************************/ 
-Rule Dataset::createRuleFromDataPoint(int i) {
+Rule Dataset::createRuleFromDataPoint(int i, double range_scalar) {
+
+	// get the input vector and the number of attributes it contains
+	vector<double> input = data_points_[i];
+	int num_attributes = input.size() - 1;
+
+	// create the rule
+	Rule r = Rule(num_attributes);
+
+	// set the rule's class to that of the input
+	r.setClass(input.back());
+	
+	// generate values for the condition's attributes
+	double curr_att_range = 0;
+	double spread = 0;
+	for (int i=0; i<num_attributes; i++) {
+
+		// get the possible range of values for the current attribute
+		curr_att_range = attribute_ranges_[i].second - attribute_ranges_[i].first;
+
+		// scale it by a factor range_scalar
+		spread = curr_att_range * range_scalar;
+
+		// set the values of the attribute
+		r.condition_[i].setCenter(input[i]);
+		r.condition_[i].setDontCare(false);
+		r.condition_[i].setSpread(spread);
+	}
+
+	return r;
 
 } // end createRuleFromDataPoint
 
