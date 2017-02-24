@@ -23,10 +23,22 @@ class Rule {
 
 	// FUNCTIONS
 	
-		// constructor
+		// first constructor
 		Rule() : id_(NO_ID), classification_(0), time_stamp_(0), exp_(0), numerosity_(1),
 		         num_matches_(0), num_correct_(0), num_dont_care_(0), num_niches_(0),
 			 niche_sizes_sum_(0), avg_niche_size_(real_dist(rng)), accuracy_(0), fitness_(0) { }
+
+		// second constructor
+		Rule(int num_attributes) : id_(NO_ID), classification_(0), time_stamp_(0), exp_(0), numerosity_(1),
+		         num_matches_(0), num_correct_(0), num_dont_care_(0), num_niches_(0),
+			 niche_sizes_sum_(0), avg_niche_size_(real_dist(rng)), accuracy_(0), fitness_(0) { 
+			 
+				 // initialize the condition vector
+				 Attribute a;
+				 for (int i=0; i<num_attributes; i++)
+					 condition_.push_back(a);
+			 
+			 }
 
 		// equality operator
 		bool operator==(const Rule &rule) const;
@@ -43,7 +55,7 @@ class Rule {
 
 		// assigns particular values to all "don't care" attributes based
 		// on the passed input vector
-		Rule specify(std::vector<double> input, 
+		void specify(std::vector<double> input, 
 				std::vector<std::pair<double,double> > ranges, 
 				double range_scalar);
 	

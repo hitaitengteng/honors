@@ -2,6 +2,7 @@
 #define DATASET_H
 
 #include "attribute.h"
+#include "rule.h"
 /****************************************************************************
  * File:        dataset.h
  * Author:      Will Gantt
@@ -12,8 +13,6 @@
  * 	  wrapper functions are such a pain to write.
  * 	- Fix printDataPoint so that the number of attributes are not
  *  	  required as a parameter.
- *  	- Fix readFromCSVFile so that the range of values for each attribute
- *  	  is accurate
  ****************************************************************************/ 
 
 class Dataset {
@@ -86,10 +85,13 @@ class Dataset {
 		// create a random data point
 		static std::vector<double> randomDataPoint(int num_attributes);
 
+		// create a rule from a data point
+		static Rule createRuleFromDataPoint(int i);
+
 		// getters
-		int getNumAttributes() const {return num_attributes_;}
-		int getNumClasses() const {return num_classes_;}
-		int getNumDataPoints() const {return num_data_points_;}
+		int num_attributes() const {return num_attributes_;}
+		int num_classes() const {return num_classes_;}
+		int num_data_points() const {return num_data_points_;}
 
 		// setters
 		void setNumAttributes(int num_attributes) {num_attributes_ = num_attributes;}

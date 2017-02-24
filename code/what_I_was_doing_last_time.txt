@@ -1,0 +1,5 @@
+
+2/23/17
+
+Last time, you were writing a function to create a rule from a data point.
+The function is called "createRuleFromDataPoint" and is in the Dataset class.

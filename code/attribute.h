@@ -17,6 +17,14 @@ class Attribute {
 			name_(""), center_(0), spread_(0), dont_care_(false) {
 		}
 
+		// create an attribute with no name
+		Attribute(double center, double spread, bool dont_care) {
+			setCenter(center);
+			setSpread(spread);
+			setDontCare(dont_care);
+		}
+
+
 		// fully specify an attribute
 		Attribute(std::string name, double center, double spread, bool dont_care) {
 			setName(name);

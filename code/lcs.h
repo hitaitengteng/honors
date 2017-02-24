@@ -83,6 +83,7 @@ class LCS {
 		// getters
 		std::vector<double> curr_data_point() {return curr_data_point_;}
 		int theta_mna() {return theta_mna_;}
+		double range_scalar() {return range_scalar_;}
 
 		// setters
 		void setCurrDataPoint(std::vector<double> curr_data_point) {

@@ -161,7 +161,7 @@ void Rule::mutate(double p_mutate, double p_dont_care,
  * 		the corresponding attribute in the input as the center of
  * 		that range.
  ****************************************************************************/ 
-Rule Rule::specify(vector<double> input, vector<pair<double,double> > ranges, 
+void Rule::specify(vector<double> input, vector<pair<double,double> > ranges, 
 		double range_scalar) {
 
 	// set the class attribute value of the rule to that of the input
@@ -188,8 +188,6 @@ Rule Rule::specify(vector<double> input, vector<pair<double,double> > ranges,
 			condition_[i].setSpread(spread);
 		}
 	}
-	return (*this);
-
 } // end specify
 
 /****************************************************************************

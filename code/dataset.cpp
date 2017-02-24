@@ -4,13 +4,6 @@
  * File:        dataset.cpp
  * Author:      William Gantt
  * Description: Implementations of various functions for the Dataset class.
- *
- * TODO:
- *
- * 	- add implementation that lets you determine the ranges of attribute
- * 	  values represented in the data
- * 	- add implementation to determine the number of distinct classes
- * 	  there are
  ****************************************************************************/ 
 
 using namespace std;
@@ -28,9 +21,6 @@ int Dataset::readFromCSVFile(string file_name) {
 
 	// a hashmap for keeping track of the number of classes
 	unordered_map<int,int> classes;       
-
-	// an array to keep track of the maximum and minimum
-	// values for an attribute across all data instances
 
 	// holds the class of the current data instance
 	int curr_class = NO_CLASS;            
@@ -135,7 +125,7 @@ int Dataset::readFromCSVFile(string file_name) {
 					       if (curr_vect.back() > attribute_ranges_[curr_att].second)
 						       attribute_ranges_[curr_att].second = curr_vect.back();
 				       }
-				       curr_att++;
+				       curr_att++;  // update the current attribute
 				}
 
 			        // delete the substring you just created from "line," as
@@ -174,8 +164,6 @@ int Dataset::readFromCSVFile(string file_name) {
 		exit(0); 
 	}
 
-	for (int i=0; i<num_attributes_; i++)
-		printf("Attribute %d: (%.2f, %.2f)\n", i, attribute_ranges_[i].first,attribute_ranges_[i].second);
 	file_stream.close();        // close the file stream
 	return num_data_points_;    // return the number of vectors read in
 
@@ -246,6 +234,15 @@ Dataset Dataset::random(int num_data_points) {
 	return d;
 
 } // end random
+
+/****************************************************************************
+ * Inputs:
+ * Outputs;
+ * Description:
+ ****************************************************************************/ 
+Rule Dataset::createRuleFromDataPoint(int i) {
+
+} // end createRuleFromDataPoint
 
 /****************************************************************************
  * Inputs:
