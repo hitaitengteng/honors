@@ -88,8 +88,8 @@ void LCS::createMatchAndCorrectSets() {
 	// updated here.
 	correct_set_.updateNicheInfo();
 
-	match_set_.print();
-	correct_set_.print();
+	// match_set_.print();
+	// correct_set_.print();
 
 	// if the match set is empty or if not all of the classes are
 	// represented in the match set, a new rule is created and
@@ -105,12 +105,30 @@ void LCS::createMatchAndCorrectSets() {
  * Inputs:      None. 
  * Outputs:     None.
  * Description: Executes a single iteration of the genetic algorithm.
+ *
+ * TODO:
+ * 	- The average niche size update seems to be experiencing problems.
+ * 	- ga_subsume needs to be fixed.
+ * 	- num_classes_represented is not updated properly
+ * 	- change class numberings in iris2.csv
+ * 	- update Makefile dependencies
+ * 	- verify that time stamps are being updated properly
+ * 	- Why is it that the GA seems to run routinely on particular iterations?
+ * 	  	This is probably because you're reading the data in the same
+ * 	  	order every time. Need a function that will mix it up.
+ *
+ * 	Secondary:
+ * 		- Need a way of mapping class names to numbers
  ****************************************************************************/
 void LCS::applyGA() {
 
+	// the index of the parents in the general population
 	int p1_index;
 	int p2_index;
 
+	// if the fitness sum is less than 2, rouletteWheelSelect can get stuck
+	// in a loop, because it will keep selecting the same single parent for
+	// crossover. Have to prevent this.
 	if (correct_set_.fitness_sum() < 2) {
 		p1_index = correct_set_.members_[0];
 		p2_index = correct_set_.members_[1];
@@ -140,8 +158,12 @@ void LCS::applyGA() {
 	
 	// don't do crossover
 	} else {
-		// otherwise, just create a copy of the parents
+		// otherwise, just create a copy of the parents, but make sure their
+		// IDs are reset
 		children = make_pair(pop_.rules_[p1_index], pop_.rules_[p2_index]);
+		children.first.setID(NO_ID);
+		children.second.setID(NO_ID);
+		// should time stamps be set here?
 	}
 	
 	// mutate the offspring 
@@ -173,6 +195,10 @@ void LCS::applyGA() {
  * Outputs:     None.
  * Description: Randomly selects a rule from [C]. A rule's likelihood of
  * 		being selected is directly proportional to its fitness.
+ *
+ * NOTE: If this function is giving you trouble (esp. if the whole program
+ * fails to terminate b/c of it, you should make sure that the fitness sum
+ * is being set correctly.
  ****************************************************************************/ 
 int LCS::rouletteWheelSelect() {
 
@@ -211,8 +237,6 @@ int LCS::rouletteWheelSelect() {
  * 		and whose class is the same as the input's class. The new
  * 		rule is then added to the general population, and to [M] and
  * 		[C].
- *
- * 		NOTE TO SELF: should this return the rule that it generates?
  ****************************************************************************/
 void LCS::cover() {
 
@@ -299,12 +323,10 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 	 	if (pop_.rules_[fitter].generalizes(first_child)) {
 			pop_.rules_[fitter].setNumerosity(pop_.rules_[fitter].numerosity() + 1);
 			subsume_first = true;
-			cout << "First child was subsumed" << endl;
 		} 
 	 	if (pop_.rules_[fitter].generalizes(second_child)) {
 			pop_.rules_[fitter].setNumerosity(pop_.rules_[fitter].numerosity() + 1);
 			subsume_second = true;
-			cout << "Second child was subsumed" << endl;
 		}
 	
 		// if a child rule was NOT subsumed, it is added to the population. In order
@@ -315,7 +337,6 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 			first_child.setID(pop_.id_count_);
 			pop_.id_count_++;
 	 		pop_.rules_[rule_to_remove1] = first_child;
-			cout << "First child was added to the population" << endl;
 		}
 		if (!subsume_second) {
 			do {
@@ -324,7 +345,6 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 			} while (rule_to_remove2 == rule_to_remove1);
 			second_child.setID(pop_.id_count_);
 			pop_.id_count_++;
-			cout << "Second child was added to the population" << endl;
 		}
 	}
 	
@@ -335,12 +355,23 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
  * Outputs:     A boolean indicating whether the covering operator should
  * 		be invoked.
  * Description: Decides whether the covering operator should be invoked.
- * 		Returns true only if one of the following is true:
+ * 		Returns true only if the population size limit has not been
+ * 		reached and if one of the following is true:
  * 			1. the correct set is empty
  * 			2. Not all of the possible classes are represented
  * 			   in the match set.
+ *
+ * 		NOTE: You may want to change the condition that prevents the
+ * 		cover operator from executing when the population size limit
+ * 		has been reached. If you do, you will have to invoke
+ * 		deletionSelect to remove a rule from the population.
  ****************************************************************************/
 bool LCS::doCover() {
+
+	// if the population size limit has already been reached, cover
+	// should not execute
+	if (pop_.rules_.size() >= pop_.max_size())
+		return false;
 
 	return ((correct_set_.isEmpty()) || 
 			(match_set_.num_classes_represented() < theta_mna_));

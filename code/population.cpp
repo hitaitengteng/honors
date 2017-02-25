@@ -22,7 +22,7 @@ void Population::add(Rule r) {
 
 	// do not add the rule if the population limit has been reached
 	if (rules_.size() == max_size_) {
-		// cout << "Unable to add rule: population limit reached." << endl;
+		cout << "Unable to add rule: population limit reached." << endl;
 		return;
 	}
 
@@ -99,7 +99,7 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
 	Rule off1;
 	Rule off2;
 
-	// copy parent conditions into offspring
+	// copy parent conditions into offspring (up to break point)
 	for (int i=0; i<cross_point; i++) {
 
 		// add the appropriate attribute values to the rules
@@ -113,7 +113,8 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
 			off2.setNumDontCare(off2.num_dont_care() + 1);
 	}
 
-	for (size_t i=cross_point; i<p1.condition_.size(); i++) {
+	// copy parent conditions into offspring (after break point)
+	for (int i=cross_point; i<p1.condition_.size(); i++) {
 
 		off1.condition_.push_back(p2.condition_[i]);
 		off2.condition_.push_back(p1.condition_[i]);
@@ -139,6 +140,9 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
  * Description: Randomly selects a rule in [P] for deletion. A rule's
  * 		likelihood of being selected is directly proportional to
  * 		its average niche size.
+ *
+ * NOTE: If this function is giving you trouble, the first thing you should
+ * check is whether theta_acc is set to an appropriate value.
  *
  * TODO:
  * 	Horribly inefficient---Fix. Also: the metrics used to
@@ -176,7 +180,7 @@ int Population::deletionSelect(double theta_acc) {
 
 	return to_delete;
 
-} // end subsumptionSelect
+} // end deletionSelect
 
 /****************************************************************************
  * Inputs:      None.

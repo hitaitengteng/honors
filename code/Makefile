@@ -17,7 +17,7 @@ lcs.o: lcs.cpp lcs.h matchSet.cpp correctSet.cpp
 main.o: main.cpp lcs.cpp
 	$(CXX) $(CPPFLAGS) -c main.cpp -o $@
 
-dataset.o: dataset.cpp dataset.h
+dataset.o: dataset.cpp dataset.h rule.cpp rule.h
 	$(CXX) $(CPPFLAGS) -c dataset.cpp -o $@
 
 correctSet.o: correctSet.cpp correctSet.h
@@ -41,6 +41,8 @@ all:
 	make population.o
 	make dataset.o
 	make main.o
+	make matchSet.o
+	make correctSet.o
 	make lcs.o
 
 clean:

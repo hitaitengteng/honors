@@ -8,7 +8,7 @@
  * Description: Defines the Population class.
  *
  * TODO:
- * 	- make id_count private
+ * 	- make id_count private (or don't)
  ****************************************************************************/ 
 
 class Population {

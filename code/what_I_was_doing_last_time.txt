@@ -1,6 +1,4 @@
 
 2/24/17
 
-Last time, you were trying to fix a bug that caused rouletteWheelSelect
-to get stuck in a while loop. It has to do with the same index being
-selected over and over again.
+See documentation for applyGA in lcs.cpp

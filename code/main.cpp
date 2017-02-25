@@ -24,11 +24,12 @@ uniform_int_distribution<int> int_dist(1,10);
 
 int main(int argc, char **argv) {
    
+	// seed the random number generator
 	rng.seed(rd());
 
 	// read in the data set
 	Dataset d;
-	d.readFromCSVFile("../Datasets/iris2.csv");
+	d.readFromCSVFile("../Datasets/iris3.csv");
 
 	// create the population
 	int max_pop_size = 50;
@@ -50,6 +51,7 @@ int main(int argc, char **argv) {
 	// run the LCS
 	for (int i=0; i<lcs.training_set_.num_data_points(); i++) {
 		lcs.processInput(i);
+		cout << lcs.match_set_.num_classes_represented() << endl;
 	}
 
 	// lcs.pop_.printVerbose();

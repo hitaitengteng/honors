@@ -17,14 +17,14 @@ class LCS {
 		// should eventually be initialized with a dataset too
 		LCS(Population p, Dataset d): curr_gen_(0), fitness_exponent_(1), 
 				   p_crossover_(0.8), p_mutate_(0.1), 
-				   p_dont_care_(0.33), theta_acc_(0.9), 
-				   theta_sub_(0), theta_mna_(4), theta_ga_(5), 
+				   p_dont_care_(0.33), theta_acc_(2), 
+				   theta_sub_(0), theta_mna_(2), theta_ga_(5), 
 				   range_scalar_(0.1), 
-				   do_ga_subsumption_(true), 
+				   do_ga_subsumption_(false), 
 				   do_correct_set_subsumption_(true)	{
 
 			pop_ = p;
-			match_set_ = MatchSet(&pop_);
+			match_set_ = MatchSet(&pop_, d.num_classes());
 			correct_set_ = CorrectSet(&pop_);
 			training_set_ = d;
 		}

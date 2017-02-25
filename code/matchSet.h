@@ -1,7 +1,6 @@
 #ifndef MATCHSET_H
 #define MATCHSET_H
 
-#include "rule.h"
 #include "population.h"
 #include "utilities.h"
 
@@ -22,8 +21,14 @@ class MatchSet {
 		MatchSet() { };
 
 		// custom constructor
-		MatchSet(Population *p) : p_(p), exp_sum_(0), avg_exp_(0), 
-			num_classes_represented_(0) { };
+		MatchSet(Population *p, int num_classes) : p_(p), exp_sum_(0), avg_exp_(0), 
+			num_classes_(num_classes), num_classes_represented_(0) { 
+				classes_represented_ = (bool*) malloc(sizeof(bool) * num_classes);
+			};
+
+		~MatchSet() {
+			// free(classes_represented_);
+		}
 
 		// the population from which the match set is created
 		Population *p_;
@@ -32,9 +37,9 @@ class MatchSet {
 		// general population that belong to the match set
 		std::vector<int> members_;
 
-		// indicates which class attribute values are
+		// An array indicating which class attribute values are
 		// represented in the match set
-		bool classes_represented_[NUM_CLASSES];
+		bool* classes_represented_;
 
 		// adds a rule's index to the match set and
 		// updates the relevant member variables
@@ -66,6 +71,7 @@ class MatchSet {
 		// getters
 		double exp_sum() {return exp_sum_;}
 		double avg_exp() {return avg_exp_;}
+		int num_classes() {return num_classes_;}
 		int num_classes_represented() {return num_classes_represented_;}
 
 		// setters
@@ -83,6 +89,9 @@ class MatchSet {
 
 		// the average of the experience values of all the rules in [M]
 		double avg_exp_;
+
+		// the number of possible classes
+		int num_classes_;
 
 		// the number of distinct classes represented by the rules in [M]
 		int num_classes_represented_;
