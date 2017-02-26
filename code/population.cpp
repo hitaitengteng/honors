@@ -221,6 +221,8 @@ int Population::subsume() {
  * Outputs:     A boolean indicating whether one of the rules in the
  * 		population matches the input.
  * Description: See above.
+ *
+ * NOTE: This function isn't used anywhere. Should probably be deleted.
  ****************************************************************************/ 
 bool Population::matchExists(vector<double> &input) const {
 

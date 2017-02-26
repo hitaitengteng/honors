@@ -23,7 +23,12 @@ class MatchSet {
 		// custom constructor
 		MatchSet(Population *p, int num_classes) : p_(p), exp_sum_(0), avg_exp_(0), 
 			num_classes_(num_classes), num_classes_represented_(0) { 
-				classes_represented_ = (bool*) malloc(sizeof(bool) * num_classes);
+
+				// initialize the array that keeps track of which classes
+				// are represented in [M]
+				classes_represented_ = (bool*) malloc(sizeof(bool) * num_classes_);
+				for (int i=0; i<num_classes; i++)
+					classes_represented_[i] = false;
 			};
 
 		~MatchSet() {
@@ -49,6 +54,7 @@ class MatchSet {
 		void clear() {
 			exp_sum_ = 0;
 			avg_exp_ = 0;
+			num_classes_represented_ = 0;
 			members_.clear();
 			for (int i=0; i<NUM_CLASSES; i++)
 				classes_represented_[i] = false;

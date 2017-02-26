@@ -59,18 +59,6 @@ bool Rule::operator==(const Rule &rule) const {
 } // end operator ==
 
 /****************************************************************************
- * Inputs:      rule: the rule to be checked for inequality
- * Outputs:     A boolean indicating whether two rules are NOT equal to
- * 		each other.
- * Description: See above.
- ****************************************************************************/ 
-bool Rule::operator!=(const Rule &rule) const {
-
-	return !((*this) == rule);
-
-} // end operator != 
-
-/****************************************************************************
  * Inputs:      p_mutate: the probability that the value of a single
  * 			 attribute is mutated.
  * 		p_dont_care: given that an attribute is to be mutated, the

@@ -55,11 +55,17 @@ void CorrectSet::updateNicheInfo() {
 	// iterate over all the rules in the correct set
 	for (int i=0; i<num_members; i++) {
 
+		// the sum of the sizes of all of the niches to which this
+		// rule has belonged
 		curr_sum = p_->rules_[members_[i]].niche_sizes_sum();
+
+		// the number of niches to which this rule has belonged
 		curr_num_niches = p_->rules_[members_[i]].num_niches();
+
+		// update the niche sizes sum of this rule to reflect its
+		// membership in the current niche
 		p_->rules_[members_[i]].setNicheSizesSum(curr_sum + num_members);
-		p_->rules_[members_[i]].setAvgNicheSize(
-				p_->rules_[members_[i]].niche_sizes_sum() / curr_num_niches);
+		p_->rules_[members_[i]].updateAvgNicheSize();
 	}
 
 } // end updateNicheInfo

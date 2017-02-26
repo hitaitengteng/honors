@@ -51,7 +51,7 @@ int main(int argc, char **argv) {
 	// run the LCS
 	for (int i=0; i<lcs.training_set_.num_data_points(); i++) {
 		lcs.processInput(i);
-		cout << lcs.match_set_.num_classes_represented() << endl;
+		// lcs.pop_.most_general().printVerbose();
 	}
 
 	// lcs.pop_.printVerbose();

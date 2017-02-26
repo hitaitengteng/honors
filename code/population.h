@@ -6,9 +6,6 @@
  * File:        population.h
  * Author:      William Gantt
  * Description: Defines the Population class.
- *
- * TODO:
- * 	- make id_count private (or don't)
  ****************************************************************************/ 
 
 class Population {
@@ -18,8 +15,8 @@ class Population {
 	// MEMBER VARIABLES (these should definitely be private)
 
 		std::vector<Rule> rules_; // the set of rules
-		int id_count_;       // counts the number of IDs
-				    // that have been used
+		int id_count_;            // counts the number of IDs
+				          // that have been used
 
 	// FUNCTIONS
 	
@@ -105,13 +102,12 @@ class Population {
 		void setMostGeneral(Rule most_general) {most_general_ = most_general;}
 
 	private:
-		int type_;             // the type of population (general population,
-				       // match set, or correct set);
 		int max_size_;         // the maximum number of rules allowed
 		double fitness_sum_;   // the sum of all the fitnesses
 		double exp_sum_;       // the sum of all the experience values
 		Rule most_general_;    // the most general rule in the population
-				       // (the one with the most "don't care" attributes)
+				       // (the one with the most "don't care" attributes
+				       // and broadest attribute ranges)
 };
 
 #endif

@@ -1,4 +1,7 @@
 
-2/24/17
+2/26/17
 
-See documentation for applyGA in lcs.cpp
+I was working on getting the gaSubsume function to work. It seems
+to be working just fine; the only problem is that the children are
+rarely subsumed. Maybe this is by design? Need to investigate further.
+Also see documentation for applyGA in lcs.cpp.

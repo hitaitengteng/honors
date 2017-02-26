@@ -107,18 +107,18 @@ void LCS::createMatchAndCorrectSets() {
  * Description: Executes a single iteration of the genetic algorithm.
  *
  * TODO:
- * 	- The average niche size update seems to be experiencing problems.
+ *      - fix most_general_
  * 	- ga_subsume needs to be fixed.
- * 	- num_classes_represented is not updated properly
- * 	- change class numberings in iris2.csv
- * 	- update Makefile dependencies
- * 	- verify that time stamps are being updated properly
- * 	- Why is it that the GA seems to run routinely on particular iterations?
- * 	  	This is probably because you're reading the data in the same
- * 	  	order every time. Need a function that will mix it up.
+ * 		- figure out why it is so rarely the case that the child
+ * 		  is subsumed by the parent and whether that's a problem.
+ * 	- figure out where experience needs to be incorporated.
+ * 	- figure out how you're going to deal with numerosity
+ * 	- write a function for breaking up the data into training and testing
+ * 	  sets
  *
  * 	Secondary:
  * 		- Need a way of mapping class names to numbers
+ * 		- update Makefile dependencies
  ****************************************************************************/
 void LCS::applyGA() {
 
@@ -128,7 +128,7 @@ void LCS::applyGA() {
 
 	// if the fitness sum is less than 2, rouletteWheelSelect can get stuck
 	// in a loop, because it will keep selecting the same single parent for
-	// crossover. Have to prevent this.
+	// crossover. The code in this if-statement prevents that.
 	if (correct_set_.fitness_sum() < 2) {
 		p1_index = correct_set_.members_[0];
 		p2_index = correct_set_.members_[1];
@@ -163,7 +163,6 @@ void LCS::applyGA() {
 		children = make_pair(pop_.rules_[p1_index], pop_.rules_[p2_index]);
 		children.first.setID(NO_ID);
 		children.second.setID(NO_ID);
-		// should time stamps be set here?
 	}
 	
 	// mutate the offspring 
@@ -270,6 +269,11 @@ void LCS::cover() {
 	match_set_.add(pop_.size() - 1);
 	correct_set_.add(pop_.size() - 1);
 
+	// update the accuracy and fitness of the rule, as well as
+	// niche information
+	pop_.rules_[pop_.size() - 1].updateAccuracyAndFitness(fitness_exponent_);
+	correct_set_.updateNicheInfo();
+
 } // end cover
 
 /****************************************************************************
@@ -294,8 +298,7 @@ void LCS::cover() {
  ****************************************************************************/
 void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_child) {
 
-	// booleans to indicate which of the 
-	// offspring rules are to be subsumed
+	// booleans to indicate which of the offspring rules are to be subsumed
 	bool subsume_first = false;
 	bool subsume_second = false;
 	
@@ -305,7 +308,8 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 	int rule_to_remove1 = -1;
 	int rule_to_remove2 = -1;
 	
-	// determine which of the two parents is fitter
+	// determine which of the two parents is fitter (TODO: fix this so that the
+	// second parent is not automatically selected if they have equal fitness)
 	int fitter;
 	if (pop_.rules_[p1_index].fitness() > pop_.rules_[p2_index].fitness())
 		fitter = p1_index;
@@ -322,10 +326,12 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 		// subsume a child rule only if it generalizes the child rule.
 	 	if (pop_.rules_[fitter].generalizes(first_child)) {
 			pop_.rules_[fitter].setNumerosity(pop_.rules_[fitter].numerosity() + 1);
+			cout << "first child subsumed" << endl;
 			subsume_first = true;
 		} 
 	 	if (pop_.rules_[fitter].generalizes(second_child)) {
 			pop_.rules_[fitter].setNumerosity(pop_.rules_[fitter].numerosity() + 1);
+			cout << "second child subsumed" << endl;
 			subsume_second = true;
 		}
 	
@@ -337,6 +343,7 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 			first_child.setID(pop_.id_count_);
 			pop_.id_count_++;
 	 		pop_.rules_[rule_to_remove1] = first_child;
+			cout << "parent numerosity increased" << endl;
 		}
 		if (!subsume_second) {
 			do {
@@ -345,7 +352,10 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 			} while (rule_to_remove2 == rule_to_remove1);
 			second_child.setID(pop_.id_count_);
 			pop_.id_count_++;
+			cout << "parent numerosity increased" << endl;
 		}
+	} else {
+		cout << "subsume criteria not met" << endl;
 	}
 	
 } // end gaSubsume
@@ -411,7 +421,8 @@ bool LCS::doGA() {
 			curr_gen_ - pop_.rules_[r_i].time_stamp();
 	}
 
-	return (sum_iters_since_last_ga / correct_set_size) > theta_ga_;
+	return (((double)sum_iters_since_last_ga) / 
+			((double) correct_set_size)) > theta_ga_;
 
 } // end doGA
 

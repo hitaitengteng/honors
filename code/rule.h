@@ -75,7 +75,7 @@ class Rule {
 		// updates average niche size
 		void updateAvgNicheSize() {
 			if (num_niches_ != 0) {
-				avg_niche_size_ = niche_sizes_sum_ / num_niches_;
+				avg_niche_size_ = ((double) niche_sizes_sum_) / ((double) num_niches_);
 			}
 		}
 
