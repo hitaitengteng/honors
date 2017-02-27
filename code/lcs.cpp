@@ -305,12 +305,12 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 	// if an offspring rule is not subsumed, another rule from the
 	// population must be selected for deletion. These variables
 	// store the indices of those rules
-	int rule_to_remove1 = -1;
-	int rule_to_remove2 = -1;
+	int rule_to_remove1;
+	int rule_to_remove2;
 	
 	// determine which of the two parents is fitter (TODO: fix this so that the
 	// second parent is not automatically selected if they have equal fitness)
-	int fitter;
+	int fitter; 
 	if (pop_.rules_[p1_index].fitness() > pop_.rules_[p2_index].fitness())
 		fitter = p1_index;
 	else
@@ -335,28 +335,48 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 			subsume_second = true;
 		}
 	
-		// if a child rule was NOT subsumed, it is added to the population. In order
-		// to maintain a constant population size, another rule must be selected for
-		// deletion (NOTE: the rule(s) selected for deletion may be the parent(s)).
+		// if a child rule was NOT subsumed, it is added to the population. If
+		// the population has already reached capacity, another rule must be
+		// deleted. (NOTE: The parents may be selected for deletion.)
 		if (!subsume_first) {
-			rule_to_remove1 = pop_.deletionSelect(theta_acc_);
+
+			// set the ID of the child and update the rule ID count
+			// of the population
 			first_child.setID(pop_.id_count_);
 			pop_.id_count_++;
-	 		pop_.rules_[rule_to_remove1] = first_child;
-			cout << "parent numerosity increased" << endl;
+
+			// if the population is already at capacity, a rule has to 
+			// be deleted
+			if (pop_.rules_.size() == pop_.max_size()) {
+				rule_to_remove1 = pop_.deletionSelect(theta_acc_);
+				pop_.remove(rule_to_remove1);
+			}
+
+			// add the child to the population
+			pop_.add(first_child);
+			cout << "first child added to the population" << endl;
 		}
 		if (!subsume_second) {
-			do {
-				rule_to_remove2 = pop_.deletionSelect(theta_acc_);
-	 			pop_.rules_[rule_to_remove2] = second_child;
-			} while (rule_to_remove2 == rule_to_remove1);
 			second_child.setID(pop_.id_count_);
 			pop_.id_count_++;
-			cout << "parent numerosity increased" << endl;
+
+			if (pop_.rules_.size() == pop_.max_size()) {
+
+				// If the population is at capacity and the first
+				// child was subsumed, AND the second child is also
+				// to be subsumed, we want to make sure we don't select
+				// the first child for deletion. If it has been added,
+				// the first child will be at index (pop_size - 1), so
+				// we don't want to pick that index. Hence the do-while loop.
+				do {
+					rule_to_remove2 = pop_.deletionSelect(theta_acc_);
+				} while (rule_to_remove2 == (pop_.size() - 1));
+				pop_.remove(rule_to_remove2);
+			}
+			pop_.add(second_child);
+			cout << "second child added to the population" << endl;
 		}
-	} else {
-		cout << "subsume criteria not met" << endl;
-	}
+	} 
 	
 } // end gaSubsume
 

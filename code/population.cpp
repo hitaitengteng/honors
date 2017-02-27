@@ -4,11 +4,6 @@
  * File:        population.cpp
  * Author:      William Gantt
  * Description: Method implementations for the Population class
- *
- * TODO:
- * 	- method descriptions
- * 	- unit test all functions
- * 	- resolve problems with most_general
  ****************************************************************************/ 
 
 using namespace std;
