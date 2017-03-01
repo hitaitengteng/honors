@@ -1,26 +1,36 @@
 1/30/17
 Will Gantt
 
+Project Description [From the "Chapter 2" writeup]:
+
+The goal of my project is to use learning classifier systems (LCSs) 
+to measure the impact of different variables on regional and global 
+crop yields. LCSs are systems that use evolutionary computation to 
+evolve a set of rules for classifying inputs based on a specified 
+attribute. In an effective LCS, these rules will indicate what features 
+of the inputs are most relevant in determining how they should be 
+classified. By constructing an LCS for yield data from 1975 to 2007 
+(collected by Erik Nelson), I will identify the environmental and 
+economic factors that most significantly influence changes in crop 
+yields. 
+
 
 The following is my ideal timeline for my honors project.
-
 
 Implementing & Testing:
 -----------------------
 
-Feb. 20: 
-	Get a preliminary version of the LCS up and running.
-
-Feb. 27:
-	Test the LCS on Erik's data and debug as necessary.
-
 Mar. 6:
-	Write at least two variations on the initial implementation.
+	Have a first version of the LCS up and running.
 
 Mar 13  (Spring break):
-	Test the variations and debug as necessary.
+	Run the LCS on Erik's data and document preliminary results.
+	Debug as needed, and repeat tests.
 
 Mar. 27 (end of spring break):
+
+	Write two variations on the original version of the LCS.
+
 	Compare the performance and output of the variations on Erik's
 	data. Document the results and try to explain them.
 
@@ -28,37 +38,39 @@ Mar. 27 (end of spring break):
 	might be improved in a particular way, implement the improvements
 	and test again.
 
-	Write the Results section: This section should compare the results
-	of the different versions with one another, and with Erik and Clare's
-	findings as well. Submit to Clare for revision.
 
 Writing:
 --------
 
 Apr. 3:
+	Write the Results section: This section should compare the results
+	of the different versions with one another, and with Erik and Clare's
+	findings as well. Submit to Clare for revision.
+
+Apr. 10:
 	Write the Discussion and Conclusion sections: This should attempt to 
 	explain the results, as well as the shortcomings of the system.
 	Submit to Clare for revision.
 
-Apr. 10:
+Apr. 17:
 	Write the System Description section. This should include descriptions
 	of both the original implementation and the variations, and should also
 	lay out the experimental set-up. Submit to Clare for revision.
 
-Apr. 17:
+Apr. 24:
 	Rewrite the Introduction section and write the abstract. This will 
 	largely be a revision of the "Chapter 2" I submitted first semester,
 	with some added background information. Submit to Clare for revision.
 
-Apr. 24:
+May 1:
 	Make any final revisions necessary. Polish up the document and the code.
 
 
 --------------------------------------------------------------------------------
 
 I believe the CS department's policy concerning honors project submission deadlines
-would put the due date at May 14th. Thus, I have allowed myself a considerable
-buffer to accommodate whatever snags and delays may arise. Of course, Hofstadter's
+would put the due date at May 14th. Thus, I have allowed myself a two-week
+buffer to accommodate the snags and delays may arise. Of course, Hofstadter's
 Law states that
 
 	"It takes longer than you expect, even when you take into account
@@ -72,6 +84,5 @@ So even though I fully expect that there will be more difficulties along the way
 and that I will be working right up to the deadline, I have put down these dates
 as a guideline mostly for myself. That said, do let me know if you think any of
 this is overly optimistic.
-
 
 Will

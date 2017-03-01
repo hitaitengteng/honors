@@ -9,6 +9,10 @@ UCS, in turn, takes its inspiration from Stewart Wilson's XCS. The LCS
 I describe here is Michigan-style and accuracy-based, and uses crisp
 real-valued intervals in classifier conditions.
 
+NOTE (3/1/17): This is out of date and does not accurately represent my
+actual implementation. Once I have completely finished coding, I will write
+up a more faithful description.
+
 ---------------------------------------------------------------------------
 A. KNOWLEDGE REPRESENTATION
 ---------------------------------------------------------------------------
