@@ -1,0 +1,23 @@
+Week of 2/20/17
+Will Gantt
+
+This week:
+
+I have made considerable progress on the debugging. The basic machinery is nearly
+done, but some of the less important operators still need work. Specifically, I need
+to make changes to the two "subsumption" operators, which, as their name suggests,
+allow rules to subsume other rules that they generalize. I also need to work on the
+"specify" operator, which takes an overly general rule and assigns values to its
+attributes based on an input vector. There are also some memory leaks that I'm trying
+to work through, but the output from Valgrind has not been particularly helpful.
+
+As I mentioned in my email, I have been testing the LCS on data from the UCI Machine
+Learning repository, which has been very helpful. However, I would like to start
+experimenting with Erik's data as soon as possible. 
+
+Next week:
+
+I will finish dealing with the items listed above. Assuming the system doesn't
+produce *terrible* results, I also need to start thinking about the proper approach
+to data collection, and about what writing I should be doing. We can discuss all
+this in our meeting on Friday.

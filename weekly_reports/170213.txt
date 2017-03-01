@@ -1,0 +1,26 @@
+Week of 2/13/17
+Will Gantt
+
+This week:
+
+I continued writing tests and debugging using Valgrind, but still have not
+addressed all of the bugs that need debugging. I did not get to devote as
+many hours to the project this week as I would have liked for several
+reasons, none of which I will bore you with.
+
+In my roadmap for the semester, today was the day I had hoped to have
+a first functional version of the LCS up and running, which clearly has
+not come to fruition. I expected this would be the case, and intended the
+due date mostly as a motivator for myself. More realistically, with the
+other assignments I have on the docket at the moment, I hope to have it
+done by the end of next wee.
+
+I meant to note in my previous entry that the schema for the LCS, which
+I originally wrote up in Crisp_LCS_Schema.txt (in the "write_ups_etc"
+directory) is no longer completely accurate. My plan is to make the
+necessary corrections once I have finished with the initial coding.
+
+Next week:
+
+Finish writing tests and debugging.
+
