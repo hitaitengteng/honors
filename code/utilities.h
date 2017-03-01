@@ -6,6 +6,10 @@
  * Author:      Will Gantt
  * Description: Includes basic include files, named constants, and various 
  *              functions for reading and writing to files.
+ *
+ * TODO:
+ * 	- Determine whether there are any includes that you can get rid of
+ * 	  and put the remaining ones in alphabetical order
  ****************************************************************************/ 
 
 #include <cstdlib>
@@ -20,6 +24,7 @@
 #include <utility>
 #include <chrono>
 #include <math.h>
+#include <assert.h>
 
 // a random number generator
 extern std::mt19937 rng;
@@ -32,16 +37,11 @@ extern std::uniform_real_distribution<double> real_dist;
 extern std::uniform_int_distribution<int> int_dist;
 
 // class attribute (yield change) values
-static const int NO_CLASS = 0;
-static const int HIGH_NEG = 1;
-static const int LOW_NEG = 2;
-static const int LOW_POS = 3;
-static const int HIGH_POS = 4;
-
-// population types
-static const int GENERAL = 1;
-static const int MATCH_SET = 2;
-static const int CORRECT_SET = 3;
+static const int NO_CLASS = -1;
+static const int HIGH_NEG = 0;
+static const int LOW_NEG = 1;
+static const int LOW_POS = 2;
+static const int HIGH_POS = 3;
 
 static const int NO_ID = -1;
 

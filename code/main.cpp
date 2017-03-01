@@ -24,13 +24,20 @@ uniform_int_distribution<int> int_dist(1,10);
 
 int main(int argc, char **argv) {
    
+	if (argc == 0) {
+		cout << stderr << "Error: No input file" << endl;
+	}
+
+	string file_name = argv[1];
+
 	// seed the random number generator
 	rng.seed(rd());
 
 	// read in the data set
 	Dataset d;
-	d.readFromCSVFile("../Datasets/iris3.csv");
+	d.readFromCSVFile(file_name);
 
+	exit(0);
 	// create the population
 	int max_pop_size = 50;
 	Population p(max_pop_size);

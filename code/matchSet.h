@@ -27,12 +27,12 @@ class MatchSet {
 				// initialize the array that keeps track of which classes
 				// are represented in [M]
 				classes_represented_ = (bool*) malloc(sizeof(bool) * num_classes_);
-				for (int i=0; i<num_classes; i++)
+				for (int i=0; i<num_classes_; i++)
 					classes_represented_[i] = false;
 			};
 
 		~MatchSet() {
-			// free(classes_represented_);
+			free(classes_represented_);
 		}
 
 		// the population from which the match set is created
@@ -56,7 +56,7 @@ class MatchSet {
 			avg_exp_ = 0;
 			num_classes_represented_ = 0;
 			members_.clear();
-			for (int i=0; i<NUM_CLASSES; i++)
+			for (int i=0; i<num_classes_; i++)
 				classes_represented_[i] = false;
 		}
 

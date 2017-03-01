@@ -9,11 +9,13 @@
 /****************************************************************************
  * TODO:
  * 	- Write print function
+ * 	- Write function for splitting data into training and test sets?
  ****************************************************************************/
 class LCS {
 
 	public:
-		// should eventually be initialized with a dataset too
+		// should eventually be initialized with different training
+		// and testing sets
 		LCS(Population p, Dataset d): curr_gen_(0), fitness_exponent_(1), 
 				   p_crossover_(0.8), p_mutate_(0.4), 
 				   p_dont_care_(0.33), theta_acc_(1), 
@@ -26,6 +28,7 @@ class LCS {
 			match_set_ = MatchSet(&pop_, d.num_classes());
 			correct_set_ = CorrectSet(&pop_);
 			training_set_ = d;
+			test_set_ = d;
 		}
 
 	// MEMBER FUNCTIONS 
@@ -60,6 +63,10 @@ class LCS {
 
 		// processes a single input from the dataset
 		void processInput(int i);
+
+		// once the LCS has evolved a population of rules, this function
+		// then classifies new inputs using those rules
+		std::pair<int,int> *classifyInputs();
 	
 	// MEMBER VARIABLES (these should probably be private)
 
@@ -82,7 +89,7 @@ class LCS {
 		Dataset training_set_;
 
 		// the data set used to test the LCS
-		Dataset testing_set_;
+		Dataset test_set_;
 
 		// getters
 		std::vector<double> curr_data_point() {return curr_data_point_;}

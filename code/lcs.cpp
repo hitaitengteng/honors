@@ -44,6 +44,121 @@ void LCS::processInput(int i) {
 
 /****************************************************************************
  * Inputs:      None.
+ * Outputs:     An array of pairs indicating the actual and predicted class
+ * 		for every input in the test set.
+ * Description: Once the population of rules has been evolved, this function
+ * 		goes through the rules in the test set and classifies them
+ * 		using those rules. The classification for an input is selected
+ * 		by a "vote" of all the rules matching the input, weighted by
+ * 		the fitness. 
+ ****************************************************************************/
+pair<int,int>* LCS::classifyInputs() {
+
+	// clear the match set
+	match_set_.clear();
+
+	// an array to keep track of the "votes" for each class
+	double *class_votes = (double*) calloc(0, sizeof(double) * 
+						test_set_.num_classes());
+	assert(class_votes);
+
+	// the index of the current rule in the general population
+	int curr_rule_index = 0;
+
+	// the classification of the current rule
+	int curr_class = NO_CLASS;
+
+	// the selected class for a given input
+	int selected_class = NO_CLASS;
+
+	// the greatest total vote weight cast
+	// in favor of a particular class
+	double max_vote_weight = 0;
+
+	// the population and match set sizes
+	int pop_size = 0;
+	int match_set_size = 0;
+
+	// the number of inputs in the test set
+	int num_inputs = test_set_.num_data_points();
+
+	// the number of correctly classified inputs
+	int num_correct = 0;
+
+	// a pair containing the actual classification of the input
+	// (first in pair) and the predicted classification (second)
+	pair<int,int> actual_and_predicted;
+
+	// an array to keep track of the classifications
+	// of inputs (both actual and predicted).
+	pair<int,int> *classifications = 
+		(pair<int,int>*) malloc(sizeof(pair<int,int>) * num_inputs);
+	assert(classifications);
+
+	// for every input...
+	for (int i=0; i<num_inputs; i++) {
+
+		// update the current data point and
+		// reset the maximum vote weight
+		curr_data_point_ = test_set_.data_points_[i];
+		max_vote_weight = 0;
+
+		// get the actual classification of the input
+		actual_and_predicted.first = curr_data_point_.back();
+
+		// iterate over all the rules in the population 
+		// and determine [M] for the input
+		pop_size = pop_.rules_.size();
+		for (int j=0; j<pop_size; j++) {
+			if (pop_.rules_[j].matches(curr_data_point_)) {
+				match_set_.add(j);
+			}
+		}
+
+		// iterate over the match set
+		match_set_size = match_set_.members_.size();
+		for (int k=0; k<match_set_size; k++) {
+
+			// get the current rule in [M] and its classification
+			curr_rule_index = match_set_.members_[k];
+			curr_class = pop_.rules_[curr_rule_index].classification();
+
+			// submit a "vote" for the classification of this rule,
+			// weighted by the rule's fitness
+			class_votes[curr_class] += pop_.rules_[curr_rule_index].fitness();
+
+			// update the predicted classification for this input, but
+			// only if the total vote weight for the current class
+			// exceeds that of the current maximum vote weight
+			if (class_votes[curr_class] > max_vote_weight) {
+				max_vote_weight = class_votes[curr_class];
+				selected_class = curr_class;
+			}
+		}
+
+		// set the predicted class for the input
+		actual_and_predicted.second = selected_class;
+
+		// see if the input was correctly classified
+		if (actual_and_predicted.first == actual_and_predicted.second)
+			num_correct++;
+
+		// copy the pair of the actual and predicted class for 
+		// the current input into the array of all such pairs
+		classifications[i] = actual_and_predicted;
+	}
+
+	// no longer needed
+	free(class_votes);
+	printf("%d rules correctly classified.\n", num_correct);
+
+	// must be freed elsewhere
+	return classifications;
+
+} // end classifyInputs
+
+/****************************************************************************
+ * Inputs:      None.
  * Outputs:     None.
  * Description: Creates the match set [M] and the correct set [C] from the
  * 		rules in the general population that (a) match the current
