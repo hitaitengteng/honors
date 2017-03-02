@@ -18,7 +18,9 @@ class MatchSet {
 	public:
 
 		// default constructor
-		MatchSet() { };
+		MatchSet() { 
+		
+		}
 
 		// custom constructor
 		MatchSet(Population *p, int num_classes) : p_(p), exp_sum_(0), avg_exp_(0), 
@@ -32,7 +34,9 @@ class MatchSet {
 			};
 
 		~MatchSet() {
-			free(classes_represented_);
+
+			// Ideally, this should free classes_represented_, but
+			// I get errors when I try to do this.
 		}
 
 		// the population from which the match set is created

@@ -46,4 +46,4 @@ all:
 	make lcs.o
 
 clean:
-	rm *.o classify
+	rm *.o *.csv classify

@@ -12,6 +12,8 @@
  * 	- Should population size increase when a child is subsumed?
  * 	- Figure out how to modify methods so that numerosity parameter
  * 	  is taken into account (or just don't use the numerosity parameter)
+ * 	- Fix bug that causes centers to have negative values
+ * 	- Figure out why there are so many rules with accuracy and fitness 0
  ****************************************************************************/ 
   
 using namespace std;
@@ -24,36 +26,32 @@ uniform_int_distribution<int> int_dist(1,10);
 
 int main(int argc, char **argv) {
    
-	if (argc == 0) {
-		cout << stderr << "Error: No input file" << endl;
+	if (argc < 2) {
+		cout << stderr << "Error: too few arguments" << endl;
 	}
 
-	string file_name = argv[1];
+	// get the name of the input files for
+	// the training and test sets
+	string training_set_file = argv[1];
+	string test_set_file = argv[2];
 
 	// seed the random number generator
 	rng.seed(rd());
 
-	// read in the data set
-	Dataset d;
-	d.readFromCSVFile(file_name);
+	// read in the training set
+	Dataset training_set;
+	training_set.readFromCSVFile(training_set_file);
 
-	exit(0);
+	// read in the test set
+	Dataset test_set;
+	test_set.readFromCSVFile(test_set_file);
+
 	// create the population
 	int max_pop_size = 50;
 	Population p(max_pop_size);
 
 	// create the LCS
-	LCS lcs(p,d);
-
-	// generate rules based on instances in the data set
-	Rule r1 = lcs.training_set_.createRuleFromDataPoint(40,lcs.range_scalar());
-	Rule r2 = lcs.training_set_.createRuleFromDataPoint(50,lcs.range_scalar());
-	Rule r3 = lcs.training_set_.createRuleFromDataPoint(100,lcs.range_scalar());
-
-	// add the rules to the population
-	lcs.pop_.add(r1);
-	lcs.pop_.add(r2);
-	lcs.pop_.add(r3);
+	LCS lcs(p,training_set,test_set);
 
 	// run the LCS
 	for (int i=0; i<lcs.training_set_.num_data_points(); i++) {
@@ -61,7 +59,7 @@ int main(int argc, char **argv) {
 		// lcs.pop_.most_general().printVerbose();
 	}
 
-	// lcs.pop_.printVerbose();
+	lcs.pop_.printVerbose();
 
 	return 0;
 }

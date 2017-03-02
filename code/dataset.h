@@ -43,7 +43,7 @@ class Dataset {
 	// FUNCTIONS
 	
 		// default constructor
-		Dataset() : num_attributes_(0), num_classes_(0), num_data_points_(0) {}
+		Dataset() : num_attributes_(0), num_classes_(0), num_data_points_(0) { }
 
 		// custom constructor
 		Dataset(std::vector<std::string> attribute_names, 

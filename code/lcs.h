@@ -9,14 +9,14 @@
 /****************************************************************************
  * TODO:
  * 	- Write print function
- * 	- Write function for splitting data into training and test sets?
  ****************************************************************************/
 class LCS {
 
 	public:
 		// should eventually be initialized with different training
 		// and testing sets
-		LCS(Population p, Dataset d): curr_gen_(0), fitness_exponent_(1), 
+		LCS(Population p, Dataset training_set, Dataset test_set): 
+				   curr_gen_(0), fitness_exponent_(1), 
 				   p_crossover_(0.8), p_mutate_(0.4), 
 				   p_dont_care_(0.33), theta_acc_(1), 
 				   theta_sub_(0), theta_mna_(2), theta_ga_(25), 
@@ -25,10 +25,10 @@ class LCS {
 				   do_correct_set_subsumption_(true)	{
 
 			pop_ = p;
-			match_set_ = MatchSet(&pop_, d.num_classes());
+			training_set_ = training_set;
+			test_set_ = test_set;
+			match_set_ = MatchSet(&pop_, training_set_.num_classes());
 			correct_set_ = CorrectSet(&pop_);
-			training_set_ = d;
-			test_set_ = d;
 		}
 
 	// MEMBER FUNCTIONS 

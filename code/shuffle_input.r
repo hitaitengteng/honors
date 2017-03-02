@@ -11,7 +11,7 @@
 args = commandArgs(trailingOnly=TRUE)
 
 # Read in the input file
-data.set = read.csv(args[1],header=FALSE,sep=",")
+data.set = read.csv(args[1],header=TRUE,sep=",")
 
 # Get the number of inputs
 num_inputs = nrow(data.set)
@@ -31,4 +31,4 @@ for (i in 1:num_inputs) {
 }	
 
 # Write the reordered inputs to a csv file
-write.csv(data.set.randomized, file=args[2], row.names=FALSE)
+write.csv(data.set.randomized, file=args[2], quote=FALSE, row.names=FALSE)
