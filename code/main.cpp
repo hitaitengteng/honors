@@ -56,10 +56,12 @@ int main(int argc, char **argv) {
 	// run the LCS
 	for (int i=0; i<lcs.training_set_.num_data_points(); i++) {
 		lcs.processInput(i);
-		// lcs.pop_.most_general().printVerbose();
+		printf("[P] fitness sum: %f\n", lcs.pop_.fitness_sum());
 	}
 
-	lcs.pop_.printVerbose();
+	// lcs.pop_.printVerbose();
+	// pair<int,int>* classifications = lcs.classifyInputs();
+	// free(classifications);
 
 	return 0;
 }

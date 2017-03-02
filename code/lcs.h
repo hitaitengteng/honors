@@ -13,16 +13,14 @@
 class LCS {
 
 	public:
-		// should eventually be initialized with different training
-		// and testing sets
 		LCS(Population p, Dataset training_set, Dataset test_set): 
 				   curr_gen_(0), fitness_exponent_(1), 
 				   p_crossover_(0.8), p_mutate_(0.4), 
 				   p_dont_care_(0.33), theta_acc_(1), 
-				   theta_sub_(0), theta_mna_(2), theta_ga_(25), 
-				   range_scalar_(0.4), 
+				   theta_sub_(0), theta_mna_(3), theta_ga_(25), 
+				   range_scalar_(0.1), 
 				   do_ga_subsumption_(true), 
-				   do_correct_set_subsumption_(true)	{
+				   do_correct_set_subsumption_(false)	{
 
 			pop_ = p;
 			training_set_ = training_set;
@@ -49,6 +47,9 @@ class LCS {
 		// creates one that does
 		void cover();
 
+		// update the accuracy and fitness of the population
+		void fitnessUpdate();
+
 		// eliminates superfluous rules
 		void gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_child);
 
@@ -67,6 +68,8 @@ class LCS {
 		// once the LCS has evolved a population of rules, this function
 		// then classifies new inputs using those rules
 		std::pair<int,int> *classifyInputs();
+
+		void print();
 	
 	// MEMBER VARIABLES (these should probably be private)
 
@@ -132,8 +135,9 @@ class LCS {
 		// which the covering operator may be invoked
 		double theta_mna_;
 
-		// the maximum number of time steps that may pass before the
-		// GA is invoked [FIX THIS DESCRIPTION]
+		// if the average number of iterations that have passed since a
+		// rule in [C] was last involved in a GA exceeds this value,
+		// then the GA is invoked.
 		double theta_ga_;
 
 		// a scalar that determines the range from which random attribute

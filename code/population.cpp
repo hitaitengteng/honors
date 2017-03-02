@@ -30,17 +30,19 @@ void Population::add(Rule r) {
 	// if this is either the first rule added to the population,
 	// or else is more general than the current most general
 	// rule, update 'most_general_'
-	if (rules_.empty() || (r.num_dont_care() > most_general_.num_dont_care())) {
-		most_general_ = r;
-	} else if ((r.num_dont_care() == most_general_.num_dont_care()) &&
-			(r.generalizes(most_general_))) {
-		most_general_ = r;
-	}
+	// if (rules_.empty() || (r.num_dont_care() > most_general_.num_dont_care())) {
+	//	most_general_ = r;
+	// } else if ((r.num_dont_care() == most_general_.num_dont_care()) &&
+	//		(r.generalizes(most_general_))) {
+	//	most_general_ = r;
+	// }
 
 	// add the rule to the vector of all rules
 	rules_.push_back(r);
 
 	// increment the fitness and experience sums of the population
+	// NOTE: currently, no rules being added to the population will
+	// have nonzero fitness.
 	fitness_sum_ += r.fitness();
 	exp_sum_ += r.exp();
 
@@ -94,7 +96,7 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
 	Rule off1;
 	Rule off2;
 
-	// copy parent conditions into offspring (up to break point)
+	// copy parent conditions into offspring (up to crossover point)
 	for (int i=0; i<cross_point; i++) {
 
 		// add the appropriate attribute values to the rules
@@ -108,7 +110,7 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
 			off2.setNumDontCare(off2.num_dont_care() + 1);
 	}
 
-	// copy parent conditions into offspring (after break point)
+	// copy parent conditions into offspring (after crossover point)
 	for (int i=cross_point; i<p1.condition_.size(); i++) {
 
 		off1.condition_.push_back(p2.condition_[i]);
@@ -148,9 +150,15 @@ int Population::deletionSelect(double theta_acc) {
 
 	// sum the average niche sizes of all the rules
 	double avg_niche_size_sum = 0;
+
+	// the maximum avg niche size across all rules in the population
+	double max_avg_niche_size = 0;
+
 	int pop_size = rules_.size();
 	for (int i=0; i<pop_size; i++) {
 		avg_niche_size_sum += rules_[i].avg_niche_size();
+		if (rules_[i].avg_niche_size() > max_avg_niche_size)
+			max_avg_niche_size = rules_[i].avg_niche_size();
 	}
 
 	// select a random rule for deletion. A rule may not be deleted if its
@@ -171,7 +179,7 @@ int Population::deletionSelect(double theta_acc) {
 				break;
 			}
 		}
-	} while (rules_[to_delete].accuracy() > theta_acc);
+	} while ((rules_[to_delete].accuracy() > theta_acc));
 
 	return to_delete;
 

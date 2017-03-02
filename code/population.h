@@ -97,17 +97,17 @@ class Population {
 
 		// setters
 		void setMaxSize(int max_size) {max_size_ = max_size;}
-		void setFitnessSum(int fitness_sum) {fitness_sum_ = fitness_sum;}
+		void setFitnessSum(double fitness_sum) {fitness_sum_ = fitness_sum;}
 		void setExpSum(double exp_sum) {exp_sum_ = exp_sum;}
 		void setMostGeneral(Rule most_general) {most_general_ = most_general;}
 
 	private:
-		int max_size_;         // the maximum number of rules allowed
-		double fitness_sum_;   // the sum of all the fitnesses
-		double exp_sum_;       // the sum of all the experience values
-		Rule most_general_;    // the most general rule in the population
-				       // (the one with the most "don't care" attributes
-				       // and broadest attribute ranges)
+		int max_size_;         		// the maximum number of rules allowed
+		double fitness_sum_;   		// the sum of all the fitnesses
+		double exp_sum_;       		// the sum of all the experience values
+		Rule most_general_;    		// the most general rule in the population
+				       		// (the one with the most "don't care" attributes
+				       		// and broadest attribute ranges)
 };
 
 #endif

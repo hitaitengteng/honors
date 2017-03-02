@@ -28,13 +28,12 @@ void LCS::processInput(int i) {
 	// correctly classify it
 	createMatchAndCorrectSets();
 
-	// specify
+	// specify operator?
 
 	// the GA is invoked on the correct set only if the average
 	// number of iterations that have passed since a rule in the
 	// correct set participated in a GA call exceeds a threshold
 	// value theta_ga_
-	
 	if (doGA()) {
 		printf("GA ran on iteration %d\n", curr_gen_);
 		applyGA();
@@ -150,7 +149,7 @@ pair<int,int>* LCS::classifyInputs() {
 
 	// no longer needed
 	free(class_votes);
-	printf("%d rules correctly classified.\n", num_correct);
+	printf("%d inputs correctly classified.\n", num_correct);
 
 	// must be freed elsewhere
 	return classifications;
@@ -188,13 +187,12 @@ void LCS::createMatchAndCorrectSets() {
 				correct_set_.add(i);
 
 			}
-
-			// update the rule's accuracy and fitness and
-			// copy it back into the population vector
-			pop_.rules_[i].updateAccuracyAndFitness(fitness_exponent_);
-
 		}
 	}
+
+	// update the fitness and accuracy of all the rules in [M]
+	// and update the fitness sum of the general population
+	fitnessUpdate();
 
 	// There is certain information about the correct set (such as
 	// the number of members it contains) that each rule must have,
@@ -202,9 +200,6 @@ void LCS::createMatchAndCorrectSets() {
 	// already been created. That's the information that gets
 	// updated here.
 	correct_set_.updateNicheInfo();
-
-	// match_set_.print();
-	// correct_set_.print();
 
 	// if the match set is empty or if not all of the classes are
 	// represented in the match set, a new rule is created and
@@ -228,8 +223,8 @@ void LCS::createMatchAndCorrectSets() {
  * 		  is subsumed by the parent and whether that's a problem.
  * 	- figure out where experience needs to be incorporated.
  * 	- figure out how you're going to deal with numerosity
- * 	- write a function for breaking up the data into training and testing
- * 	  sets
+ * 	- figure out why the thing breaks when theta_acc_ is 0.99
+ * 	- figure out why the population fitness sum is sometimes negative
  *
  * 	Secondary:
  * 		- Need a way of mapping class names to numbers
@@ -243,7 +238,8 @@ void LCS::applyGA() {
 
 	// if the fitness sum is less than 2, rouletteWheelSelect can get stuck
 	// in a loop, because it will keep selecting the same single parent for
-	// crossover. The code in this if-statement prevents that.
+	// crossover. The code in this if-statement prevents that. [This needs
+	// to be fixed]
 	if (correct_set_.fitness_sum() < 2) {
 		p1_index = correct_set_.members_[0];
 		p2_index = correct_set_.members_[1];
@@ -384,13 +380,57 @@ void LCS::cover() {
 	match_set_.add(pop_.size() - 1);
 	correct_set_.add(pop_.size() - 1);
 
-	// update the accuracy and fitness of the rule, as well as
-	// niche information
-	pop_.rules_[pop_.size() - 1].updateAccuracyAndFitness(fitness_exponent_);
+	// update the accuracy and fitness of the rule 
+	// and the fitness sum of the population
+	fitnessUpdate();
+
+	// update niche information
 	correct_set_.updateNicheInfo();
 
 } // end cover
 
+void LCS::fitnessUpdate() {
+
+	// the index of the current rule in the general population
+	int curr_rule_index = 0;
+
+	// the fitness of the rule before it's updated
+	double orig_fitness = 0;
+
+	// the fitness of the rule after it's updated
+	double new_fitness = 0;
+
+	// the sum of the differences between the new and old fitness
+	// of every rule
+	double fitness_sum_diff = 0;
+
+	// iterate over the match set and update the fitness and accuracy
+	// of each rule, as well as the fitness sum of the population
+	int match_set_size = match_set_.members_.size();
+	for (int i=0; i<match_set_size; i++) {
+
+		// get the index of the current rule
+		curr_rule_index = match_set_.members_[i];
+
+		// save the fitness of the rule
+		orig_fitness = pop_.rules_[curr_rule_index].fitness();
+
+		// update the fitness and accuracy of the rule
+		pop_.rules_[curr_rule_index].updateAccuracyAndFitness(fitness_exponent_);
+
+		// get the new fitness
+		new_fitness = pop_.rules_[curr_rule_index].fitness();
+
+		// calculate the difference between the new and old
+		// fitnesses and add it to the sum of differences
+		fitness_sum_diff += new_fitness - orig_fitness;
+	}
+
+	// printf("fitness sum diff: %f\n", fitness_sum_diff);
+	// update the fitness sum of the general population
+	pop_.setFitnessSum(pop_.fitness_sum() + fitness_sum_diff);
+
+} // end fitnessUpdate
 /****************************************************************************
  * Inputs:     
  * 	p1_index:    the index of the first parent rule in the general
@@ -410,6 +450,7 @@ void LCS::cover() {
  * 		incremented. Otherwise, the offspring is added to
  * 		the population and a rule is selected from the general
  * 		population at random for deletion.
+ *
  ****************************************************************************/
 void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_child) {
 
@@ -441,12 +482,10 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 		// subsume a child rule only if it generalizes the child rule.
 	 	if (pop_.rules_[fitter].generalizes(first_child)) {
 			pop_.rules_[fitter].setNumerosity(pop_.rules_[fitter].numerosity() + 1);
-			cout << "first child subsumed" << endl;
 			subsume_first = true;
 		} 
 	 	if (pop_.rules_[fitter].generalizes(second_child)) {
 			pop_.rules_[fitter].setNumerosity(pop_.rules_[fitter].numerosity() + 1);
-			cout << "second child subsumed" << endl;
 			subsume_second = true;
 		}
 	
@@ -469,7 +508,6 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 
 			// add the child to the population
 			pop_.add(first_child);
-			cout << "first child added to the population" << endl;
 		}
 		if (!subsume_second) {
 			second_child.setID(pop_.id_count_);
@@ -489,7 +527,6 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 				pop_.remove(rule_to_remove2);
 			}
 			pop_.add(second_child);
-			cout << "second child added to the population" << endl;
 		}
 	} 
 	
@@ -578,3 +615,23 @@ bool LCS::doSpecify() {
 	return false;
 
 } // end doSpecify
+
+/****************************************************************************
+ * Inputs:      None.
+ * Outputs:     A boolean indicating whether the specify operator should be
+ * 		invoked.
+ * Description: Determines whether the specify operator should be invoked
+ * 		on [C].
+ ****************************************************************************/
+void LCS::print() {
+
+	printf("\n");
+	printf("current generation: %d\n",curr_gen_);
+	printf("population size: %d\n",pop_.size());
+	printf("population fitness sum: %f\n",pop_.fitness_sum());
+	printf("population experience sum: %f\n",pop_.exp_sum());
+	printf("[M] size: %lu\n", match_set_.members_.size());
+	printf("[C] size: %lu\n", correct_set_.members_.size());
+	printf("\n");
+
+} // end print
