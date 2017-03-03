@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
 	test_set.readFromCSVFile(test_set_file);
 
 	// create the population
-	int max_pop_size = 50;
+	int max_pop_size = 30;
 	Population p(max_pop_size);
 
 	// create the LCS
@@ -56,11 +56,12 @@ int main(int argc, char **argv) {
 	// run the LCS
 	for (int i=0; i<lcs.training_set_.num_data_points(); i++) {
 		lcs.processInput(i);
+		// lcs.print();
 	}
 
-	lcs.pop_.printVerbose();
-	// pair<int,int>* classifications = lcs.classifyInputs();
-	// free(classifications);
+	// lcs.pop_.printVerbose();
+	pair<int,int>* classifications = lcs.classifyInputs();
+	free(classifications);
 
 	return 0;
 }

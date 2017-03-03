@@ -14,9 +14,7 @@ void MatchSet::add(int index) {
 		// this is just for the sake of abbreviated expression below
 		Rule r = p_->rules_[index];
 
-		// update the rule's experience and the number of inputs
-		// it matches
-		p_->rules_[index].setExp(r.exp() + 1);
+		// update the rule's number of matches
 		p_->rules_[index].setNumMatches(r.num_matches() + 1);
 
 		// add the rule's index to [M]
@@ -24,7 +22,7 @@ void MatchSet::add(int index) {
 
 		// update the sum of the experience values 
 		// and the average experience value of rules in [M]
-		exp_sum_ += r.exp();
+		exp_sum_ += r.num_matches();
 		avg_exp_ = exp_sum_ / members_.size();
 
 		// if necessary, update the list of classes represented

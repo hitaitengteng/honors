@@ -34,9 +34,7 @@ class MatchSet {
 			};
 
 		~MatchSet() {
-
-			// Ideally, this should free classes_represented_, but
-			// I get errors when I try to do this.
+			free(classes_represented_);
 		}
 
 		// the population from which the match set is created

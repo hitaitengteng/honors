@@ -25,7 +25,7 @@ void CorrectSet::add(int index) {
 
 		// update the sum of the experience and 
 		// fitness values of all the rules in [C]
-		exp_sum_ += r.exp();
+		exp_sum_ += r.num_matches();
 		fitness_sum_ += r.fitness();
 
 		// update the sum of the average niche

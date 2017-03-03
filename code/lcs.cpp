@@ -7,7 +7,6 @@
  * Description:
  *
  * TODO:
- * 	- Need a separate function, maybe "evaluateInput," for testing mode.
  * 	- Implement specify operator
  ****************************************************************************/
 
@@ -57,8 +56,7 @@ pair<int,int>* LCS::classifyInputs() {
 	match_set_.clear();
 
 	// an array to keep track of the "votes" for each class
-	double *class_votes = (double*) calloc(0, sizeof(double) * 
-						test_set_.num_classes());
+	double *class_votes = (double*) calloc(test_set_.num_classes(), sizeof(double));
 	assert(class_votes);
 
 	// the index of the current rule in the general population
@@ -147,7 +145,6 @@ pair<int,int>* LCS::classifyInputs() {
 		classifications[i] = actual_and_predicted;
 	}
 
-	// no longer needed
 	free(class_votes);
 	printf("%d inputs correctly classified.\n", num_correct);
 
@@ -223,8 +220,6 @@ void LCS::createMatchAndCorrectSets() {
  * 		  is subsumed by the parent and whether that's a problem.
  * 	- figure out where experience needs to be incorporated.
  * 	- figure out how you're going to deal with numerosity
- * 	- figure out why the thing breaks when theta_acc_ is 0.99
- * 	- figure out why the population fitness sum is sometimes negative
  *
  * 	Secondary:
  * 		- Need a way of mapping class names to numbers
@@ -360,20 +355,34 @@ void LCS::cover() {
 	// set the class
 	r.setClass(curr_data_point_.back());
 
+	// determines whether the current attribute should be covered
+	// with a "don't care" value
+	double dont_care = 1;
+
 	Attribute a;
 	int cond_length = curr_data_point_.size() - 1;
 	for (int i=0; i<cond_length; i++) {
+
+		// determine whether or not to set this attribute to "don't care"
+		a.setDontCare(false);
+		dont_care = real_dist(rng);
+		if (dont_care <= p_dont_care_) {
+			a.setDontCare(true);
+		} 
+		
+		// even if the attribute *is* set to don't care, we still want
+		// to give it a center and spread that match the input.
+		// [EXPLAIN WHY]
 
 		// set the center value of the attribute using the value of
 		// the current element in the data point
 		a.setCenter(curr_data_point_[i]);
 
-		// set the spread and "don't care" values
+		// set the spread 
 		double curr_att_range = training_set_.attribute_ranges_[i].second - 
 			training_set_.attribute_ranges_[i].first;
 		double spread = curr_att_range * range_scalar_ * real_dist(rng);
 		a.setSpread(spread);
-		a.setDontCare(false);
 
 		// add the attribute to the vector
 		r.condition_.push_back(a);
@@ -393,6 +402,11 @@ void LCS::cover() {
 
 } // end cover
 
+/****************************************************************************
+ * Inputs:
+ * Outputs:
+ * Description:
+ ****************************************************************************/ 
 void LCS::fitnessUpdate() {
 
 	// the index of the current rule in the general population
@@ -435,6 +449,7 @@ void LCS::fitnessUpdate() {
 	pop_.setFitnessSum(pop_.fitness_sum() + fitness_sum_diff);
 
 } // end fitnessUpdate
+
 /****************************************************************************
  * Inputs:     
  * 	p1_index:    the index of the first parent rule in the general
@@ -479,7 +494,7 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
 	// A parent may subsume a child rule only if its experience exceeds a threshold
 	// value theta_sub, and only if its accuracy exceeds a threshold value theta_acc.
 	// If this is not the case, then nothing happens.
-	if ((pop_.rules_[fitter].exp() >= theta_sub_) && 
+	if ((pop_.rules_[fitter].num_matches() >= theta_sub_) && 
 			(pop_.rules_[fitter].accuracy() >= theta_acc_)) {
 
 		// if the fitter parent meets both of the above criteria, it will

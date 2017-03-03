@@ -107,7 +107,7 @@ void Rule::mutate(double p_mutate, double p_dont_care,
 					num_dont_care_++;
 				}
 
-			} else {                    // move center
+			} else {                      // move center
 
 				// get the range of values for the current attribute
 				double range = ranges[i].second - ranges[i].first;
@@ -427,7 +427,6 @@ void Rule::printVerbose() {
 	printf("Class:           %d\n", classification_);
 	printf("# Don't Care:    %d\n", num_dont_care_);
 	printf("Time stamp:      %d\n", time_stamp_);
-	printf("Experience:      %d\n", exp_);
 	printf("Numerosity:      %d\n", numerosity_);
 	printf("# Matches:       %d\n", num_matches_);
 	printf("# Correct:       %d\n", num_correct_);

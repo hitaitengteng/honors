@@ -23,12 +23,12 @@ class Rule {
 	// FUNCTIONS
 	
 		// first constructor
-		Rule() : id_(NO_ID), classification_(0), time_stamp_(0), exp_(0), numerosity_(1),
+		Rule() : id_(NO_ID), classification_(0), time_stamp_(0), numerosity_(1),
 		         num_matches_(0), num_correct_(0), num_dont_care_(0), num_niches_(0),
 			 niche_sizes_sum_(0), avg_niche_size_(0), accuracy_(0), fitness_(0) { }
 
 		// second constructor
-		Rule(int num_attributes) : id_(NO_ID), classification_(0), time_stamp_(0), exp_(0), numerosity_(1),
+		Rule(int num_attributes) : id_(NO_ID), classification_(0), time_stamp_(0), numerosity_(1),
 		         num_matches_(0), num_correct_(0), num_dont_care_(0), num_niches_(0),
 			 niche_sizes_sum_(0), avg_niche_size_(0), accuracy_(0), fitness_(0) { 
 			 
@@ -99,7 +99,6 @@ class Rule {
 		int id() const {return id_;}
 		int classification() const {return classification_;}
 		int time_stamp() const {return time_stamp_;}
-		int exp() const {return exp_;}
 		int numerosity() const {return numerosity_;}
 		int num_matches() const {return num_matches_;}
 		int num_correct() const {return num_correct_;}
@@ -114,7 +113,6 @@ class Rule {
 		void setCondition(std::vector<Attribute> condition) {condition_ = condition;}
 		void setClass(int classification) {classification_ = classification;}
 		void setTimeStamp(int time_stamp) {time_stamp_ = time_stamp;}
-		void setExp(int exp) {exp_ = exp;}
 		void setNumerosity(int numerosity) {numerosity_ = numerosity;}
 		void setNumMatches(int num_matches) {num_matches_ = num_matches;}
 		void setNumCorrect(int num_correct) {num_correct_ = num_correct;}
@@ -129,33 +127,25 @@ class Rule {
 	private:
 
 		// a number that uniquely identifies the rule
-		// UPDATES CORRECTLY
 		int id_;
 
 		// the class into which any input matching the condition is
 		// to be categorized, according to the rule
-		// UPDATES CORRECTLY
 		int classification_;
 
 		// the last generation on which this rule participated in an
 		// iteration of the GA
 		int time_stamp_;
 
-		// the number of times this rule's parameters have been updated
-		// UPDATES CORRECTLY
-		int exp_;
 
 		// the number of copies of this rule in the population set [P]
-		// UPDATES CORRECTLY
 		int numerosity_;
 
 		// the number of inputs that this rule matches
-		// UPDATES CORRECTLY
 		int num_matches_;
 
 		// the number of inputs that this rule both matches AND correctly
 		// classifies
-		// UPDATES CORRECTLY
 		int num_correct_;
 
 		// the number of attributes in the condition of this rule whose
@@ -164,17 +154,14 @@ class Rule {
 
 		// the number of distinct correct sets to which this rule has
 		// belonged
-		// UPDATES CORRECTLY
 		int num_niches_;
 
 		// the sum of the sizes of all niches to which this rule has
 		// belonged
-		// UPDATES CORRECTLY
 		int niche_sizes_sum_;
 
 		// the average size of the correct sets to which this rule has
 		// belonged
-		// UPDATES CORRECTLY
 		double avg_niche_size_;
 
 		// the rule's accuracy in correctly classifying inputs

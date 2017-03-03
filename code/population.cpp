@@ -27,16 +27,6 @@ void Population::add(Rule r) {
 		id_count_++;
 	}
 
-	// if this is either the first rule added to the population,
-	// or else is more general than the current most general
-	// rule, update 'most_general_'
-	// if (rules_.empty() || (r.num_dont_care() > most_general_.num_dont_care())) {
-	//	most_general_ = r;
-	// } else if ((r.num_dont_care() == most_general_.num_dont_care()) &&
-	//		(r.generalizes(most_general_))) {
-	//	most_general_ = r;
-	// }
-
 	// add the rule to the vector of all rules
 	rules_.push_back(r);
 
@@ -44,7 +34,7 @@ void Population::add(Rule r) {
 	// NOTE: currently, no rules being added to the population will
 	// have nonzero fitness.
 	fitness_sum_ += r.fitness();
-	exp_sum_ += r.exp();
+	exp_sum_ += r.num_matches();
 
 } // end add
 
@@ -67,7 +57,7 @@ void Population::remove(int index) {
 
 	// decrement the fitness and experience sums of the population
 	fitness_sum_ -= rules_[index].fitness();
-	exp_sum_ -= rules_[index].exp();
+	exp_sum_ -= rules_[index].num_matches();
 
 	// Delete the rule. Note that we do not have to delete it from
 	// the match or correct sets because those are reset at every
@@ -195,6 +185,8 @@ int Population::deletionSelect(double theta_acc) {
 		while_counter++;
 	} while ((rules_[to_delete].accuracy() > theta_acc));
 
+	printf("Deleted rule accuracy: %f\n", rules_[to_delete].accuracy());
+	printf("Deleted rule avg niche size: %f\n", rules_[to_delete].avg_niche_size());
 	return to_delete;
 
 } // end deletionSelect
