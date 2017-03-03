@@ -154,11 +154,21 @@ int Population::deletionSelect(double theta_acc) {
 	// the maximum avg niche size across all rules in the population
 	double max_avg_niche_size = 0;
 
+	// the index of the rule with the maximum average niche size
+	int max_index = 0;
+
+	// ensures that the do-while loop doesn't get stuck
+	int while_counter = 0;
+
+	// calculate the sum of the average niche sizes of all the rules
+	// and find the maximum across all rules
 	int pop_size = rules_.size();
 	for (int i=0; i<pop_size; i++) {
 		avg_niche_size_sum += rules_[i].avg_niche_size();
-		if (rules_[i].avg_niche_size() > max_avg_niche_size)
+		if (rules_[i].avg_niche_size() > max_avg_niche_size) {
 			max_avg_niche_size = rules_[i].avg_niche_size();
+			max_index = i;
+		}
 	}
 
 	// select a random rule for deletion. A rule may not be deleted if its
@@ -178,7 +188,11 @@ int Population::deletionSelect(double theta_acc) {
 				to_delete = i;
 				break;
 			}
+			if (while_counter > 5) {
+				return max_index;
+			}
 		}
+		while_counter++;
 	} while ((rules_[to_delete].accuracy() > theta_acc));
 
 	return to_delete;

@@ -282,6 +282,10 @@ void LCS::applyGA() {
 	children.second.mutate(p_mutate_, p_dont_care_, 
 		training_set_.attribute_ranges_, range_scalar_);
 
+	// update the time stamps
+	children.first.setTimeStamp(curr_gen_);
+	children.second.setTimeStamp(curr_gen_);
+
 	// see documentation for gaSubsume below. If gaSubsume is not used,
 	// then two existing rules are deleted and the two offspring are
 	// added to the population. A rule's likelihood of being chosen
