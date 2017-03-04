@@ -95,6 +95,9 @@ pair<int,int>* LCS::classifyInputs() {
 	// for every input...
 	for (int i=0; i<num_inputs; i++) {
 
+		// clear the match set
+		match_set_.clear();
+
 		// update the current data point and
 		// reset the maximum vote weight
 		curr_data_point_ = test_set_.data_points_[i];
@@ -114,6 +117,7 @@ pair<int,int>* LCS::classifyInputs() {
 
 		// iterate over the match set
 		match_set_size = match_set_.members_.size();
+		cout << "match set size: " << match_set_size << endl;
 		for (int k=0; k<match_set_size; k++) {
 
 			// get the current rule in [M] and its classification
@@ -354,6 +358,10 @@ void LCS::cover() {
 
 	// set the class
 	r.setClass(curr_data_point_.back());
+
+	// set fitness and accuracy
+	r.setAccuracy(0);
+	r.setFitness(0);
 
 	// determines whether the current attribute should be covered
 	// with a "don't care" value

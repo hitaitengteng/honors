@@ -47,7 +47,7 @@ int main(int argc, char **argv) {
 	test_set.readFromCSVFile(test_set_file);
 
 	// create the population
-	int max_pop_size = 30;
+	int max_pop_size = 6;
 	Population p(max_pop_size);
 
 	// create the LCS
@@ -59,8 +59,12 @@ int main(int argc, char **argv) {
 		// lcs.print();
 	}
 
-	// lcs.pop_.printVerbose();
+	lcs.pop_.printVerbose();
 	pair<int,int>* classifications = lcs.classifyInputs();
+	int training_set_size = lcs.training_set_.num_data_points();
+	for (int i=0; i<training_set_size; i++) {
+		cout << classifications[i].first << " " << classifications[i].second << endl;
+	}
 	free(classifications);
 
 	return 0;

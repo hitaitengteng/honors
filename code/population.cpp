@@ -185,8 +185,6 @@ int Population::deletionSelect(double theta_acc) {
 		while_counter++;
 	} while ((rules_[to_delete].accuracy() > theta_acc));
 
-	printf("Deleted rule accuracy: %f\n", rules_[to_delete].accuracy());
-	printf("Deleted rule avg niche size: %f\n", rules_[to_delete].avg_niche_size());
 	return to_delete;
 
 } // end deletionSelect

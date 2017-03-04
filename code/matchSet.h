@@ -34,7 +34,7 @@ class MatchSet {
 			};
 
 		~MatchSet() {
-			free(classes_represented_);
+			// free(classes_represented_);
 		}
 
 		// the population from which the match set is created
@@ -58,8 +58,9 @@ class MatchSet {
 			avg_exp_ = 0;
 			num_classes_represented_ = 0;
 			members_.clear();
-			for (int i=0; i<num_classes_; i++)
+			for (int i=0; i<num_classes_; i++) {
 				classes_represented_[i] = false;
+			}
 		}
 
 		// returns the size of the match set
