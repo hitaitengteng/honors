@@ -9,6 +9,7 @@
  * Description: Defines the Dataset class. [Description]
  *
  * TODO: 
+ * 	- Have some way of "tagging" examples as classified.
  * 	- Ideally, the vector member variables would be private, but
  * 	  wrapper functions are such a pain to write.
  * 	- Fix printDataPoint so that the number of attributes are not

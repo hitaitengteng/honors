@@ -59,6 +59,46 @@ bool Rule::operator==(const Rule &rule) const {
 } // end operator ==
 
 /****************************************************************************
+ * Inputs:
+ * Outputs:
+ * Description:
+ ****************************************************************************/ 
+void Rule::processInput(std::vector<double> &input) {
+
+	// get the input's class
+	int classification = input.back();
+
+	// if the rule's condition matches the input...
+	if (matches(input)) {
+
+		// ...and if the rule correctly classifies the input,
+		// then the input counts as a true positive for this rule
+		if (classification_ == classification)
+			true_positives_++;
+
+		// if the rule doesn't correctly classify the input,
+		// it's a false positive
+		else
+			false_positives_++;
+
+	// if the rule's condition DOES NOT match the input...
+	} else {
+
+		// ...but the class of the rule matches the class of
+		// the input, then the input counts as a false negative
+		// for this rule
+		if (classification_ == classification)
+			false_negatives_++;
+
+		// if the rule doesn't correctly classify the input,
+		// it's a true negative
+		else
+			true_negatives_++;
+	}
+
+} // end processInput 
+
+/****************************************************************************
  * Inputs:      p_mutate: the probability that the value of a single
  * 			 attribute is mutated.
  * 		p_dont_care: given that an attribute is to be mutated, the
@@ -331,11 +371,7 @@ Rule Rule::random(int num_attributes) {
 	}
 
 	// random accuracy and fitness
-	r.setAccuracy(real_dist(rng));
-	r.setFitness(real_dist(rng));
-
-	// random average niche size (not a realistic value)
-	r.setAvgNicheSize(real_dist(rng));
+	r.setFitness1(real_dist(rng));
 
 	return r;
 
@@ -379,8 +415,8 @@ void Rule::print() {
 	}
 
 	printf("\n");
-	printf("Accuracy:        %.3f\n", accuracy_);
-	printf("Fitness:         %.3f\n", fitness_);
+	printf("Fitness1:         %.3f\n", fitness1_);
+	printf("Fitness2:         %.3f\n", fitness2_);
 	printf("Class:           %s\n", CLASS_NAMES[classification_].c_str());
 
 } // end printRule
@@ -426,15 +462,12 @@ void Rule::printVerbose() {
 	printf("\n\n");
 	printf("Class:           %d\n", classification_);
 	printf("# Don't Care:    %d\n", num_dont_care_);
-	printf("Time stamp:      %d\n", time_stamp_);
-	printf("Numerosity:      %d\n", numerosity_);
-	printf("# Matches:       %d\n", num_matches_);
-	printf("# Correct:       %d\n", num_correct_);
-	printf("# Niches:        %d\n", num_niches_);
-	printf("Niche sizes sum: %d\n", niche_sizes_sum_);
-	printf("Avg Niche Size:  %.2f\n", avg_niche_size_);
-	printf("Accuracy:        %.3f\n", accuracy_);
-	printf("Fitness:         %.3f\n", fitness_);
+	printf("Fitness1:        %.3f\n", fitness1_);
+	printf("Fitness2:        %.3f\n", fitness2_);
+	printf("true pos:        %d\n", true_positives_);
+	printf("false pos:       %d\n", false_positives_);
+	printf("true neg:        %d\n", true_negatives_);
+	printf("false neg:       %d\n", false_negatives_);
 	printf("\n");
 
 } // end printRule
