@@ -59,7 +59,7 @@ int main(int argc, char **argv) {
 		// lcs.print();
 	}
 
-	// lcs.pop_.printVerbose();
+	lcs.pop_.printVerbose();
 	pair<int,int>* classifications = lcs.classifyInputs();
 	int training_set_size = lcs.training_set_.num_data_points();
 	for (int i=0; i<training_set_size; i++) {

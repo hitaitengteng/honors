@@ -1,7 +1,6 @@
 #ifndef RULE_H
 #define RULE_H
 
-#include "utilities.h"
 #include "attribute.h"
 /****************************************************************************
  * File:        Rule.h

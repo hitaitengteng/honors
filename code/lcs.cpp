@@ -100,6 +100,7 @@ pair<int,int>* LCS::classifyInputs() {
 
 		// clear the match set
 		match_set_.clear();
+		selected_class = NO_CLASS;
 
 		// update the current data point and
 		// reset the maximum vote weight
@@ -398,6 +399,14 @@ void LCS::cover() {
 		r.condition_.push_back(a);
 	}
 
+	// if the population is already at capacity, a rule has to 
+	// be deleted
+	int rule_to_remove = -1;
+	if (pop_.rules_.size() == pop_.max_size()) {
+		rule_to_remove = pop_.deletionSelect(theta_acc_);
+		pop_.remove(rule_to_remove);
+	}
+
 	// add it to the population, match, and correct sets 
 	pop_.add(r);
 	match_set_.add(pop_.size() - 1);
@@ -572,17 +581,8 @@ void LCS::gaSubsume(int p1_index, int p2_index, Rule first_child, Rule second_ch
  * 			2. Not all of the possible classes are represented
  * 			   in the match set.
  *
- * 		NOTE: You may want to change the condition that prevents the
- * 		cover operator from executing when the population size limit
- * 		has been reached. If you do, you will have to invoke
- * 		deletionSelect to remove a rule from the population.
  ****************************************************************************/
 bool LCS::doCover() {
-
-	// if the population size limit has already been reached, cover
-	// should not execute
-	if (pop_.rules_.size() >= pop_.max_size())
-		return false;
 
 	return ((correct_set_.isEmpty()) || 
 			(match_set_.num_classes_represented() < theta_mna_));
