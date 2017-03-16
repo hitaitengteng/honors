@@ -1,0 +1,31 @@
+Week of 3/06/17
+Will Gantt
+
+This week:
+
+After our meeting, it became clear that my implementation of the LCS
+differed considerably from your expectations. To implement the new fitness
+schema and to make the necessary structural changes to what I have already
+written will require fairly substantial revision. I began those revisions
+this week.
+
+Some of the major changes that I am making (apart from the fitness schema):
+
+The original system:
+	- One example is presented to the LCS at a time.
+	- The GA operates only on those rules that correctly classify the
+	  current example.
+	- The population is empty when initialized.
+	- One complete run of the LCS attempts to classify all examples.
+
+The new system:
+	- All of the data is presented to the LCS simultaneously.
+	- The GA operates on the entire population.
+	- The population is initialized with a random set of rules.
+	- One complete run of the LCS attempts to classify all of the
+	  examples in a single class.
+
+Next week:
+
+I will continue to overhaul the system, implementing the changes described
+above.
