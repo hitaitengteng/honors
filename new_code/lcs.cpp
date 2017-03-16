@@ -308,43 +308,6 @@ void LCS::applyGA() {
 /****************************************************************************
  * Inputs:      None.
  * Outputs:     None.
- * Description: Randomly selects a rule from [C]. A rule's likelihood of
- * 		being selected is directly proportional to its fitness.
- *
- * NOTE: If this function is giving you trouble (esp. if the whole program
- * fails to terminate b/c of it, you should make sure that the fitness sum
- * is being set correctly.
- ****************************************************************************/ 
-int LCS::rouletteWheelSelect() {
-
-	// select a random number in the range [0,correct_set_.fitness_sum()]
-	double random = real_dist(rng) * correct_set_.fitness_sum();
-
-	/*
-	 * we determine the individual selected by subtracting
-	 * the individual fitnesses from the random value generated
-	 * above until that value falls to or below 0. In this way,
-	 * an individual's likelihood of being selected is directly
-	 * proportional to its fitness
-	 */
-	int num_rules = correct_set_.members_.size();
-	int curr_index;
-	for (int i=0; i<num_rules; i++) {
-		curr_index = correct_set_.members_[i];
-		random -= pop_.rules_[curr_index].fitness();
-		if (random <= 0) {
-			return i;
-		}
-	}
-
-	// control should never reach here
-	return correct_set_.members_[num_rules - 1];
-
-} // end rouletteWheelSelect
-
-/****************************************************************************
- * Inputs:      None.
- * Outputs:     None.
  * Description: If [C] is empty on a given iteration of the LCS, or if not
  * 		all of the classes are represented in [M], this function is
  * 		called. Cover creates a new rule whose attribute values are
@@ -400,15 +363,6 @@ void LCS::cover() {
 
 	// add it to the population, match, and correct sets 
 	pop_.add(r);
-	match_set_.add(pop_.size() - 1);
-	correct_set_.add(pop_.size() - 1);
-
-	// update the accuracy and fitness of the rule 
-	// and the fitness sum of the population
-	fitnessUpdate();
-
-	// update niche information
-	correct_set_.updateNicheInfo();
 
 } // end cover
 

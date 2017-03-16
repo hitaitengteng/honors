@@ -4,6 +4,10 @@
  * File:        population.cpp
  * Author:      William Gantt
  * Description: Method implementations for the Population class
+ *
+ * TODO:
+ * 	- deletionSelect needs to be rewritten
+ * 	- random needs to be rewritten
  ****************************************************************************/ 
 
 using namespace std;
@@ -33,8 +37,8 @@ void Population::add(Rule r) {
 	// increment the fitness and experience sums of the population
 	// NOTE: currently, no rules being added to the population will
 	// have nonzero fitness.
-	fitness_sum_ += r.fitness();
-	exp_sum_ += r.num_matches();
+	fitness1_sum_ += r.fitness1();
+	fitness2_sum_ += r.fitness2();
 
 } // end add
 
@@ -43,9 +47,6 @@ void Population::add(Rule r) {
  * 		be removed.
  * Outputs:     None.
  * Description: Removes a rule from the population.
- *
- * TODO: take care of the case where the rule to be removed is the most
- * 	 general rule
  ****************************************************************************/ 
 void Population::remove(int index) {
 
@@ -55,9 +56,8 @@ void Population::remove(int index) {
 		return;
 	}
 
-	// decrement the fitness and experience sums of the population
-	fitness_sum_ -= rules_[index].fitness();
-	exp_sum_ -= rules_[index].num_matches();
+	// decrement the fitness sum of the population
+	fitness2_sum_ -= rules_[index].fitness2();
 
 	// Delete the rule. Note that we do not have to delete it from
 	// the match or correct sets because those are reset at every
@@ -65,6 +65,37 @@ void Population::remove(int index) {
 	rules_.erase(rules_.begin() + index);
 
 } // end remove
+
+/****************************************************************************
+ * Inputs:
+ * Outputs:
+ * Description:
+ ****************************************************************************/
+int Population::rouletteWheelSelect() {
+
+	// select a random number in the range [0,correct_set_.fitness_sum()]
+	double random = real_dist(rng) * fitness2_sum();
+
+	/*
+	 * we determine the individual selected by subtracting
+	 * the individual fitnesses from the random value generated
+	 * above until that value falls to or below 0. In this way,
+	 * an individual's likelihood of being selected is directly
+	 * proportional to its fitness
+	 */
+	int num_rules = rules_.size();
+	int curr_index;
+	for (int i=0; i<num_rules; i++) {
+		random -= rules_[i].fitness2();
+		if (random <= 0) {
+			return i;
+		}
+	}
+
+	// control should never reach here
+	return rules_[num_rules - 1];
+
+} // end rouletteWheelSelect
 
 /****************************************************************************
  * Inputs:      i,j: the indices in the general population of the rules
@@ -136,7 +167,7 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
  * 	determine which rule is to be deleted should be more
  * 	sophisticated.
  ****************************************************************************/ 
-int Population::deletionSelect(double theta_acc) {
+/* int Population::deletionSelect(double theta_acc) {
 
 	// sum the average niche sizes of all the rules
 	double avg_niche_size_sum = 0;
@@ -188,60 +219,7 @@ int Population::deletionSelect(double theta_acc) {
 	return to_delete;
 
 } // end deletionSelect
-
-/****************************************************************************
- * Inputs:      None.
- * Outputs:     The number of rules subsumed
- * Description: Checks the most general rule against every other rule in [P].
- * 		If the most general rule generalizes another rule R, R is
- * 		deleted and the numerosity of the most general rule is
- * 		increased.
- *
- * TODO:
- *
- * 	- This needs to be updated to accommodate the addition of matchSet
- * 	  and correctSet classes (should be implemented in either
- * 	  correctSet.cpp or lcs.cpp)
- ****************************************************************************/ 
-int Population::subsume() {
-
-	// the number of rules subsumed
-	int num_subsumed = 0;
-
-	// for each rule in the population, check whether the most general
-	// rule generalizes it; if so, remove it from the vector of rules
-	for (auto it = rules_.begin(); it != rules_.end(); ) {
-		if (most_general_.generalizes(*it)) {
-			rules_.erase(it);
-			++num_subsumed;
-		} else {
-			it++;
-		}
-	}
-
-	return num_subsumed;
-
-} // end subsume
-
-/****************************************************************************
- * Inputs:      input: the input to be checked for a match.
- * Outputs:     A boolean indicating whether one of the rules in the
- * 		population matches the input.
- * Description: See above.
- *
- * NOTE: This function isn't used anywhere. Should probably be deleted.
- ****************************************************************************/ 
-bool Population::matchExists(vector<double> &input) const {
-
-	int num_rules = rules_.size();
-	for (size_t i=0; i<num_rules; i++) {
-		if (rules_[i].matches(input))
-			return true;
-	}
-		
-	return false;
-
-} // end matchExists
+*/
 
 /****************************************************************************
  * Input:       pop_size: the number of rules to be generated.
@@ -251,22 +229,6 @@ bool Population::matchExists(vector<double> &input) const {
  ****************************************************************************/ 
 Population Population::random(int pop_size, int attributes_per_rule) {
 
-	// initialize a population with a maximum size of 'size'
-	Population p(pop_size);
-
-	// generate a random set of rules
-	for (size_t i=0; i<pop_size; i++) {
-		p.add(Rule::random(attributes_per_rule));
-
-		// update the most general rule in the population
-		// (if necessary)
-		if (i==0) {
-			p.most_general_ = p.rules_[i];
-		} else if (p.rules_[i].generalizes(p.most_general_)) {
-			p.most_general_ = p.rules_[i];
-		}
-	}
-
-	return p;
+	return NULL;
 
 } // end random

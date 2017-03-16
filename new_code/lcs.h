@@ -81,13 +81,6 @@ class LCS {
 		// the population of rules
 		Population pop_;
 
-		// the set of all rules matching a given input
-		MatchSet match_set_;
-
-		// the set of all rules that both match a given input AND
-		// correctly classify it
-		CorrectSet correct_set_;
-
 		// the data set used to train the LCS
 		Dataset training_set_;
 
