@@ -1,0 +1,27 @@
+Week of 2/28/17
+Will Gantt
+
+This week:
+
+I completed *an* implementation of the LCS. I ran it on the Iris and Wine datasets
+from the UCI Machine Learning repository. Initially, it looked as though the system
+was not performing any better than chance. However, I discovered a bug in a function
+used to evaluate the testing data that was responsible for part of that apparent
+poor performance. After I fixed it, the system still didn't do great, but it started
+to exhibit greater than 50% accuracy.
+
+In our meeting, we discussed an alternative fitness schema that would allow the rules
+to "communicate" more in their evolution. By assigning credit to just one rule per
+input, the system would eliminate redundancies and encourage greater coverage of
+inputs across the rule set.
+
+I have spent the latter portion of this week thinking about how best to integrate
+this new schema into the LCS, and I think I need to clear up a few more things
+with you before I can feel confident moving forward.
+
+Next week:
+
+is the last week before spring break. I have a number of other assignments and
+projects due in my other classes, but I will continue trying to improve the
+accuracy of the system. As mentioned above, though, I think my ability to make
+good progress in this regard is contingent on me meeting with you once more.
