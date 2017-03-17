@@ -1,0 +1,34 @@
+Will Gantt
+3/17/17
+
+Testing
+--------------------------------------------
+	- mutate (rule.cpp)
+	- crossover (population.cpp)
+
+Rewriting functions for Population class
+--------------------------------------------
+	- applyGA (population.cpp)
+	- cover (population.cpp)
+
+New functions
+--------------------------------------------
+	- finish implementation of fitness1Evaluate (population.cpp)
+	- fitness2Evaluate (population.cpp)
+	- [function that combines fitness1Evaluate and fitness2Evaluate] (population.cpp)
+
+Data Structures
+--------------------------------------------
+	- Include Dataset object in Population constructor
+
+Function descriptions
+--------------------------------------------
+	- rouletteWheelSelect (population.cpp)
+	- processInput (rule.cpp)
+
+Questions
+--------------------------------------------
+	- Should we hold on to the LCS class?
+	- How to combat overgenerality?
+	- How are you going to tag examples as classified?
+	- Should the Population class include the data set class?

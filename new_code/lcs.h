@@ -40,9 +40,6 @@ class LCS {
 		// input.
 		void createMatchAndCorrectSets();
 
-		// selects a rule from the correct set using roulette wheel selection
-		int rouletteWheelSelect();
-
 		// when no rule in the population matches an input, this function
 		// creates one that does
 		void cover();

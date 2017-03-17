@@ -55,6 +55,8 @@ class Rule {
 		}
 
 
+		// determines whether a given input should count as a true positive,
+		// true negative, false positive, or false negative for the rule
 		void processInput(std::vector<double> &input);
 
 		// mutates the class and attribute ranges in the condition with

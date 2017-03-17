@@ -1,7 +1,6 @@
 #ifndef DATASET_H
 #define DATASET_H
 
-#include "attribute.h"
 #include "rule.h"
 /****************************************************************************
  * File:        dataset.h
@@ -10,8 +9,6 @@
  *
  * TODO: 
  * 	- Have some way of "tagging" examples as classified.
- * 	- Ideally, the vector member variables would be private, but
- * 	  wrapper functions are such a pain to write.
  * 	- Fix printDataPoint so that the number of attributes are not
  *  	  required as a parameter.
  ****************************************************************************/ 
@@ -58,7 +55,6 @@ class Dataset {
 			class_names_ = class_names;
 			class_ranges_ = class_ranges;
 			data_points_ = data_points;
-
 
 			num_attributes_ = attribute_names.size();
 			num_classes_ = class_names.size();

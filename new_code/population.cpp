@@ -1,12 +1,10 @@
 #include "population.h"
+#include "dataset.h"
 
 /****************************************************************************
  * File:        population.cpp
  * Author:      William Gantt
  * Description: Method implementations for the Population class
- *
- * TODO:
- * 	- deletionSelect needs to be rewritten
  ****************************************************************************/ 
 
 using namespace std;
@@ -56,6 +54,7 @@ void Population::remove(int index) {
 	}
 
 	// decrement the fitness sum of the population
+	fitness1_sum_ -= rules_[index].fitness1();
 	fitness2_sum_ -= rules_[index].fitness2();
 
 	// Delete the rule. Note that we do not have to delete it from
@@ -83,7 +82,6 @@ int Population::rouletteWheelSelect() {
 	 * proportional to its fitness
 	 */
 	int num_rules = rules_.size();
-	int curr_index;
 	for (int i=0; i<num_rules; i++) {
 		random -= rules_[i].fitness2();
 		if (random <= 0) {
@@ -95,6 +93,45 @@ int Population::rouletteWheelSelect() {
 	return (num_rules - 1);
 
 } // end rouletteWheelSelect
+
+/****************************************************************************
+ * Inputs:
+ * Outputs:
+ * Description:
+ ****************************************************************************/ 
+void Population::evaluateFitness1(int num_examples) {
+
+	// reset the fitness1 sum
+	fitness1_sum_ = 0;
+
+	// get the number of rules
+	int pop_size = size();
+
+	// a variable to store the current example
+	vector<double> curr_example;
+
+	// iterate over all the rules
+	for (int i=0; i<pop_size; i++) {
+
+		// for each input, determine whether it is a true positive,
+		// true negative, false positive, or false negative for the
+		// current rule
+		for (int j=0; j<num_examples; j++) {
+			//
+			// get the current example
+			// 
+
+			rules_[i].processInput(curr_example);	
+		}
+
+		// once the number of true and false positives and negatives
+		// has been determined, we update the fitness of the rule,
+		// and the fitness1 sum for the population
+		rules_[i].updateFitness1();
+		fitness1_sum_ += rules_[i].fitness1();
+	}
+
+} // end evaluateFitness1
 
 /****************************************************************************
  * Inputs:      i,j: the indices in the general population of the rules
@@ -150,75 +187,6 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
 	return make_pair(off1, off2);
 
 } // end crossover
-
-/****************************************************************************
- * Inputs:      None.
- * Outputs:     The index in [P] of the rule to be deleted.
- * Description: Randomly selects a rule in [P] for deletion. A rule's
- * 		likelihood of being selected is directly proportional to
- * 		its average niche size.
- *
- * NOTE: If this function is giving you trouble, the first thing you should
- * check is whether theta_acc is set to an appropriate value.
- *
- * TODO:
- * 	Horribly inefficient---Fix. Also: the metrics used to
- * 	determine which rule is to be deleted should be more
- * 	sophisticated.
- ****************************************************************************/ 
-/* int Population::deletionSelect(double theta_acc) {
-
-	// sum the average niche sizes of all the rules
-	double avg_niche_size_sum = 0;
-
-	// the maximum avg niche size across all rules in the population
-	double max_avg_niche_size = 0;
-
-	// the index of the rule with the maximum average niche size
-	int max_index = 0;
-
-	// ensures that the do-while loop doesn't get stuck
-	int while_counter = 0;
-
-	// calculate the sum of the average niche sizes of all the rules
-	// and find the maximum across all rules
-	int pop_size = rules_.size();
-	for (int i=0; i<pop_size; i++) {
-		avg_niche_size_sum += rules_[i].avg_niche_size();
-		if (rules_[i].avg_niche_size() > max_avg_niche_size) {
-			max_avg_niche_size = rules_[i].avg_niche_size();
-			max_index = i;
-		}
-	}
-
-	// select a random rule for deletion. A rule may not be deleted if its
-	// fitness exceeds a threshold value theta_acc, hence the do-while loop
-	double random;
-	int to_delete;
-	do {
-		// generate a random value in the range [0,avg_niche_size_sum]
-		random = real_dist(rng) * avg_niche_size_sum;
-
-		// using the random value generated above, this loop selects a rule
-		// for deletion from the population. A rule's chance of being
-		// selected is directly proportional to its average niche size.
-		for (int i=0; i<pop_size; i++) {
-			random -= rules_[i].avg_niche_size();
-			if (random <= 0) {
-				to_delete = i;
-				break;
-			}
-			if (while_counter > 5) {
-				return max_index;
-			}
-		}
-		while_counter++;
-	} while ((rules_[to_delete].accuracy() > theta_acc));
-
-	return to_delete;
-
-} // end deletionSelect
-*/
 
 /****************************************************************************
  * Input:       pop_size: the number of rules to be generated.
