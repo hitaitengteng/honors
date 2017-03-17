@@ -332,7 +332,8 @@ Rule Rule::random(int num_attributes, int num_classes,
 
 	Rule r;
 
-	// random class (the '+1' is an artifice that needs to be removed)
+	// random class (the '+1' is an artifice that should eventually
+	// be removed)
 	r.setClass((rng() % num_classes) + 1);
 
 	// random attributes
@@ -464,10 +465,10 @@ void Rule::printVerbose() {
 	printf("# Don't Care:    %d\n", num_dont_care_);
 	printf("Fitness1:        %.3f\n", fitness1_);
 	printf("Fitness2:        %.3f\n", fitness2_);
-	printf("true pos:        %d\n", true_positives_);
-	printf("false pos:       %d\n", false_positives_);
-	printf("true neg:        %d\n", true_negatives_);
-	printf("false neg:       %d\n", false_negatives_);
+	printf("True Pos:        %d\n", true_positives_);
+	printf("False Pos:       %d\n", false_positives_);
+	printf("True Neg:        %d\n", true_negatives_);
+	printf("False Neg:       %d\n", false_negatives_);
 	printf("\n");
 
 } // end printRule

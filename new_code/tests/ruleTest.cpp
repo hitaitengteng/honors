@@ -12,8 +12,10 @@ uniform_int_distribution<int> int_dist(1,10);
 int main(int argc, char **argv) {
 
 	rng.seed(rd());
-	Rule r = Rule::random(10);
-	r.printVerbose();
+	for (int i=0; i<10; i++) {
+		Rule r = Rule::random(10);
+		r.printVerbose();
+	}
 
 	return 0;
 }

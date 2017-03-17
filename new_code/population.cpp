@@ -7,7 +7,6 @@
  *
  * TODO:
  * 	- deletionSelect needs to be rewritten
- * 	- random needs to be rewritten
  ****************************************************************************/ 
 
 using namespace std;
@@ -93,7 +92,7 @@ int Population::rouletteWheelSelect() {
 	}
 
 	// control should never reach here
-	return rules_[num_rules - 1];
+	return (num_rules - 1);
 
 } // end rouletteWheelSelect
 
@@ -229,6 +228,22 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
  ****************************************************************************/ 
 Population Population::random(int pop_size, int attributes_per_rule) {
 
-	return NULL;
+	// initialize the population of rules
+	Population p = Population(pop_size);
+
+	// a rule variable for generating random rules
+	Rule r;
+
+	// generate an initial population of random rules
+	for (int i=0; i<pop_size; i++) {
+
+		// generate a random rule and add it to the population
+		r = Rule::random(attributes_per_rule);
+		r.setID(p.id_count_);
+		p.add(r);
+		p.id_count_++;
+	}
+
+	return p;
 
 } // end random

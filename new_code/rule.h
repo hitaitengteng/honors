@@ -18,8 +18,7 @@ class Rule {
 	// MEMBER VARIABLES
 	
 		// the condition under which the rule applies (NOTE: this should
-		// probably be private, but I was feeling too lazy to make wrapper
-		// functions)
+		// probably be private)
 		std::vector<Attribute> condition_;
 
 	// FUNCTIONS
@@ -47,6 +46,14 @@ class Rule {
 			fitness1_ = (double) (true_positives_ + true_negatives_) /
 					(double) (false_positives_ + false_negatives_);
 		}
+
+		// computes fitness2 using odds ratio
+		void updateFitness2() {
+
+			fitness2_ = (double) (true_positives_ + true_negatives_) /
+					(double) (false_positives_ + false_negatives_);
+		}
+
 
 		void processInput(std::vector<double> &input);
 
@@ -115,21 +122,35 @@ class Rule {
 		// to be categorized, according to the rule
 		int classification_;
 
+		// the number of examples correctly classified by the rule
 		int true_positives_;
 
+		// the number of examples that the rule matches but does
+		// not correctly classify
 		int false_positives_;
 
+		// the number of examples that the rule neither matches
+		// nor correctly classifies
 		int true_negatives_;
 
+		// the number of examples that the rule does not match,
+		// but that have the same class as the rule
 		int false_negatives_;
 
 		// the number of attributes in the condition of this rule whose
 		// dontCare variable is set to true
 		int num_dont_care_;
 
-		// the rule's fitness (used in the GA; based on accuracy)
+		// the first fitness is used to establish a preliminary
+		// ranking of the rules used to compute the 2nd fitness,
+		// which drives the GA. This first fitness is calculated
+		// using odds ratio
 		double fitness1_;
 
+		// the second fitness is also calculated using odds ratio,
+		// but in computing the 2nd fitness, we count an example
+		// as a true positive only for the fittest rule that covers
+		// it
 		double fitness2_;
 
 };

@@ -8,6 +8,9 @@ CPPFLAGS += -std=c++11 # must use C++11
 ruleTest: ruleTest.cpp ../rule.cpp ../attribute.cpp
 	$(CXX) $(CPPFLAGS) -o ruleTest ruleTest.cpp ../rule.cpp ../attribute.cpp
 
+popTest: popTest.cpp ../population.cpp ../rule.cpp ../attribute.cpp
+	$(CXX) $(CPPFLAGS) -o popTest popTest.cpp ../population.cpp ../rule.cpp ../attribute.cpp
+
 clean:
 	rm ruleTest
-	rm *.o
+	rm popTest
