@@ -63,7 +63,7 @@ bool Rule::operator==(const Rule &rule) const {
  * Outputs:
  * Description:
  ****************************************************************************/ 
-void Rule::processInput(std::vector<double> &input) {
+int Rule::processInput(std::vector<double> &input) {
 
 	// get the input's class
 	int classification = input.back();
@@ -73,13 +73,17 @@ void Rule::processInput(std::vector<double> &input) {
 
 		// ...and if the rule correctly classifies the input,
 		// then the input counts as a true positive for this rule
-		if (classification_ == classification)
+		if (classification_ == classification) {
 			true_positives_++;
+			return TP;
+		}
 
 		// if the rule doesn't correctly classify the input,
 		// it's a false positive
-		else
+		else {
 			false_positives_++;
+			return FP;
+		}
 
 	// if the rule's condition DOES NOT match the input...
 	} else {
@@ -87,13 +91,17 @@ void Rule::processInput(std::vector<double> &input) {
 		// ...but the class of the rule matches the class of
 		// the input, then the input counts as a false negative
 		// for this rule
-		if (classification_ == classification)
+		if (classification_ == classification) {
 			false_negatives_++;
+			return FN;
+		}
 
 		// if the rule doesn't correctly classify the input,
 		// it's a true negative
-		else
+		else {
 			true_negatives_++;
+			return TN;
+		}
 	}
 
 } // end processInput 
@@ -328,7 +336,7 @@ bool Rule::matches(vector<double> &input) const {
  ****************************************************************************/ 
 Rule Rule::random(int num_attributes, int num_classes, 
 		vector<pair<double,double> > attribute_ranges,
-		double range_scalar) {
+		double range_scalar, double dont_care_prob) {
 
 	Rule r;
 
@@ -339,7 +347,7 @@ Rule Rule::random(int num_attributes, int num_classes,
 	// random attributes
 	Attribute a;
 	for (int i=0; i<num_attributes; i++) {
-		a = Attribute::random(attribute_ranges[i], range_scalar);
+		a = Attribute::random(attribute_ranges[i], range_scalar, dont_care_prob);
 		if (a.dont_care() == true)
 			r.num_dont_care_++;
 		r.condition_.push_back(a);
@@ -355,12 +363,12 @@ Rule Rule::random(int num_attributes, int num_classes,
  * Description: Generates a random rule with a condition of a specified
  * 		length.
  ****************************************************************************/ 
-Rule Rule::random(int num_attributes) {
+Rule Rule::random(int num_attributes, int num_classes) {
 
 	Rule r;
 
 	// random class
-	r.setClass(rng() % NUM_CLASSES);
+	r.setClass(rng() % num_classes);
 
 	// random attributes
 	Attribute a;
@@ -370,9 +378,6 @@ Rule Rule::random(int num_attributes) {
 			r.num_dont_care_++;
 		r.condition_.push_back(a);
 	}
-
-	// random accuracy and fitness
-	r.setFitness1(real_dist(rng));
 
 	return r;
 
@@ -418,7 +423,7 @@ void Rule::print() {
 	printf("\n");
 	printf("Fitness1:         %.3f\n", fitness1_);
 	printf("Fitness2:         %.3f\n", fitness2_);
-	printf("Class:           %s\n", CLASS_NAMES[classification_].c_str());
+	printf("Class:           %d\n", classification_);
 
 } // end printRule
 

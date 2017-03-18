@@ -99,13 +99,14 @@ int Population::rouletteWheelSelect() {
  * Outputs:
  * Description:
  ****************************************************************************/ 
-void Population::evaluateFitness1(int num_examples) {
+void Population::evaluateFitness1() {
 
 	// reset the fitness1 sum
 	fitness1_sum_ = 0;
 
 	// get the number of rules
 	int pop_size = size();
+	int num_examples = training_set_.data_points_.size();
 
 	// a variable to store the current example
 	vector<double> curr_example;
@@ -117,10 +118,7 @@ void Population::evaluateFitness1(int num_examples) {
 		// true negative, false positive, or false negative for the
 		// current rule
 		for (int j=0; j<num_examples; j++) {
-			//
-			// get the current example
-			// 
-
+			curr_example = training_set_.data_points_[j];
 			rules_[i].processInput(curr_example);	
 		}
 
@@ -132,6 +130,66 @@ void Population::evaluateFitness1(int num_examples) {
 	}
 
 } // end evaluateFitness1
+
+/****************************************************************************
+ * Inputs:
+ * Outputs:
+ * Description:
+ ****************************************************************************/ 
+void Population::evaluateFitness2() {
+
+	// the population size and the number of examples
+	int pop_size = rules_.size();
+	int num_examples = training_set_.num_data_points();
+
+	// the classification of an example for the current rule (true
+	// positive, false positive, true negative, or false negative)
+	int example_type = 0;
+
+	// rank the rules by fitness1
+	rank();
+
+	// iterate over the set of rules in rank order
+	for (int i=0; i<pop_size; i++) {
+
+		// reset TP, TN, FP, FN to 0 (they were already counted once
+		// when we computed fitness1, so they have to be reset here
+		// for the second count)
+		rules_[i].resetCounts();
+
+		// iterate over the set of examples
+		for (int j=0; j<num_examples; j++) {
+
+			// run processInput for the current example and
+			// the current rule
+			example_type = rules_[i].processInput(training_set_.data_points_[j]);
+
+			// if current example is a TP for the current rule
+			if (example_type == TP) {
+
+				// if the current example has NOT already been covered by
+				// another rule, indicate that the example has now been
+				// covered (by this rule)
+				if (training_set_.examples_covered_[j] == false) {
+					training_set_.examples_covered_[j] = true;
+
+				// if the current example HAS already been covered, we have
+				// to decrement the true positive count of the current rule.
+				// This is because the count was incremented when processInput
+				// was called above
+				} else {
+					int num_tp = rules_[i].true_positives();
+					rules_[i].setTruePositives(num_tp - 1);
+				}
+			}
+		}
+		
+		// now that we know the counts of true and false positives for this rule,
+		// we can update fitness2
+		rules_[i].updateFitness2();
+	}
+
+} // evaluateFitness2
 
 /****************************************************************************
  * Inputs:      i,j: the indices in the general population of the rules
@@ -150,8 +208,8 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
 	int cross_point = (rng() % p1.condition_.size());
 
 	// create the offspring
-	Rule off1;
-	Rule off2;
+	Rule off1 = Rule();
+	Rule off2 = Rule();
 
 	// copy parent conditions into offspring (up to crossover point)
 	for (int i=0; i<cross_point; i++) {
@@ -183,6 +241,10 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
 	off1.setClass(p1.classification());
 	off2.setClass(p2.classification());
 
+	// make sure that the fitnesses are set to 0
+	off1.setFitness1(0);
+	off2.setFitness1(0);
+
 	// return the pair
 	return make_pair(off1, off2);
 
@@ -194,7 +256,7 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
  * Output:      A randomly generated population.
  * Description: Generates a random population of rules.
  ****************************************************************************/ 
-Population Population::random(int pop_size, int attributes_per_rule) {
+Population Population::random1(int pop_size, int attributes_per_rule, int num_classes) {
 
 	// initialize the population of rules
 	Population p = Population(pop_size);
@@ -206,8 +268,54 @@ Population Population::random(int pop_size, int attributes_per_rule) {
 	for (int i=0; i<pop_size; i++) {
 
 		// generate a random rule and add it to the population
-		r = Rule::random(attributes_per_rule);
+		r = Rule::random(attributes_per_rule, num_classes);
 		r.setID(p.id_count_);
+		p.add(r);
+		p.id_count_++;
+	}
+
+	return p;
+
+} // end random
+
+/****************************************************************************
+ * Input:       
+ * Output:      
+ * Description: 
+ ****************************************************************************/ 
+Population Population::random2(int pop_size,
+				int target_class,
+				double elitism_rate,
+				double crossover_prob,
+				double mutate_prob,
+				double dont_care_prob,
+				double range_scalar,
+				Dataset training_set, 
+				Dataset test_set) {
+
+	// initialize the population of rules
+	Population p = Population(pop_size, target_class, elitism_rate, crossover_prob, 
+			mutate_prob, dont_care_prob, range_scalar, training_set, test_set);
+
+	// a rule variable for generating random rules
+	Rule r;
+
+	// the number of class attribute values
+	int num_classes = p.training_set_.num_classes();
+
+	// the number of attributes (excluding the class attribute) in an example
+	int attributes_per_rule = p.training_set_.num_attributes();
+
+	// the range of the attributes
+	vector< pair<double,double> > att_ranges = p.training_set_.attribute_ranges_;
+
+	// generate an initial population of random rules
+	for (int i=0; i<pop_size; i++) {
+
+		// generate a random rule and add it to the population
+		r = Rule::random(attributes_per_rule, num_classes, att_ranges, p.range_scalar(), p.dont_care_prob());
+		r.setID(p.id_count_);
+		r.setClass(p.target_class());
 		p.add(r);
 		p.id_count_++;
 	}

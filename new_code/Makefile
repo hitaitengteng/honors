@@ -6,13 +6,10 @@ CPPFLAGS =  -g # Debugging
 CPPFLAGS += -Wall # Show all warnings
 CPPFLAGS += -std=c++11 # Must use C++11
 
-OBJS = lcs.o dataset.o population.o rule.o attribute.o main.o
+OBJS = dataset.o population.o rule.o attribute.o main.o
 
 classify: $(OBJS)
 	$(CXX) $(CPPFLAGS) $(OBJS) -o $@
-
-lcs.o: lcs.cpp lcs.h 
-	$(CXX) $(CPPFLAGS) -c lcs.cpp -o $@
 
 main.o: main.cpp lcs.cpp
 	$(CXX) $(CPPFLAGS) -c main.cpp -o $@
@@ -35,7 +32,6 @@ all:
 	make population.o
 	make dataset.o
 	make main.o
-	make lcs.o
 
 clean:
 	rm *.o classify

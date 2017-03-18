@@ -3,32 +3,38 @@ Will Gantt
 
 Testing
 --------------------------------------------
-	- mutate (rule.cpp)
-	- crossover (population.cpp)
+	- make sure num_dont_care_ updates correctly
+	- evaluateFitness1
+	- evaluateFitness2
+	- random attribute generation
 
 Rewriting functions for Population class
 --------------------------------------------
 	- applyGA (population.cpp)
-	- cover (population.cpp)
 
 New functions
 --------------------------------------------
-	- finish implementation of fitness1Evaluate (population.cpp)
-	- fitness2Evaluate (population.cpp)
-	- [function that combines fitness1Evaluate and fitness2Evaluate] (population.cpp)
+	- select (population.cpp)
+	- crossoverAndMutate (population.cpp)
+	- random2 (population.cpp)
 
 Data Structures
 --------------------------------------------
-	- Include Dataset object in Population constructor
+	- figure out how to free the examples_covered array (dataset.h)
 
 Function descriptions
 --------------------------------------------
+	- evaluateFitness1 (population.cpp)
+	- evaluateFitness2 (population.cpp)
 	- rouletteWheelSelect (population.cpp)
 	- processInput (rule.cpp)
+	- random1 (population.cpp)
+	- random2 (population.cpp)
 
 Questions
 --------------------------------------------
-	- Should we hold on to the LCS class?
 	- How to combat overgenerality?
-	- How are you going to tag examples as classified?
-	- Should the Population class include the data set class?
+	- Add a fitness boost *for* generality?
+	- Take care of the hazard of dividing by 0 when computing
+	  fitness2
+	- Should ranges be adjustable in the mutation operation?

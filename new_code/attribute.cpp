@@ -38,7 +38,7 @@ Attribute Attribute::random() {
  * Outputs:
  * Description:
  ****************************************************************************/ 
-Attribute Attribute::random(std::pair<double,double> attribute_ranges, double range_scalar) {
+Attribute Attribute::random(std::pair<double,double> attribute_ranges, double range_scalar, double dont_care_prob) {
 
 	// create the attribute
 	Attribute a;
@@ -47,8 +47,8 @@ Attribute Attribute::random(std::pair<double,double> attribute_ranges, double ra
 	double range = attribute_ranges.second - attribute_ranges.first;
 
 	// set the dontCare value
-	int dc = (rng() % 2);
-	if (dc == 0) {
+	int dc = real_dist(rng);
+	if (dc > dont_care_prob) {
 		a.setDontCare(false);
 	} else {
 		a.setDontCare(true);
@@ -56,7 +56,7 @@ Attribute Attribute::random(std::pair<double,double> attribute_ranges, double ra
 
 	// set the center and spread
 	a.setCenter(real_dist(rng) * range);
-	a.setSpread(real_dist(rng) * range_scalar);
+	a.setSpread(real_dist(rng) * range * range_scalar);
 
 	return a;
 

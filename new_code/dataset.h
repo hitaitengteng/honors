@@ -38,6 +38,10 @@ class Dataset {
 		// the set of all data points
 		std::vector<std::vector<double> > data_points_;
 
+		// keeps track of which data points have already been covered by
+		// a rule
+		bool *examples_covered_;
+
 	// FUNCTIONS
 	
 		// default constructor
@@ -59,6 +63,10 @@ class Dataset {
 			num_attributes_ = attribute_names.size();
 			num_classes_ = class_names.size();
 			num_data_points_ = data_points.size();
+
+			examples_covered_ = (bool*) malloc(sizeof(bool) * num_data_points_);
+			for (int i=0; i<num_data_points_; i++)
+				examples_covered_[i] = false;
 
 		}
 

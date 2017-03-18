@@ -1,19 +1,10 @@
-#include "lcs.h"
+#include "population.h"
 #include <time.h>
 
 /****************************************************************************
  * File:        main.cpp
  * Author:      William Gantt
  * Description: 
- *
- * TODO:
- * 	- make member variables private that should be private
- * 	- Update Crisp_LCS_Schema.txt
- * 	- Should population size increase when a child is subsumed?
- * 	- Figure out how to modify methods so that numerosity parameter
- * 	  is taken into account (or just don't use the numerosity parameter)
- * 	- Fix bug that causes centers to have negative values
- * 	- Figure out why there are so many rules with accuracy and fitness 0
  ****************************************************************************/ 
   
 using namespace std;
@@ -24,8 +15,21 @@ random_device rd;
 uniform_real_distribution<double> real_dist(0,1);
 uniform_int_distribution<int> int_dist(1,10);
 
+/*
+ * Order of arguments in random2 function:
+ * 	1. max population size
+ * 	2. target class
+ * 	3. elitism rate
+ * 	4. crossover probability
+ * 	5. mutation probability
+ * 	6. "don't care" probability
+ * 	7. range scalar
+ * 	8. training set
+ * 	9. test set
+ */
 int main(int argc, char **argv) {
    
+	// make sure the user enters the right number of arguments
 	if (argc < 2) {
 		cout << stderr << "Error: too few arguments" << endl;
 	}
@@ -46,9 +50,10 @@ int main(int argc, char **argv) {
 	Dataset test_set;
 	test_set.readFromCSVFile(test_set_file);
 
-	// create the population
-	// int max_pop_size = 20;
-	// Population p(max_pop_size);
+	// generate a random population using the training and testing sets.
+	// The order of the arguments is given above the main function.
+	Population p = Population::random2(20,0,0,0,0,0,0.1,training_set,test_set);
+	p.printVerbose();
 
 	return 0;
 }

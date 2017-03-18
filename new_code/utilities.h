@@ -43,6 +43,13 @@ static const int LOW_NEG = 1;
 static const int LOW_POS = 2;
 static const int HIGH_POS = 3;
 
+// named constants for true positives, false positives,
+// true negatives, and false negatives
+static const int TP = 1;
+static const int TN = 2;
+static const int FP = 3;
+static const int FN = 4;
+
 static const int NO_ID = -1;
 
 // for testing

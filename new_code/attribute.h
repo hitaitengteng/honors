@@ -35,7 +35,7 @@ class Attribute {
 
 		// generates a random attribute
 		static Attribute random();
-		static Attribute random(std::pair<double,double> attribute_range, double range_scalar);
+		static Attribute random(std::pair<double,double> attribute_range, double range_scalar, double dont_care_prob);
 
 		// prints info about an attribute
 		void print();

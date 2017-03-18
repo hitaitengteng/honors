@@ -55,9 +55,20 @@ class Rule {
 		}
 
 
+		// resets the counts of true positives, false positives, true negatives
+		// and false negatives
+		void resetCounts() {
+
+			true_positives_ = 0;
+			false_positives_ = 0;
+			true_negatives_ = 0;
+			false_negatives_ = 0;
+
+		}
+
 		// determines whether a given input should count as a true positive,
 		// true negative, false positive, or false negative for the rule
-		void processInput(std::vector<double> &input);
+		int processInput(std::vector<double> &input);
 
 		// mutates the class and attribute ranges in the condition with
 		// some probability
@@ -79,13 +90,13 @@ class Rule {
 		bool matches(std::vector<double> &input) const;
 
 		// generate a random rule
-		static Rule random(int num_attributes);
+		static Rule random(int num_attributes, int num_classes);
 		
 		// generate a random rule, supposing you already have some information
 		// about the dataset that you're working with
 		static Rule random(int num_attributes, int num_classes, 
 				std::vector<std::pair<double,double> > attribute_ranges, 
-				double range_scalar);
+				double range_scalar, double dont_care_prob);
 
 		// prints out some information about a rule
 		void print();
