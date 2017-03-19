@@ -298,7 +298,7 @@ bool Rule::generalizes(Rule &rule) const {
  * 		the input's attribute values fall within the range of the
  * 		corresponding attribute in the condition.
  ****************************************************************************/ 
-bool Rule::matches(vector<double> &input) const {
+bool Rule::matches(vector<double> input) {
 
 	// the center and spread of the current attribute
 	double center = 0;

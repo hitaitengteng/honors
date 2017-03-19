@@ -65,9 +65,10 @@ void Population::remove(int index) {
 } // end remove
 
 /****************************************************************************
- * Inputs:
- * Outputs:
- * Description:
+ * Inputs:      None.
+ * Outputs:     The index in the population of the selected rule.
+ * Description: Selects a rule from the population using roulette wheel
+ * 		selection---a fitness-based selection algorithm.
  ****************************************************************************/
 int Population::rouletteWheelSelect() {
 
@@ -95,9 +96,9 @@ int Population::rouletteWheelSelect() {
 } // end rouletteWheelSelect
 
 /****************************************************************************
- * Inputs:
- * Outputs:
- * Description:
+ * Inputs:      None.
+ * Outputs:     None.
+ * Description: Computes fitness1 for all rules in the population.
  ****************************************************************************/ 
 void Population::evaluateFitness1() {
 
@@ -132,9 +133,9 @@ void Population::evaluateFitness1() {
 } // end evaluateFitness1
 
 /****************************************************************************
- * Inputs:
- * Outputs:
- * Description:
+ * Inputs:      None.
+ * Outputs:     None.
+ * Description: Computes fitness2 for all rules in the population.
  ****************************************************************************/ 
 void Population::evaluateFitness2() {
 
@@ -190,6 +191,28 @@ void Population::evaluateFitness2() {
 	}
 
 } // evaluateFitness2
+
+/****************************************************************************
+ * Inputs:      None.
+ * Outputs:     None.
+ * Description: Creates the population for the next generation
+ ****************************************************************************/
+void Population::select() {
+
+	// initialize a vector of rules for the new population
+	
+	// compute pop_size * elitism_rate (this should probably be done
+	// just once elsewhere) and round the result to the nearest whole
+	// number ---> N
+	
+	// Copy the N fittest members from the old population into the new
+	
+	// Perform Xover using the remaining members of the old population
+	// (i.e. NOT the ones selected using elitism)
+	
+	// Copy the children into the new population array
+
+} // end select
 
 /****************************************************************************
  * Inputs:      i,j: the indices in the general population of the rules
@@ -251,6 +274,15 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
 } // end crossover
 
 /****************************************************************************
+ * Inputs:
+ * Outputs:     None.
+ * Description: Applies the crossover and mutation operators to the population
+ ****************************************************************************/
+void Population::crossoverAndMutate() {
+
+} // end crossoverAndMutate 
+
+/****************************************************************************
  * Input:       pop_size: the number of rules to be generated.
  * 		attributes_per_rule: the number of attributes in a rule
  * Output:      A randomly generated population.
@@ -306,8 +338,8 @@ Population Population::random2(int pop_size,
 	// the number of attributes (excluding the class attribute) in an example
 	int attributes_per_rule = p.training_set_.num_attributes();
 
-	// the range of the attributes
-	vector< pair<double,double> > att_ranges = p.training_set_.attribute_ranges_;
+	// the range of the attributes for the target class
+	vector< pair<double,double> > att_ranges = p.training_set_.targetClassAttributeRanges(target_class);
 
 	// generate an initial population of random rules
 	for (int i=0; i<pop_size; i++) {

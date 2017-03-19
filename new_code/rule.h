@@ -2,13 +2,11 @@
 #define RULE_H
 
 #include "attribute.h"
+
 /****************************************************************************
  * File:        Rule.h
  * Author:      William Gantt
  * Description: Defines the Rule class.
- *
- * TODO:
- * 	- Need some way to avoid dividing by 0 when computing odds ratio
  ****************************************************************************/ 
 
 class Rule {
@@ -43,15 +41,31 @@ class Rule {
 		// computes fitness1 using odds ratio
 		void updateFitness1() {
 
-			fitness1_ = (double) (true_positives_ + true_negatives_) /
-					(double) (false_positives_ + false_negatives_);
+			// first, compute odds ratio, but only if the denominator
+			// of the fraction is nonzero
+			if (false_positives_ != 0 && false_negatives_ != 0) {
+				fitness1_ = (double) (true_positives_ * true_negatives_) /
+					(double) (false_positives_ * false_negatives_);
+			}
+
+			// for each "don't care" value that the rule has, it receives
+			// a slight fitness boost
+			fitness1_ += num_dont_care_ * FITNESS_BOOST;
 		}
 
 		// computes fitness2 using odds ratio
 		void updateFitness2() {
 
-			fitness2_ = (double) (true_positives_ + true_negatives_) /
-					(double) (false_positives_ + false_negatives_);
+			// first, compute odds ratio, but only if the denominator
+			// of the fraction is nonzero
+			if (false_positives_ != 0 && false_negatives_ != 0) {
+				fitness1_ = (double) (true_positives_ * true_negatives_) /
+					(double) (false_positives_ * false_negatives_);
+			}
+
+			// for each "don't care" value that the rule has, it receives
+			// a slight fitness boost
+			fitness1_ += num_dont_care_ * FITNESS_BOOST;
 		}
 
 
@@ -87,7 +101,7 @@ class Rule {
 		bool generalizes(Rule &rule) const;
 
 		// checks whether this rule matches an input datum
-		bool matches(std::vector<double> &input) const;
+		bool matches(std::vector<double> input);
 
 		// generate a random rule
 		static Rule random(int num_attributes, int num_classes);

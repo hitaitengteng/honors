@@ -174,7 +174,7 @@ int Dataset::readFromCSVFile(string file_name) {
  * Outputs;
  * Description:
  ****************************************************************************/ 
-void Dataset::printDataset() {
+void Dataset::printDatasetInfo() {
 
 	int i; // counter
 
@@ -187,8 +187,10 @@ void Dataset::printDataset() {
 		printf("%s ", attribute_names_[i].c_str());
 	printf("\n");
 
-	for (i=0; i<num_data_points_; i++)
-		printDataPoint(data_points_[i], num_attributes_);
+	printf("Attribute ranges: \n");
+	for (i=0; i<num_attributes_; i++)
+		printf("%.2f - %.2f | ", attribute_ranges_[i].first, attribute_ranges_[i].second);
+	printf("\n");
 
 } // end print
 
@@ -272,6 +274,46 @@ Rule Dataset::createRuleFromDataPoint(int i, double range_scalar) {
 	return r;
 
 } // end createRuleFromDataPoint
+
+/****************************************************************************
+ * Inputs:
+ * Outputs;
+ * Description:
+ ****************************************************************************/ 
+vector< pair<double,double> > Dataset::targetClassAttributeRanges(int target_class) {
+
+	// initialize the vector of attribute ranges
+	vector< pair<double,double> > ranges;
+	for (int i=0; i<num_attributes_; i++)
+		ranges.push_back(make_pair(FLT_MAX,FLT_MIN));
+
+	// iterate over all the examples in the data set
+	for (int i=0; i<num_data_points_; i++) {
+
+		// get the class of the current example and check whether
+		// it's the same as the target class
+		if (data_points_[i].back() == target_class) {
+
+			// iterate over all of the attribute values of the
+			// current example
+			for (int j=0; j<num_attributes_; j++) {
+
+				// if the current attribute value is less than
+				// the current minimum for the attribute (within
+				// the target class), update the current minimum
+				if (data_points_[i][j] < ranges[j].first)
+					ranges[j].first = data_points_[i][j];
+
+				// do the same thing, but for the maximum
+				if (data_points_[i][j] > ranges[j].second)
+					ranges[j].second = data_points_[i][j];
+			}
+		}
+	}
+
+	return ranges;
+
+} // end targetClassAttributeRanges
 
 /****************************************************************************
  * Inputs:

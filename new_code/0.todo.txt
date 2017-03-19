@@ -6,7 +6,6 @@ Testing
 	- make sure num_dont_care_ updates correctly
 	- evaluateFitness1
 	- evaluateFitness2
-	- random attribute generation
 
 Rewriting functions for Population class
 --------------------------------------------
@@ -21,6 +20,8 @@ New functions
 Data Structures
 --------------------------------------------
 	- figure out how to free the examples_covered array (dataset.h)
+	- should have a flag for rules to keep track of which ones
+	  need to have their fitness updated
 
 Function descriptions
 --------------------------------------------
@@ -30,11 +31,13 @@ Function descriptions
 	- processInput (rule.cpp)
 	- random1 (population.cpp)
 	- random2 (population.cpp)
+	- [so many to do I'm going to stop listing them]
 
 Questions
 --------------------------------------------
 	- How to combat overgenerality?
 	- Add a fitness boost *for* generality?
 	- Take care of the hazard of dividing by 0 when computing
-	  fitness2
+	  fitness
 	- Should ranges be adjustable in the mutation operation?
+	- Implement fitness boost for the more general rules

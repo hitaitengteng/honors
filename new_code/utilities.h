@@ -50,6 +50,10 @@ static const int TN = 2;
 static const int FP = 3;
 static const int FN = 4;
 
+// fitness boost for each "don't care" value that a rule
+// has
+static const double FITNESS_BOOST = 0.01;
+
 static const int NO_ID = -1;
 
 // for testing

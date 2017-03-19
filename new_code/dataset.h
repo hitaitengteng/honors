@@ -8,7 +8,6 @@
  * Description: Defines the Dataset class. [Description]
  *
  * TODO: 
- * 	- Have some way of "tagging" examples as classified.
  * 	- Fix printDataPoint so that the number of attributes are not
  *  	  required as a parameter.
  ****************************************************************************/ 
@@ -75,9 +74,9 @@ class Dataset {
 
 		// function for printing all of the data points
 		// in the data set
-		void printDataset();
+		void printDatasetInfo();
 
-		// prints a single data point
+		// prints a single data point;;
 		static void printDataPoint(std::vector<double> data_point, int num_attributes) {
 			for (int i=0; i<num_attributes; i++)
 				printf("%.3f ", data_point[i]);
@@ -92,6 +91,9 @@ class Dataset {
 
 		// create a rule from a data point
 		Rule createRuleFromDataPoint(int i, double range_scalar);
+
+		// get the ranges of all attributes for the target class
+		std::vector< std::pair<double,double> > targetClassAttributeRanges(int target_class);
 
 		// getters
 		int num_attributes() const {return num_attributes_;}
