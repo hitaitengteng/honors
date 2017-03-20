@@ -15,29 +15,24 @@ New functions
 --------------------------------------------
 	- select (population.cpp)
 	- crossoverAndMutate (population.cpp)
-	- random2 (population.cpp)
+		[should ultimately return void; currently returns
+		 a vector of rules.]
 
 Data Structures
 --------------------------------------------
 	- figure out how to free the examples_covered array (dataset.h)
+	  without raising exceptions
 	- should have a flag for rules to keep track of which ones
 	  need to have their fitness updated
 
 Function descriptions
 --------------------------------------------
-	- evaluateFitness1 (population.cpp)
-	- evaluateFitness2 (population.cpp)
 	- rouletteWheelSelect (population.cpp)
 	- processInput (rule.cpp)
-	- random1 (population.cpp)
 	- random2 (population.cpp)
 	- [so many to do I'm going to stop listing them]
 
 Questions
 --------------------------------------------
 	- How to combat overgenerality?
-	- Add a fitness boost *for* generality?
-	- Take care of the hazard of dividing by 0 when computing
-	  fitness
 	- Should ranges be adjustable in the mutation operation?
-	- Implement fitness boost for the more general rules

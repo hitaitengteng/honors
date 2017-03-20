@@ -54,6 +54,7 @@ int main(int argc, char **argv) {
 	// The order of the arguments is given above the main function.
 	Population p = Population::random2(20,1,0,0,0,0.25,0.25,training_set,test_set);
 	p.evaluateFitness1();
+	p.evaluateFitness2();
 	p.printVerbose();
 
 	return 0;

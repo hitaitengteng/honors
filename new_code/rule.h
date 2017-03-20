@@ -22,12 +22,12 @@ class Rule {
 	// FUNCTIONS
 	
 		// first constructor
-		Rule() : id_(NO_ID), classification_(0), true_positives_(0), 
-			 false_positives_(0), true_negatives_(0), false_negatives_(0), num_dont_care_(0) { }
+		Rule() : id_(NO_ID), classification_(0), true_positives_(0.5), 
+			 false_positives_(0.5), true_negatives_(0.5), false_negatives_(0.5), num_dont_care_(0) { }
 
 		// second constructor
-		Rule(int num_attributes) : id_(NO_ID), classification_(0), true_positives_(0), 
-			 false_positives_(0), true_negatives_(0), false_negatives_(0), num_dont_care_(0) {
+		Rule(int num_attributes) : id_(NO_ID), classification_(0), true_positives_(0.5), 
+			 false_positives_(0.5), true_negatives_(0.5), false_negatives_(0.5), num_dont_care_(0) {
 		 
 				 // initialize the condition vector
 				 Attribute a;
@@ -41,12 +41,8 @@ class Rule {
 		// computes fitness1 using odds ratio
 		void updateFitness1() {
 
-			// first, compute odds ratio, but only if the denominator
-			// of the fraction is nonzero
-			if (false_positives_ != 0 && false_negatives_ != 0) {
-				fitness1_ = (double) (true_positives_ * true_negatives_) /
-					(double) (false_positives_ * false_negatives_);
-			}
+			fitness1_ = (true_positives_ * true_negatives_) /
+				(false_positives_ * false_negatives_);
 
 			// for each "don't care" value that the rule has, it receives
 			// a slight fitness boost
@@ -56,16 +52,12 @@ class Rule {
 		// computes fitness2 using odds ratio
 		void updateFitness2() {
 
-			// first, compute odds ratio, but only if the denominator
-			// of the fraction is nonzero
-			if (false_positives_ != 0 && false_negatives_ != 0) {
-				fitness1_ = (double) (true_positives_ * true_negatives_) /
-					(double) (false_positives_ * false_negatives_);
-			}
+			fitness2_ = (true_positives_ * true_negatives_) /
+					(false_positives_ * false_negatives_);
 
 			// for each "don't care" value that the rule has, it receives
 			// a slight fitness boost
-			fitness1_ += num_dont_care_ * FITNESS_BOOST;
+			fitness2_ += num_dont_care_ * FITNESS_BOOST;
 		}
 
 
@@ -73,10 +65,10 @@ class Rule {
 		// and false negatives
 		void resetCounts() {
 
-			true_positives_ = 0;
-			false_positives_ = 0;
-			true_negatives_ = 0;
-			false_negatives_ = 0;
+			true_positives_ = 0.5;
+			false_positives_ = 0.5;
+			true_negatives_ = 0.5;
+			false_negatives_ = 0.5;
 
 		}
 
@@ -121,10 +113,10 @@ class Rule {
 		// getters 
 		int id() const {return id_;}
 		int classification() const {return classification_;}
-		int true_positives() const {return true_positives_;}
-		int false_positives() const {return false_positives_;}
-		int true_negatives() const {return true_negatives_;}
-		int false_negatives() const {return false_negatives_;}
+		double true_positives() const {return true_positives_;}
+		double false_positives() const {return false_positives_;}
+		double true_negatives() const {return true_negatives_;}
+		double false_negatives() const {return false_negatives_;}
 		int num_dont_care() const {return num_dont_care_;}
 		double fitness1() const {return fitness1_;}
 		double fitness2() const {return fitness2_;}
@@ -132,15 +124,22 @@ class Rule {
 		// setters
 		void setID(int id) {id_ = id;}
 		void setClass(int classification) {classification_ = classification;}
-		void setTruePositives(int true_positives) {true_positives_ = true_positives;}
-		void setFalsePositives(int false_positives) {false_positives_ = false_positives;}
-		void setTrueNegatives(int true_negatives) {true_negatives_ = true_negatives;}
-		void setFalseNegatives(int false_negatives) {false_negatives_ = false_negatives;}
+		void setTruePositives(double true_positives) {true_positives_ = true_positives;}
+		void setFalsePositives(double false_positives) {false_positives_ = false_positives;}
+		void setTrueNegatives(double true_negatives) {true_negatives_ = true_negatives;}
+		void setFalseNegatives(double false_negatives) {false_negatives_ = false_negatives;}
 		void setNumDontCare(int num_dont_care) {num_dont_care_ = num_dont_care;}
 		void setFitness1(double fitness1) {fitness1_ = fitness1;}
 		void setFitness2(double fitness2) {fitness2_ = fitness2;}
 
 	private:
+
+		/* 
+		 * Note that the variable type for the number of TPs, TNs, FPs, and FNs
+		 * is double. This is so that they may be initialized with a value of 0.5,
+		 * which is a way to avoid having to check for division by 0 when computing
+		 * odds ratio.
+		 */
 
 		// a number that uniquely identifies the rule
 		int id_;
@@ -150,19 +149,19 @@ class Rule {
 		int classification_;
 
 		// the number of examples correctly classified by the rule
-		int true_positives_;
+		double true_positives_;
 
 		// the number of examples that the rule matches but does
 		// not correctly classify
-		int false_positives_;
+		double false_positives_;
 
 		// the number of examples that the rule neither matches
 		// nor correctly classifies
-		int true_negatives_;
+		double true_negatives_;
 
 		// the number of examples that the rule does not match,
 		// but that have the same class as the rule
-		int false_negatives_;
+		double false_negatives_;
 
 		// the number of attributes in the condition of this rule whose
 		// dontCare variable is set to true

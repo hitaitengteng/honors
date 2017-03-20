@@ -147,13 +147,17 @@ void Population::evaluateFitness2() {
 	// positive, false positive, true negative, or false negative)
 	int example_type = 0;
 
+	// reset the array that keeps track of which examples have already
+	// been covered by a rule, as well as the fitness2 sum
+	reset();
+
 	// rank the rules by fitness1
-	rank();
+	rankByFitness1();
 
 	// iterate over the set of rules in rank order
 	for (int i=0; i<pop_size; i++) {
 
-		// reset TP, TN, FP, FN to 0 (they were already counted once
+		// reset TP, TN, FP, FN to 0.5 (they were already counted once
 		// when we computed fitness1, so they have to be reset here
 		// for the second count)
 		rules_[i].resetCounts();
@@ -199,18 +203,28 @@ void Population::evaluateFitness2() {
  ****************************************************************************/
 void Population::select() {
 
-	// initialize a vector of rules for the new population
-	
-	// compute pop_size * elitism_rate (this should probably be done
-	// just once elsewhere) and round the result to the nearest whole
-	// number ---> N
-	
-	// Copy the N fittest members from the old population into the new
-	
-	// Perform Xover using the remaining members of the old population
-	// (i.e. NOT the ones selected using elitism)
-	
-	// Copy the children into the new population array
+	// the number of rules from the previous generation that are
+	// to be preserved
+	int num_elites = round(max_size_ * elitism_rate_);
+	int rest_of_pop = max_size_ - num_elites;
+
+	// by ranking by fitness2, we put the elite rules for the new generation
+	// in the correct position
+	rankByFitness2();
+
+	// Perform Xover and mutation (note that this is being performed
+	// on the previous generation and NOT new_pop, which is as it should
+	// be)
+	vector<Rule> children = crossoverAndMutate();
+
+	// select children at random to fill the remaining slots in the
+	// population
+	random_shuffle(children.begin(), children.end());
+	children.resize(rest_of_pop);
+
+	// copy the selected children into the new population
+	for (int i=0; i<rest_of_pop; i++)
+		rules_[rest_of_pop + i] = children[i];
 
 } // end select
 
@@ -278,7 +292,7 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
  * Outputs:     None.
  * Description: Applies the crossover and mutation operators to the population
  ****************************************************************************/
-void Population::crossoverAndMutate() {
+vector<Rule> Population::crossoverAndMutate() {
 
 } // end crossoverAndMutate 
 

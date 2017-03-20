@@ -63,18 +63,42 @@ class Dataset {
 			num_classes_ = class_names.size();
 			num_data_points_ = data_points.size();
 
-			examples_covered_ = (bool*) malloc(sizeof(bool) * num_data_points_);
+			examples_covered_ = new bool[num_data_points_];
 			for (int i=0; i<num_data_points_; i++)
 				examples_covered_[i] = false;
 
 		}
 
+		// copy constructor
+		Dataset(const Dataset &d) {
+
+			attribute_names_ = d.attribute_names_;
+			attribute_ranges_ = d.attribute_ranges_;
+			class_names_ = d.class_names_;
+			class_ranges_ = d.class_ranges_;
+			data_points_ = d.data_points_;
+
+			num_attributes_ = d.num_attributes();
+			num_classes_ = d.num_classes();
+			num_data_points_ = d.num_data_points();
+
+			examples_covered_ = new bool[num_data_points_];
+			if (d.examples_covered_) {
+				for (int i=0; i<num_data_points_; i++)
+					examples_covered_[i] = d.examples_covered_[i];
+			}
+		}
+
+		// destructor
+		~Dataset() {
+			// delete examples_covered_;
+		}
+
 		// function for reading in data from a csv file
 		int readFromCSVFile(std::string file_name);
 
-		// function for printing all of the data points
-		// in the data set
-		void printDatasetInfo();
+		// function for printing all of the examples in the data set
+		void printInfo();
 
 		// prints a single data point;;
 		static void printDataPoint(std::vector<double> data_point, int num_attributes) {
@@ -82,6 +106,9 @@ class Dataset {
 				printf("%.3f ", data_point[i]);
 			printf("\n");
 		}
+
+		// indicates whether there are any examples in the training set
+		bool empty() {return data_points_.empty();}
 
 		// create a random data set
 		static Dataset random(int num_data_points);

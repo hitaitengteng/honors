@@ -170,11 +170,11 @@ int Dataset::readFromCSVFile(string file_name) {
 } // end readFromCsvFile
 
 /****************************************************************************
- * Inputs:
- * Outputs;
- * Description:
+ * Inputs:      None.
+ * Outputs:     None.
+ * Description: Prints important information about the data set.
  ****************************************************************************/ 
-void Dataset::printDatasetInfo() {
+void Dataset::printInfo() {
 
 	int i; // counter
 
@@ -195,52 +195,9 @@ void Dataset::printDatasetInfo() {
 } // end print
 
 /****************************************************************************
- * Inputs:
- * Outputs;
- * Description:
- ****************************************************************************/ 
-Dataset Dataset::random(int num_data_points) {
-
-	// all ranges for randomly generated data are [0,1]
-	pair<double,double> range_pair = make_pair(0,1);
-
-	// create the vector of attribute names and ranges
-	vector<string> attribute_names;
-	vector< pair<double,double> > attribute_ranges;
-	for (int i=0; i<NUM_TEST_NAMES; i++) {
-		attribute_names.push_back(TEST_NAMES[i]);
-		attribute_ranges.push_back(range_pair);
-	}
-
-	// create the vector of class names
-	vector<string> class_names;
-	for (int i=0; i<NUM_CLASSES; i++) {
-		class_names.push_back(CLASS_NAMES[i]);
-	}
-
-	// create the vector of class ranges
-	vector<pair<double,double> > class_ranges;
-	class_ranges.push_back(make_pair(0,0));
-	class_ranges.push_back(make_pair(0,0.25));
-	class_ranges.push_back(make_pair(0.25,0.5));
-	class_ranges.push_back(make_pair(0.5,0.75));
-	class_ranges.push_back(make_pair(0.75,1));
-
-	// create the vector of data points
-	vector< vector<double> > data_points;
-	for (int i=0; i<num_data_points; i++)
-		data_points.push_back(randomDataPoint(NUM_TEST_NAMES));
-
-	Dataset d = Dataset(attribute_names, class_names, attribute_ranges,
-			class_ranges, data_points);
-	return d;
-
-} // end random
-
-/****************************************************************************
- * Inputs:      The index in the training set of the data point to be used.
- * Outputs;     A rule specified according to the values of the input.
- * Description: Generates a rule based on a data point from the training set.
+ * Inputs:      The index in the training set of the example to be used.
+ * Outputs;     A rule specified according to the values of the example.
+ * Description: Generates a rule based on an example from the data set.
  ****************************************************************************/ 
 Rule Dataset::createRuleFromDataPoint(int i, double range_scalar) {
 
@@ -277,8 +234,13 @@ Rule Dataset::createRuleFromDataPoint(int i, double range_scalar) {
 
 /****************************************************************************
  * Inputs:
- * Outputs;
- * Description:
+ * 	        target_class: the index of the class whose attribute ranges
+ * 	        are to be determined.
+ * Outputs:     the range of values for each attribute across all examples
+ * 		whose class attribute matches the target class.
+ * Description: Given a class attribute value, determines the range of values
+ * 		for each of the other attributes across all examples whose
+ * 		class attribute matches the target class.
  ****************************************************************************/ 
 vector< pair<double,double> > Dataset::targetClassAttributeRanges(int target_class) {
 
@@ -317,8 +279,10 @@ vector< pair<double,double> > Dataset::targetClassAttributeRanges(int target_cla
 
 /****************************************************************************
  * Inputs:
- * Outputs;
- * Description:
+ * 		num_attributes: the number of attributes in the random
+ * 		data point
+ * Outputs:     a random data point with the number of attributes specified.
+ * Description: generates a random data point
  ****************************************************************************/ 
 vector<double> Dataset::randomDataPoint(int num_attributes) {
 

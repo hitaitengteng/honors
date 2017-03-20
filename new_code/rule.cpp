@@ -470,10 +470,10 @@ void Rule::printVerbose() {
 	printf("# Don't Care:    %d\n", num_dont_care_);
 	printf("Fitness1:        %.3f\n", fitness1_);
 	printf("Fitness2:        %.3f\n", fitness2_);
-	printf("True Pos:        %d\n", true_positives_);
-	printf("False Pos:       %d\n", false_positives_);
-	printf("True Neg:        %d\n", true_negatives_);
-	printf("False Neg:       %d\n", false_negatives_);
+	printf("True Pos:        %.1f\n", true_positives_);
+	printf("False Pos:       %.1f\n", false_positives_);
+	printf("True Neg:        %.1f\n", true_negatives_);
+	printf("False Neg:       %.1f\n", false_negatives_);
 	printf("\n");
 
 } // end printRule

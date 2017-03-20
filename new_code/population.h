@@ -77,6 +77,7 @@ class Population {
 			mutate_prob_ = mutate_prob;
 			dont_care_prob_ = dont_care_prob;
 			range_scalar_ = range_scalar;
+
 		       	training_set_ = training_set;
 		       	test_set_ = test_set;
 
@@ -88,21 +89,36 @@ class Population {
 		// removes a rule from the population
 		void remove(int index);
 
-		// resets the population
-		void clear() {
-			rules_.clear();
-			fitness1_sum_ = 0;
+		void reset() {
+
+			// the fitness sums must be recomputed at each iteration
 			fitness2_sum_ = 0;
+
+			// reset the array that keeps track of the covered examples
+			int num_examples = training_set_.num_data_points();
+			if (!training_set_.empty()) {
+				for (int i=0; i<num_examples; i++)
+					training_set_.examples_covered_[i] = false;
+			}
 		}
 
 		// the comparison function used to rank the population by fitness1
-		static bool ranking_function(Rule r1, Rule r2) {
+		static bool ranking_function1(Rule r1, Rule r2) {
 			return r1.fitness1() > r2.fitness1();
 		}
 
+		// the comparison function used to rank the population by fitness1
+		static bool ranking_function2(Rule r1, Rule r2) {
+			return r1.fitness2() > r2.fitness2();
+		}
 		// order the population by fitness1
-		void rank() {
-			std::sort(rules_.begin(), rules_.end(), ranking_function);
+		void rankByFitness1() {
+			std::sort(rules_.begin(), rules_.end(), ranking_function1);
+		}
+
+		// order the population by fitness2
+		void rankByFitness2() {
+			std::sort(rules_.begin(), rules_.end(), ranking_function2);
 		}
 
 		// select a rule from the population using roulette wheel selection
@@ -124,7 +140,7 @@ class Population {
 		void select();
 
 		// executes the genetic operators on the appropriate rules
-		void crossoverAndMutate();
+		std::vector<Rule> crossoverAndMutate();
 
 		// creates two new rules using single-point crossover
 		std::pair<Rule,Rule> crossover(int i, int j);
