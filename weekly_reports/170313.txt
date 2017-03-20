@@ -1,0 +1,35 @@
+Week of 3/13/17
+Will Gantt
+
+This week:
+
+I have devoted all of my time this week to continuing to rework
+the code. I have made good progress---things seem to be going faster
+than I expected.
+
+I have been emailing with you back and forth this week with some
+specific implementation questions, and you have answered them very
+promptly, which has been an enormous help.
+
+I have restructured the fitness schema to include two fitness values
+for every rule (one used to establish an initial ranking of the rules,
+and another that actually drives the evolution). I have also rewritten 
+the selection function; made new functions for evaluating the two 
+fitnesses; and new functions for initializing a random population of 
+rules with sensible starting values.
+
+The major thing I'm trying to work out at the moment is the attribute
+representation. In the old system, the range of values covered by a
+rule for a single attribute was denoted by a center and a spread.
+In an email, you suggested discretizing values for all attributes
+(not just the class attribute) in the interest of narrowing the
+search space. In the interest of time as well, this seems like a good
+way to go.
+
+Next week:
+
+As you said, the rule representation I end up choosing will
+inform the choice and behavior of the genetic operators I implement.
+My goal for the next week is to decide on that representation, 
+implement the operators, and have something up and running by
+the time classes resume.
