@@ -30,6 +30,10 @@ class Dataset {
 		// values represented in the data
 		std::vector<std::pair<double,double> > attribute_ranges_;
 
+		// the quantiles of each attribute, computed only from
+		// examples from the target class
+		std::vector<std::vector<double> > attribute_quantiles_;
+
 		// the range of values of the class attribute
 		// denoted by each class (not always relevant)
 		std::vector<std::pair<double,double> > class_ranges_;
@@ -96,6 +100,9 @@ class Dataset {
 
 		// function for reading in data from a csv file
 		int readFromCSVFile(std::string file_name);
+
+		// function for reading in quantile values
+		void readQuantiles(std::string file_name);
 
 		// function for printing all of the examples in the data set
 		void printInfo();

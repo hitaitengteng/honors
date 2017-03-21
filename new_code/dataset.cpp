@@ -170,6 +170,35 @@ int Dataset::readFromCSVFile(string file_name) {
 } // end readFromCsvFile
 
 /****************************************************************************
+ * Input:       
+ *              file_name: the name of the file to be read in
+ * Output:      the number of quantiles
+ * Description: reads in the quantiles for all of the attributes in the
+ * 		data set with respect to a target class
+ *
+ * [A NOTE ON THE FORMAT OF THE FILE THAT THIS FUNCTION EXPECTS]
+ ****************************************************************************/
+void Dataset::readQuantiles(string file_name) {
+
+	fstream file_stream;                 // the file stream
+	file_stream.open(file_name.c_str()); // try to open the file
+
+	// if opened successfully, start reading
+	if (file_stream.is_open() && file_stream.good()) {
+
+		string line;
+	} else {
+
+		// the file didn't open correctly, so print an error and quit
+		cout << stderr << "Error: Unable to open file." << endl;
+		exit(0);
+	}
+
+	file_stream.close();
+
+} // end readQuantiles
+
+/****************************************************************************
  * Inputs:      None.
  * Outputs:     None.
  * Description: Prints important information about the data set.

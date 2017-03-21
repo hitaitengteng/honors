@@ -17,6 +17,7 @@ New functions
 	- crossoverAndMutate (population.cpp)
 		[should ultimately return void; currently returns
 		 a vector of rules.]
+	- readQuantiles
 
 Data Structures
 --------------------------------------------
