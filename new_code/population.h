@@ -36,7 +36,6 @@ class Population {
 			crossover_prob_ = 0;
 			mutate_prob_ = 0;
 			dont_care_prob_ = 0;
-			range_scalar_ = 0;
 		}
 
 		// custom constructor
@@ -51,7 +50,6 @@ class Population {
 			crossover_prob_ = 0;
 			mutate_prob_ = 0;
 			dont_care_prob_ = 0;
-			range_scalar_ = 0;
 		}
 
 		// custom constructor
@@ -61,7 +59,6 @@ class Population {
 				double crossover_prob,
 				double mutate_prob,
 				double dont_care_prob,
-				double range_scalar,
 				Dataset training_set, 
 				Dataset test_set
 				) {
@@ -76,7 +73,6 @@ class Population {
 			crossover_prob_ = crossover_prob;
 			mutate_prob_ = mutate_prob;
 			dont_care_prob_ = dont_care_prob;
-			range_scalar_ = range_scalar;
 
 		       	training_set_ = training_set;
 		       	test_set_ = test_set;
@@ -155,7 +151,6 @@ class Population {
 						double crossover_prob,
 						double mutate_prob,
 						double dont_care_prob,
-						double range_scalar, 
 						Dataset training_set, 
 						Dataset test_set);
 
@@ -185,7 +180,6 @@ class Population {
 		double crossover_prob() const {return crossover_prob_;}
 		double elitism_rate() const {return elitism_rate_;}
 		double dont_care_prob() const {return dont_care_prob_;}
-		double range_scalar() const   {return range_scalar_;}
 
 		// setters
 		void setMaxSize(int max_size) {max_size_ = max_size;}
@@ -196,18 +190,16 @@ class Population {
 		void setCrossoverProb(double crossover_prob) {crossover_prob_ = crossover_prob;}
 		void setElitismRate(double elitism_rate) {elitism_rate_ = elitism_rate;}
 		void setDontCareProb(double dont_care_prob) {dont_care_prob_ = dont_care_prob;}
-		void setRangeScalar(double range_scalar) {range_scalar_ = range_scalar;}
 
 	private:
-		int max_size_;         		// the maximum number of rules allowed
+		int max_size_;         		
 		int target_class_;
-		double fitness1_sum_;   	// the sum of all the fitnesses
+		double fitness1_sum_;   
 		double fitness2_sum_;
 		double mutate_prob_;
 		double crossover_prob_;
 		double elitism_rate_;
 		double dont_care_prob_;
-		double range_scalar_;
 };
 
 #endif

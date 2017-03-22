@@ -26,17 +26,9 @@ class Dataset {
 		// not used. 
 		std::vector<std::string> class_names_;
 
-		// for each attribute, the range of 
-		// values represented in the data
-		std::vector<std::pair<double,double> > attribute_ranges_;
-
 		// the quantiles of each attribute, computed only from
 		// examples from the target class
 		std::vector<std::vector<double> > attribute_quantiles_;
-
-		// the range of values of the class attribute
-		// denoted by each class (not always relevant)
-		std::vector<std::pair<double,double> > class_ranges_;
 
 		// the set of all data points
 		std::vector<std::vector<double> > data_points_;
@@ -53,14 +45,10 @@ class Dataset {
 		// custom constructor
 		Dataset(std::vector<std::string> attribute_names, 
 				std::vector<std::string> class_names,
-				std::vector<std::pair<double,double> > attribute_ranges,
-				std::vector<std::pair<double,double> > class_ranges,
 				std::vector<std::vector<double> > data_points) {
 
 			attribute_names_ = attribute_names;
-			attribute_ranges_ = attribute_ranges;
 			class_names_ = class_names;
-			class_ranges_ = class_ranges;
 			data_points_ = data_points;
 
 			num_attributes_ = attribute_names.size();
@@ -77,10 +65,9 @@ class Dataset {
 		Dataset(const Dataset &d) {
 
 			attribute_names_ = d.attribute_names_;
-			attribute_ranges_ = d.attribute_ranges_;
 			class_names_ = d.class_names_;
-			class_ranges_ = d.class_ranges_;
 			data_points_ = d.data_points_;
+			attribute_quantiles_ = d.attribute_quantiles_;
 
 			num_attributes_ = d.num_attributes();
 			num_classes_ = d.num_classes();
@@ -108,7 +95,8 @@ class Dataset {
 		void printInfo();
 
 		// prints a single data point;;
-		static void printDataPoint(std::vector<double> data_point, int num_attributes) {
+		static void printDataPoint(std::vector<double> data_point) {
+			int num_attributes = data_point.size() - 1;
 			for (int i=0; i<num_attributes; i++)
 				printf("%.3f ", data_point[i]);
 			printf("\n");
@@ -125,9 +113,6 @@ class Dataset {
 
 		// create a rule from a data point
 		Rule createRuleFromDataPoint(int i, double range_scalar);
-
-		// get the ranges of all attributes for the target class
-		std::vector< std::pair<double,double> > targetClassAttributeRanges(int target_class);
 
 		// getters
 		int num_attributes() const {return num_attributes_;}

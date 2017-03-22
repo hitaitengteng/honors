@@ -46,11 +46,11 @@ bool Rule::operator==(const Rule &rule) const {
 		// value is false, we must then check their center and
 		// spread variables for equality
 		if (condition_[i].dont_care() == false) {
-			if (condition_[i].center() != 
-			    rule.condition_[i].center())
+			if (condition_[i].l_bound() != 
+			    rule.condition_[i].l_bound())
 				return false;
-			if (condition_[i].spread() != 
-			    rule.condition_[i].spread())
+			if (condition_[i].u_bound() != 
+			    rule.condition_[i].u_bound())
 				return false;
 		}
 	}
@@ -120,10 +120,9 @@ int Rule::processInput(std::vector<double> &input) {
  * Description: Mutates a rule. This involves probabilistically altering the
  * 		values of the attributes in its condition.
  ****************************************************************************/ 
-void Rule::mutate(double p_mutate, double p_dont_care, 
-		vector<pair<double,double> > ranges, 
-		double range_scalar) {
+void Rule::mutate(double p_mutate, double p_dont_care, vector<vector<double> > quantiles) {
 
+/*
 	// a random values on [0,1]
 	double result1;
 	double result2;
@@ -181,6 +180,7 @@ void Rule::mutate(double p_mutate, double p_dont_care,
 			}
 		}
 	}
+	*/
 } // end mutate
 
 /****************************************************************************
@@ -196,9 +196,9 @@ void Rule::mutate(double p_mutate, double p_dont_care,
  * 		the corresponding attribute in the input as the center of
  * 		that range.
  ****************************************************************************/ 
-void Rule::specify(vector<double> input, vector<pair<double,double> > ranges, 
-		double range_scalar) {
+void Rule::specify(vector<double> input, vector<vector<double> > quantiles) {
 
+/*
 	// set the class attribute value of the rule to that of the input
 	setClass(input.back());
 
@@ -223,6 +223,7 @@ void Rule::specify(vector<double> input, vector<pair<double,double> > ranges,
 			condition_[i].setSpread(spread);
 		}
 	}
+*/
 } // end specify
 
 /****************************************************************************
@@ -267,21 +268,10 @@ bool Rule::generalizes(Rule &rule) const {
 			if (rule.condition_[i].dont_care() == true)
 				return false;
 
-			// determine the intervals over the current attribute
-			// that each rule covers
-			double r1LowerBound = condition_[i].center() -
-				condition_[i].spread();
-			double r1UpperBound = condition_[i].center() +
-				condition_[i].spread();
-			double r2LowerBound = rule.condition_[i].center() -
-				rule.condition_[i].spread();
-			double r2UpperBound = rule.condition_[i].center() +
-				rule.condition_[i].spread();
-
 			// return false if the interval described by rule 2
 			// does not fall within that described by rule 1
-			if ((r2LowerBound < r1LowerBound) ||
-			    (r2UpperBound > r1UpperBound))
+			if ((rule.condition_[i].l_bound() < condition_[i].l_bound()) ||
+			    (rule.condition_[i].u_bound() > condition_[i].u_bound()))
 				return false;
 		}
 	}
@@ -301,8 +291,8 @@ bool Rule::generalizes(Rule &rule) const {
 bool Rule::matches(vector<double> input) {
 
 	// the center and spread of the current attribute
-	double center = 0;
-	double spread = 0;
+	double l_bound = 0;
+	double u_bound = 0;
 
 	// iterate over the attributes of the rule's condition
 	int condition_length = condition_.size();
@@ -314,14 +304,13 @@ bool Rule::matches(vector<double> input) {
 
 			// get the center and spread of the current 
 			// attribute in the condition
-			center = condition_[i].center();
-			spread = condition_[i].spread();
+			l_bound = condition_[i].l_bound();
+			u_bound = condition_[i].u_bound();
 
 			// check whether the input value for the current
 			// attribute falls within the range [center - spread,
 			// center + spread]. If not, return false.
-			if ((input[i] < (center - spread)) ||
-			    (input[i] > (center + spread)))
+			if ((input[i] < l_bound) || (input[i] > u_bound))
 				return false;
 		}
 	} 
@@ -334,51 +323,35 @@ bool Rule::matches(vector<double> input) {
  * Outputs:     
  * Description: 
  ****************************************************************************/ 
-Rule Rule::random(int num_attributes, int num_classes, 
-		vector<pair<double,double> > attribute_ranges,
-		double range_scalar, double dont_care_prob) {
+Rule Rule::random(int num_classes, vector<vector<double> > quantiles, double dont_care_prob) {
 
 	Rule r;
 
-	// random class (the '+1' is an artifice that should eventually
-	// be removed)
+	// random class 
 	r.setClass((rng() % num_classes) + 1);
 
+	// the number of quantiles into which the attributes are divided
+	int num_quantiles = quantiles[0].size();
+
+	// a random quantile
+	int quantile = -1;
+
 	// random attributes
 	Attribute a;
+	int num_attributes = quantiles.size() - 1;
 	for (int i=0; i<num_attributes; i++) {
-		a = Attribute::random(attribute_ranges[i], range_scalar, dont_care_prob);
+
+		// generate a random quantile
+		quantile = rng() % num_quantiles;
+
+		// generate the attribute
+		a = Attribute::random(quantiles[i], quantile, dont_care_prob);
+
+		// count the number of don't cares
 		if (a.dont_care() == true)
 			r.num_dont_care_++;
 		r.condition_.push_back(a);
 	}
-
-	return r;
-}
-
-/****************************************************************************
- * Inputs:      num_attributes: the number of attributes that the rule is
- * 				is to have in its condition
- * Outputs:     A randomly generated rule.
- * Description: Generates a random rule with a condition of a specified
- * 		length.
- ****************************************************************************/ 
-Rule Rule::random(int num_attributes, int num_classes) {
-
-	Rule r;
-
-	// random class
-	r.setClass(rng() % num_classes);
-
-	// random attributes
-	Attribute a;
-	for (int i=0; i<num_attributes; i++) {
-		a = Attribute::random();
-		if (a.dont_care() == true)
-			r.num_dont_care_++;
-		r.condition_.push_back(a);
-	}
-
 	return r;
 
 } // end random
@@ -394,29 +367,36 @@ void Rule::print() {
 	char space[] = " ";
 
 	printf("\nRule %d\n--------\n", id_);
-	printf("\nAttribute:  ");
+	printf("\nAttribute:       ");
 	int condition_length = condition_.size();
 	for (size_t i=0; i<condition_length; i++)
 		printf("%-7d", (int) i);
-	printf("\nDon't Care: ");
+	printf("\nDon't Care:      ");
 	for (size_t i=0; i<condition_length; i++) {
 		if (condition_[i].dont_care())
 			printf("%-7s",dc);
 		else
 			printf("%-7s", space);
 	}
-	printf("\nCenter:     ");
+	printf("\nLower Bound:     ");
 	for (size_t i=0; i<condition_length; i++) {
 		if (!condition_[i].dont_care())
-			printf("%-7.3f", condition_[i].center()); 
+			printf("%-7.3f", condition_[i].l_bound()); 
 		else 
 			printf("%-7s", space);
 	}
-	printf("\nSpread:     ");
+	printf("\nUpper Bound:     ");
 	for (size_t i=0; i<condition_length; i++) {
 		if (!condition_[i].dont_care())
-			printf("%-7.3f", condition_[i].spread()); 
+			printf("%-7.3f", condition_[i].u_bound()); 
 		else 
+			printf("%-7s", space);
+	}
+	printf("\nQuantile:        ");
+	for (size_t i=0; i<condition_length; i++) {
+		if (!condition_[i].dont_care())
+			printf("%-7d", condition_[i].quantile());
+		else
 			printf("%-7s", space);
 	}
 
@@ -425,8 +405,7 @@ void Rule::print() {
 	printf("Fitness2:         %.3f\n", fitness2_);
 	printf("Class:           %d\n", classification_);
 
-} // end printRule
-
+} // end print
 
 /****************************************************************************
  * Inputs:      None.
@@ -439,29 +418,36 @@ void Rule::printVerbose() {
 	char space[] = " ";
 
 	printf("\nRule %d\n--------\n", id_);
-	printf("\nAttribute:  ");
+	printf("\nAttribute:        ");
 	int condition_length = condition_.size();
 	for (size_t i=0; i<condition_length; i++)
 		printf("%-7d", (int) i);
-	printf("\nDon't Care: ");
+	printf("\nDon't Care:      ");
 	for (size_t i=0; i<condition_length; i++) {
 		if (condition_[i].dont_care())
 			printf("%-7s",dc);
 		else
 			printf("%-7s", space);
 	}
-	printf("\nCenter:     ");
+	printf("\nLower Bound:     ");
 	for (size_t i=0; i<condition_length; i++) {
 		if (!condition_[i].dont_care())
-			printf("%-7.3f", condition_[i].center()); 
+			printf("%-7.3f", condition_[i].l_bound()); 
 		else 
 			printf("%-7s", space);
 	}
-	printf("\nSpread:     ");
+	printf("\nUpper Bound:     ");
 	for (size_t i=0; i<condition_length; i++) {
 		if (!condition_[i].dont_care())
-			printf("%-7.3f", condition_[i].spread()); 
+			printf("%-7.3f", condition_[i].u_bound()); 
 		else 
+			printf("%-7s", space);
+	}
+	printf("\nQuantile:        ");
+	for (size_t i=0; i<condition_length; i++) {
+		if (!condition_[i].dont_care())
+			printf("%-7d", condition_[i].quantile());
+		else
 			printf("%-7s", space);
 	}
 
@@ -476,6 +462,6 @@ void Rule::printVerbose() {
 	printf("False Neg:       %.1f\n", false_negatives_);
 	printf("\n");
 
-} // end printRule
+} // end printVerbose
 
 // end rule.cpp

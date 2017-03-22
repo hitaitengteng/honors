@@ -237,6 +237,7 @@ void Population::select() {
  ****************************************************************************/ 
 pair<Rule,Rule> Population::crossover(int i, int j) {
 	
+	/*
 	// get the parents
 	Rule p1 = rules_[i];
 	Rule p2 = rules_[j];
@@ -284,7 +285,7 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
 
 	// return the pair
 	return make_pair(off1, off2);
-
+*/
 } // end crossover
 
 /****************************************************************************
@@ -297,34 +298,6 @@ vector<Rule> Population::crossoverAndMutate() {
 } // end crossoverAndMutate 
 
 /****************************************************************************
- * Input:       pop_size: the number of rules to be generated.
- * 		attributes_per_rule: the number of attributes in a rule
- * Output:      A randomly generated population.
- * Description: Generates a random population of rules.
- ****************************************************************************/ 
-Population Population::random1(int pop_size, int attributes_per_rule, int num_classes) {
-
-	// initialize the population of rules
-	Population p = Population(pop_size);
-
-	// a rule variable for generating random rules
-	Rule r;
-
-	// generate an initial population of random rules
-	for (int i=0; i<pop_size; i++) {
-
-		// generate a random rule and add it to the population
-		r = Rule::random(attributes_per_rule, num_classes);
-		r.setID(p.id_count_);
-		p.add(r);
-		p.id_count_++;
-	}
-
-	return p;
-
-} // end random
-
-/****************************************************************************
  * Input:       
  * Output:      
  * Description: 
@@ -335,13 +308,12 @@ Population Population::random2(int pop_size,
 				double crossover_prob,
 				double mutate_prob,
 				double dont_care_prob,
-				double range_scalar,
 				Dataset training_set, 
 				Dataset test_set) {
 
 	// initialize the population of rules
 	Population p = Population(pop_size, target_class, elitism_rate, crossover_prob, 
-			mutate_prob, dont_care_prob, range_scalar, training_set, test_set);
+			mutate_prob, dont_care_prob, training_set, test_set);
 
 	// a rule variable for generating random rules
 	Rule r;
@@ -349,17 +321,14 @@ Population Population::random2(int pop_size,
 	// the number of class attribute values
 	int num_classes = p.training_set_.num_classes();
 
-	// the number of attributes (excluding the class attribute) in an example
-	int attributes_per_rule = p.training_set_.num_attributes();
-
-	// the range of the attributes for the target class
-	vector< pair<double,double> > att_ranges = p.training_set_.targetClassAttributeRanges(target_class);
+	// the quantiles for the target class
+	vector<vector<double> > target_class_quantiles = p.training_set_.attribute_quantiles_;
 
 	// generate an initial population of random rules
 	for (int i=0; i<pop_size; i++) {
 
 		// generate a random rule and add it to the population
-		r = Rule::random(attributes_per_rule, num_classes, att_ranges, p.range_scalar(), p.dont_care_prob());
+		r = Rule::random(num_classes, target_class_quantiles, p.dont_care_prob());
 		r.setID(p.id_count_);
 		r.setClass(p.target_class());
 		p.add(r);

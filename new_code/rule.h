@@ -80,14 +80,11 @@ class Rule {
 		// some probability
 		void mutate(double p_mutate, 
 				double p_dont_care, 
-				std::vector<std::pair<double,double> > ranges, 
-				double range_scalar);
+				std::vector<std::vector<double> > quantiles);
 
 		// assigns particular values to all "don't care" attributes based
 		// on the passed input vector
-		void specify(std::vector<double> input, 
-				std::vector<std::pair<double,double> > ranges, 
-				double range_scalar);
+		void specify(std::vector<double> input, std::vector<std::vector<double> > quantiles);
 	
 		// checks whether this rule is a more general version of another
 		bool generalizes(Rule &rule) const;
@@ -95,14 +92,11 @@ class Rule {
 		// checks whether this rule matches an input datum
 		bool matches(std::vector<double> input);
 
-		// generate a random rule
-		static Rule random(int num_attributes, int num_classes);
-		
 		// generate a random rule, supposing you already have some information
 		// about the dataset that you're working with
-		static Rule random(int num_attributes, int num_classes, 
-				std::vector<std::pair<double,double> > attribute_ranges, 
-				double range_scalar, double dont_care_prob);
+		static Rule random(int num_classes, 
+				std::vector<std::vector<double> > quantiles,
+				double dont_care_prob);
 
 		// prints out some information about a rule
 		void print();

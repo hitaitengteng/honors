@@ -8,58 +8,20 @@
 
 
 /****************************************************************************
- * Inputs:      None
- * Outputs:
- * Description:
- ****************************************************************************/ 
-Attribute Attribute::random() {
-
-	// create the attribute
-	Attribute a;
-
-	// set the dontCare value
-	int dc = (int_dist(rng) % 2);
-	if (dc == 0) {
-		a.setDontCare(false);
-	} else {
-		a.setDontCare(true);
-	}
-
-	// set the center and spread
-	a.setCenter(real_dist(rng));
-	a.setSpread(real_dist(rng));
-
-	return a;
-
-} // end getRandom
-
-/****************************************************************************
  * Inputs:     
  * Outputs:
  * Description:
  ****************************************************************************/ 
-Attribute Attribute::random(std::pair<double,double> attribute_ranges, 
-		double range_scalar, double dont_care_prob) {
+Attribute Attribute::random(std::vector<double> quantiles, int quantile, double dont_care_prob) {
 
-	// create the attribute
-	Attribute a;
-
-	// get the range of acceptable values
-	double range = attribute_ranges.second - attribute_ranges.first;
+	bool dont_care = false;
 
 	// randomly set the dontCare value
 	double dc = real_dist(rng);
-	if (dc <= dont_care_prob) {
-		a.setDontCare(true);
-	} else {
-		a.setDontCare(false);
-	}
+	if (dc <= dont_care_prob)
+		dont_care = true;
 
-	// set the center and spread
-	a.setCenter(attribute_ranges.first + (real_dist(rng) * range));
-	a.setSpread(real_dist(rng) * range * range_scalar);
-
-	return a;
+	return Attribute(quantiles[quantile], quantiles[quantile+1], quantile, dont_care);
 
 } // end getRandom
 
@@ -77,8 +39,10 @@ void Attribute::print() {
 	else
 		dc = "true";
 
-	printf("Name:     %s\n", name_.c_str());
-	printf("Center:   %.3f\n", center_);
-	printf("Spread:   %.3f\n", spread_);
-	printf("dontCare: %s\n", dc.c_str());
-}
+	printf("Name:        %s\n", name_.c_str());
+	printf("Quantile:    %d\n", quantile_);
+	printf("Upper Bound: %.3f\n", u_bound_);
+	printf("Lower Bound: %.3f\n", l_bound_);
+	printf("Don't Care:  %s\n", dc.c_str());
+
+} // end print

@@ -73,11 +73,6 @@ int Dataset::readFromCSVFile(string file_name) {
 		// set the member variable containing the number of attributes
 		num_attributes_ = attribute_names_.size();
 
-		// initialize the vector containing the range of values for
-		// each attribute (except the class attribute)
-		for (int i=0; i<num_attributes_; i++)
-			attribute_ranges_.push_back(make_pair(FLT_MAX,FLT_MIN));
-
 		// a vector for storing attribute values
 		vector<double> curr_vect;
 
@@ -117,15 +112,8 @@ int Dataset::readFromCSVFile(string file_name) {
 					// add the attribute value to the current data point vector
 				       curr_vect.push_back(stof(token));
 
-				       // update the maximum and minimum values of this attribute across
-				       // all data points, if necessary
-				       if (curr_att < num_attributes_) {
-					       if (curr_vect.back() < attribute_ranges_[curr_att].first)
-						       attribute_ranges_[curr_att].first = curr_vect.back();
-					       if (curr_vect.back() > attribute_ranges_[curr_att].second)
-						       attribute_ranges_[curr_att].second = curr_vect.back();
-				       }
-				       curr_att++;  // update the current attribute
+				       // update the current attribute
+				       curr_att++;
 				}
 
 			        // delete the substring you just created from "line," as
@@ -175,8 +163,13 @@ int Dataset::readFromCSVFile(string file_name) {
  * Output:      the number of quantiles
  * Description: reads in the quantiles for all of the attributes in the
  * 		data set with respect to a target class
- *
- * [A NOTE ON THE FORMAT OF THE FILE THAT THIS FUNCTION EXPECTS]
+ * Note:        
+ * 		This function expects a csv file of a specific format:
+ * 		Specifically, one with no column or row names, where each
+ * 		attribute gets its own line, and where the values on each
+ * 		line are the quantiles listed in ascending order. Such files
+ * 		can be generated from a data set using the R script
+ * 		make_quantiles, which can be found in this directory.
  ****************************************************************************/
 void Dataset::readQuantiles(string file_name) {
 
@@ -186,7 +179,71 @@ void Dataset::readQuantiles(string file_name) {
 	// if opened successfully, start reading
 	if (file_stream.is_open() && file_stream.good()) {
 
+		// the line being read in 
 		string line;
+		
+		// an individual word or entry from the line read in
+		string token;
+
+		// a string index denoting the end of a token
+		int tokenEnd;
+
+		// this function handles .csv files, so the delimiter
+		// should always be a comma
+		string delimiter = ",";
+
+		// the set of quantiles for the current attribute
+		vector<double> curr_quantiles;
+
+		// read until the end of the file is reached, or until
+		// some other error flag is set
+		while (file_stream.good()) {
+
+			// reset the quantiles vector
+			curr_quantiles.clear();
+
+			// get the current line
+			getline(file_stream, line);
+
+			// add a comma to the end of the line (this makes parsing easier,
+			// as mentioned above)
+			line.append(delimiter);
+
+			// as attribute values are extracted from a line, they are deleted
+			// from the string. Thus, we want to move onto the next line when
+			// the line size reaches 0.
+			for (int j = 0; line.size() > 0; j++) {
+
+				// find the next delimiting character
+			        tokenEnd = line.find(delimiter);
+
+			        // get the substring from the beginning of the line
+			        // up to, but not including, the delimiter
+			        token = line.substr(0, tokenEnd);
+
+				// we have to have this check here because otherwise the program
+				// will throw an exception when it reaches the end of the file.
+				if (token.compare("") != 0) {
+
+					// add the attribute value to the current data point vector
+				       curr_quantiles.push_back(stof(token));
+
+				}
+
+			        // delete the substring you just created from "line," as
+			        // well as the delimiter that follows it
+			        line.erase(line.begin(), line.begin() + tokenEnd + 1);
+			}
+
+			// add the quantiles for the current attribute to the vector
+			// of quantiles for all the attributes (on the last iteration
+			// of the while loop, the curr_quantiles vector will be empty,
+			// and we don't want to add an empty vector to attribute_quantiles_,
+			// hence the need for this check)
+			if (!curr_quantiles.empty())
+				attribute_quantiles_.push_back(curr_quantiles);
+		}
+
 	} else {
 
 		// the file didn't open correctly, so print an error and quit
@@ -216,10 +273,13 @@ void Dataset::printInfo() {
 		printf("%s ", attribute_names_[i].c_str());
 	printf("\n");
 
-	printf("Attribute ranges: \n");
-	for (i=0; i<num_attributes_; i++)
-		printf("%.2f - %.2f | ", attribute_ranges_[i].first, attribute_ranges_[i].second);
-	printf("\n");
+	if (!attribute_quantiles_.empty()) {
+		printf("Attribute Quantiles: \n");
+		for (i=0; i<num_attributes_; i++)
+			printDataPoint(attribute_quantiles_[i]);
+		printf("\n");
+	}
+
 
 } // end print
 
@@ -230,6 +290,7 @@ void Dataset::printInfo() {
  ****************************************************************************/ 
 Rule Dataset::createRuleFromDataPoint(int i, double range_scalar) {
 
+	/*
 	// get the input vector and the number of attributes it contains
 	vector<double> input = data_points_[i];
 	int num_attributes = input.size() - 1;
@@ -258,53 +319,8 @@ Rule Dataset::createRuleFromDataPoint(int i, double range_scalar) {
 	}
 
 	return r;
-
+*/
 } // end createRuleFromDataPoint
-
-/****************************************************************************
- * Inputs:
- * 	        target_class: the index of the class whose attribute ranges
- * 	        are to be determined.
- * Outputs:     the range of values for each attribute across all examples
- * 		whose class attribute matches the target class.
- * Description: Given a class attribute value, determines the range of values
- * 		for each of the other attributes across all examples whose
- * 		class attribute matches the target class.
- ****************************************************************************/ 
-vector< pair<double,double> > Dataset::targetClassAttributeRanges(int target_class) {
-
-	// initialize the vector of attribute ranges
-	vector< pair<double,double> > ranges;
-	for (int i=0; i<num_attributes_; i++)
-		ranges.push_back(make_pair(FLT_MAX,FLT_MIN));
-
-	// iterate over all the examples in the data set
-	for (int i=0; i<num_data_points_; i++) {
-
-		// get the class of the current example and check whether
-		// it's the same as the target class
-		if (data_points_[i].back() == target_class) {
-
-			// iterate over all of the attribute values of the
-			// current example
-			for (int j=0; j<num_attributes_; j++) {
-
-				// if the current attribute value is less than
-				// the current minimum for the attribute (within
-				// the target class), update the current minimum
-				if (data_points_[i][j] < ranges[j].first)
-					ranges[j].first = data_points_[i][j];
-
-				// do the same thing, but for the maximum
-				if (data_points_[i][j] > ranges[j].second)
-					ranges[j].second = data_points_[i][j];
-			}
-		}
-	}
-
-	return ranges;
-
-} // end targetClassAttributeRanges
 
 /****************************************************************************
  * Inputs:

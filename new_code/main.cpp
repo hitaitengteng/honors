@@ -38,6 +38,10 @@ int main(int argc, char **argv) {
 	// the training and test sets
 	string training_set_file = argv[1];
 	string test_set_file = argv[2];
+	string quantiles_file;
+
+	if (argc > 2)
+		quantiles_file = argv[3];
 
 	// seed the random number generator
 	rng.seed(rd());
@@ -46,16 +50,19 @@ int main(int argc, char **argv) {
 	Dataset training_set;
 	training_set.readFromCSVFile(training_set_file);
 
+	if (argc > 2)
+		training_set.readQuantiles(quantiles_file);
+
 	// read in the test set
 	Dataset test_set;
 	test_set.readFromCSVFile(test_set_file);
 
 	// generate a random population using the training and testing sets.
 	// The order of the arguments is given above the main function.
-	Population p = Population::random2(20,1,0,0,0,0.25,0.25,training_set,test_set);
-	p.evaluateFitness1();
-	p.evaluateFitness2();
-	p.printVerbose();
+	Population p = Population::random2(20,1,0,0,0,0.25,training_set,test_set);
+	// p.evaluateFitness1();
+	// p.evaluateFitness2();
+	// p.printVerbose();
 
 	return 0;
 }
