@@ -342,7 +342,7 @@ Rule Rule::random(int num_classes, vector<vector<double> > quantiles, double don
 	for (int i=0; i<num_attributes; i++) {
 
 		// generate a random quantile
-		quantile = rng() % num_quantiles;
+		quantile = rng() % (num_quantiles - 1);
 
 		// generate the attribute
 		a = Attribute::random(quantiles[i], quantile, dont_care_prob);

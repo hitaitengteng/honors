@@ -23,9 +23,8 @@ uniform_int_distribution<int> int_dist(1,10);
  * 	4. crossover probability
  * 	5. mutation probability
  * 	6. "don't care" probability
- * 	7. range scalar
- * 	8. training set
- * 	9. test set
+ * 	7. training set
+ * 	8. test set
  */
 int main(int argc, char **argv) {
    
@@ -60,9 +59,9 @@ int main(int argc, char **argv) {
 	// generate a random population using the training and testing sets.
 	// The order of the arguments is given above the main function.
 	Population p = Population::random2(20,1,0,0,0,0.25,training_set,test_set);
-	// p.evaluateFitness1();
+	p.evaluateFitness1();
 	// p.evaluateFitness2();
-	// p.printVerbose();
+	p.printVerbose();
 
 	return 0;
 }

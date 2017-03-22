@@ -21,7 +21,8 @@ Attribute Attribute::random(std::vector<double> quantiles, int quantile, double 
 	if (dc <= dont_care_prob)
 		dont_care = true;
 
-	return Attribute(quantiles[quantile], quantiles[quantile+1], quantile, dont_care);
+	Attribute a = Attribute(quantiles[quantile], quantiles[quantile+1], quantile, dont_care);
+	return a;
 
 } // end getRandom
 
