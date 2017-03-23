@@ -54,7 +54,7 @@ class Dataset {
 			num_attributes_ = attribute_names.size();
 			num_classes_ = class_names.size();
 			num_data_points_ = data_points.size();
-
+			num_quantiles_ = attribute_quantiles_[0].size(); 
 			examples_covered_ = new bool[num_data_points_];
 			for (int i=0; i<num_data_points_; i++)
 				examples_covered_[i] = false;
@@ -72,6 +72,7 @@ class Dataset {
 			num_attributes_ = d.num_attributes();
 			num_classes_ = d.num_classes();
 			num_data_points_ = d.num_data_points();
+			num_quantiles_ = d.num_quantiles();
 
 			examples_covered_ = new bool[num_data_points_];
 			if (d.examples_covered_) {
@@ -89,7 +90,7 @@ class Dataset {
 		int readFromCSVFile(std::string file_name);
 
 		// function for reading in quantile values
-		void readQuantiles(std::string file_name);
+		int readQuantiles(std::string file_name);
 
 		// function for printing all of the examples in the data set
 		void printInfo();
@@ -118,17 +119,20 @@ class Dataset {
 		int num_attributes() const {return num_attributes_;}
 		int num_classes() const {return num_classes_;}
 		int num_data_points() const {return num_data_points_;}
+		int num_quantiles() const {return num_quantiles_;}
 
 		// setters
 		void setNumAttributes(int num_attributes) {num_attributes_ = num_attributes;}
 		void setNumClasses(int num_classes) {num_classes_ = num_classes;}
 		void setNumDataPoints(int num_data_points) {num_data_points_ = num_data_points;}
+		void setNumQuantiles(int num_quantiles) {num_quantiles_ = num_quantiles;}
 
 	private:
 
 		int num_attributes_;  // number of attributes in a data point
 		int num_classes_;     // number of classes
 		int num_data_points_; // total number of data points
+		int num_quantiles_;   // the number of quantiles into which the data are divided
 };
 
 #endif

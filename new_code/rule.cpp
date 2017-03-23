@@ -122,10 +122,15 @@ int Rule::processInput(std::vector<double> &input) {
  ****************************************************************************/ 
 void Rule::mutate(double p_mutate, double p_dont_care, vector<vector<double> > quantiles) {
 
-/*
 	// a random values on [0,1]
 	double result1;
 	double result2;
+
+	// the quantile of the current attribute
+	int curr_quantile = -1;
+
+	// the number of quantiles
+	int num_quantiles = quantiles.size() - 1;
 
 	// iterate over all attributes in the condition
 	int condition_length = condition_.size();
@@ -135,16 +140,17 @@ void Rule::mutate(double p_mutate, double p_dont_care, vector<vector<double> > q
 		result1 = real_dist(rng);
 
 		// if the value is less than or equal to p_mutate, we mutate
-		// the current attribute. The attribute may be mutated by 
-		// either adjusting its "center" variable, or by adjusting
-		// its "don't care" value
+		// the current attribute. The attribute may be mutated in one
+		// of two ways:
+		// 	1. Change of quantiles (of upper and lower bounds)
+		// 	2. Change of "don't care" value
 		if (result1 <= p_mutate) {
 
 			// determine whether to change the "don't care" value
 			// or to move the center
 			result2 = real_dist(rng);
 
-			if (result2 <= p_dont_care) { // change to "don't care"
+			if (result2 <= p_dont_care) { // change "don't care"
 
 				if (condition_[i].dont_care() == true) {
 					condition_[i].setDontCare(false);
@@ -154,33 +160,27 @@ void Rule::mutate(double p_mutate, double p_dont_care, vector<vector<double> > q
 					num_dont_care_++;
 				}
 
-			} else {                      // move center
+			} else {                      // change quantile
 
-				// get the range of values for the current attribute
-				double range = ranges[i].second - ranges[i].first;
+				// get the quantile of the current attribute
+				curr_quantile = condition_[i].quantile();
 
-				// scale the range by range_scalar
-				double maxVal = range * range_scalar;
+				// randomly select a different quantile
+				int new_quantile = -1;
+				do {
+					new_quantile = rng() % num_quantiles;
+				} while (new_quantile == curr_quantile);
 
-				// select a random value in the interval [0,maxVal] 
-				// by which the center is to be adjusted
-				uniform_real_distribution<double> real_dist2(0,maxVal);
-				double centerAdjust = real_dist2(rng);
+				// update the attribute's quantile
+				condition_[i].setQuantile(new_quantile);
+				cout << new_quantile << endl;
 
-				// get the current center value
-				double oldCenter = condition_[i].center();
-
-				// adjust the center (whether to add centerAdjust or
-				// substract centerAdjust is determined by whether
-				// rng is odd or even)
-				if (rng() % 2 == 0)
-					condition_[i].setCenter(oldCenter + centerAdjust);
-				else
-					condition_[i].setCenter(oldCenter - centerAdjust);
+				// and update the upper and lower bounds
+				condition_[i].setLowerBound(quantiles[i][new_quantile]);
+				condition_[i].setUpperBound(quantiles[i][new_quantile+1]);
 			}
 		}
 	}
-	*/
 } // end mutate
 
 /****************************************************************************

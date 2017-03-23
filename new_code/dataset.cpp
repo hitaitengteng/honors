@@ -171,7 +171,7 @@ int Dataset::readFromCSVFile(string file_name) {
  * 		can be generated from a data set using the R script
  * 		make_quantiles, which can be found in this directory.
  ****************************************************************************/
-void Dataset::readQuantiles(string file_name) {
+int Dataset::readQuantiles(string file_name) {
 
 	fstream file_stream;                 // the file stream
 	file_stream.open(file_name.c_str()); // try to open the file
@@ -252,6 +252,10 @@ void Dataset::readQuantiles(string file_name) {
 	}
 
 	file_stream.close();
+
+	// return the number of quantiles (the quantiles vector also contains
+	// the minimum, which is why we have to subtract 1)
+	return (attribute_quantiles_[0].size() - 1);
 
 } // end readQuantiles
 

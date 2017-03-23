@@ -49,8 +49,11 @@ int main(int argc, char **argv) {
 	Dataset training_set;
 	training_set.readFromCSVFile(training_set_file);
 
-	if (argc > 2)
-		training_set.readQuantiles(quantiles_file);
+	// read in the quantiles
+	if (argc > 2) {
+		int num_quantiles = training_set.readQuantiles(quantiles_file);
+		training_set.setNumQuantiles(num_quantiles);
+	}
 
 	// read in the test set
 	Dataset test_set;
@@ -58,9 +61,11 @@ int main(int argc, char **argv) {
 
 	// generate a random population using the training and testing sets.
 	// The order of the arguments is given above the main function.
-	Population p = Population::random2(20,0,0,0,0,0.25,training_set,test_set);
-	p.evaluateFitness1();
-	p.evaluateFitness2();
+	Population p = Population::random2(1,0,0,0,0,0.25,training_set,test_set);
+	p.rules_[0].mutate(0.5,0.25,training_set.attribute_quantiles_);
+
+	// p.evaluateFitness1();
+	// p.evaluateFitness2();
 	p.printVerbose();
 
 	return 0;

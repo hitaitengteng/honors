@@ -237,7 +237,6 @@ void Population::select() {
  ****************************************************************************/ 
 pair<Rule,Rule> Population::crossover(int i, int j) {
 	
-	/*
 	// get the parents
 	Rule p1 = rules_[i];
 	Rule p2 = rules_[j];
@@ -285,11 +284,11 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
 
 	// return the pair
 	return make_pair(off1, off2);
-*/
+
 } // end crossover
 
 /****************************************************************************
- * Inputs:
+ * Inputs:      None.
  * Outputs:     None.
  * Description: Applies the crossover and mutation operators to the population
  ****************************************************************************/
