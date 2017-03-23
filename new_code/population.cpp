@@ -183,7 +183,7 @@ void Population::evaluateFitness2() {
 				// This is because the count was incremented when processInput
 				// was called above
 				} else {
-					int num_tp = rules_[i].true_positives();
+					double num_tp = rules_[i].true_positives();
 					rules_[i].setTruePositives(num_tp - 1);
 				}
 			}
