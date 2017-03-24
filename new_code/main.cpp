@@ -61,12 +61,14 @@ int main(int argc, char **argv) {
 
 	// generate a random population using the training and testing sets.
 	// The order of the arguments is given above the main function.
-	Population p = Population::random2(1,0,0,0,0,0.25,training_set,test_set);
-	p.rules_[0].mutate(0.5,0.25,training_set.attribute_quantiles_);
+	Population p = Population::random2(2,0,0,0,0,0.25,training_set,test_set);
+	p.printVerbose();
+	pair<Rule,Rule> off = p.crossover(0,1);
+	off.first.printVerbose();
+	off.second.printVerbose();
 
 	// p.evaluateFitness1();
 	// p.evaluateFitness2();
-	p.printVerbose();
 
 	return 0;
 }

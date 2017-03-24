@@ -107,15 +107,12 @@ int Rule::processInput(std::vector<double> &input) {
 } // end processInput 
 
 /****************************************************************************
- * Inputs:      p_mutate: the probability that the value of a single
- * 			 attribute is mutated.
+ * Inputs:      p_mutate:    the probability that the value of a single
+ * 			     attribute is mutated.
  * 		p_dont_care: given that an attribute is to be mutated, the
- * 			   probability that it will be mutated to a "don't
- * 			   care" value
- * 		ranges: the acceptable values for each attribute
- * 		range_scalar: used in determining the size of the new range
- * 			     of a mutated attribute.
- * 		rng: a random number generator
+ * 			     probability that it will be mutated to a "don't
+ * 			     care" value
+ * 		quantiles:   contains the quantile values for each attribute
  * Outputs:     None.
  * Description: Mutates a rule. This involves probabilistically altering the
  * 		values of the attributes in its condition.
