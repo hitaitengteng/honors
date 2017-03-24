@@ -190,43 +190,133 @@ void Population::evaluateFitness2() {
 		}
 		
 		// now that we know the counts of true and false positives for this rule,
-		// we can update fitness2
+		// we can update fitness2 and add the result to the fitness2 sum
 		rules_[i].updateFitness2();
+		fitness2_sum_ += rules_[i].fitness2();
 	}
 
 } // evaluateFitness2
 
 /****************************************************************************
+ * Inputs:
+ * Outputs:
+ * Description:
+ *
+ * NEED BETTER COMMENTS HERE
+ *
+ * Note: (Does the population have to be ranked by fitness2 for this to
+ * 	  work properly?)
+ ****************************************************************************/ 
+vector<int> Population::sus(int num_to_select) {
+
+	// a vector for storing the indices of the selected rules
+	vector<int> selected(num_to_select);
+	if ((fitness2_sum_ > 0) && (num_to_select < max_size_)) {
+
+		// get the pointer interval
+		double pointer_interval = fitness2_sum_ / num_to_select;
+
+		// select a random number in the range [0,pointer_interval]
+		double r = fmod(rng(),pointer_interval);
+
+		// select the parents
+		for (int i=0; i<num_to_select; i++) {
+			int j = 0;
+			double curr_fitness2_sum = 0;
+			while (curr_fitness2_sum < (r + (i * pointer_interval))) {
+				curr_fitness2_sum += rules_[j].fitness2();
+				j++;
+			}
+			selected[i] = j-1;
+		}
+
+	} 
+
+	return selected;
+
+} // end sus
+
+/****************************************************************************
  * Inputs:      None.
  * Outputs:     None.
- * Description: Creates the population for the next generation
+ * Description: 
+ *
+ * NOTE: Must guarantee that there are an even number of parents!
  ****************************************************************************/
-void Population::select() {
+void Population::applyGA() {
+
+	// evaluate fitnesses
+	evaluateFitness1();
+	evaluateFitness2();
+
+	// by ranking by fitness2, we put the elite rules for the new generation
+	// in the correct position
+	rankByFitness2();
 
 	// the number of rules from the previous generation that are
 	// to be preserved
 	int num_elites = round(max_size_ * elitism_rate_);
 	int rest_of_pop = max_size_ - num_elites;
 
-	// by ranking by fitness2, we put the elite rules for the new generation
-	// in the correct position
-	rankByFitness2();
+	// select the rules to be used for crossover
+	vector<int> selected = sus(rest_of_pop);
 
 	// Perform Xover and mutation (note that this is being performed
 	// on the previous generation and NOT new_pop, which is as it should
 	// be)
-	vector<Rule> children = crossoverAndMutate();
+	vector<Rule> offspring = crossoverAndMutate(selected);
 
-	// select children at random to fill the remaining slots in the
+	// select offspring at random to fill the remaining slots in the
 	// population
-	random_shuffle(children.begin(), children.end());
-	children.resize(rest_of_pop);
+	random_shuffle(offspring.begin(), offspring.end());
+	offspring.resize(rest_of_pop);
 
-	// copy the selected children into the new population
-	for (int i=0; i<rest_of_pop; i++)
-		rules_[rest_of_pop + i] = children[i];
+	// copy the selected offspring into the new population
+	for (int i=0; i<rest_of_pop; i++) {
+		offspring[i].setID(rules_[num_elites + i].id());
+		rules_[num_elites + i] = offspring[i];
+	}
 
 } // end select
+
+/****************************************************************************
+ * Inputs:
+ * Outputs:
+ * Description:
+ ****************************************************************************/
+vector<Rule> Population::crossoverAndMutate(vector<int> selected) {
+	
+	// shuffle the vector of selected rule indices
+	random_shuffle(selected.begin(),selected.end());
+
+	// the number of offspring
+	int num_offspring = selected.size();
+
+	// stores a pair of offspring from a single crossover
+	pair<Rule,Rule> offspring;
+
+	// a vector to contain the offspring rules
+	vector<Rule> new_rules(num_offspring);
+
+	// iterate through the vector, calling crossover on pairs of
+	// rules and mutating the offspring
+	for (int i=0; i<num_offspring; i+=2) {
+
+		// crossover the current set of parents
+		offspring = crossover(selected[i],selected[i+1]);
+
+		// mutate the children
+		offspring.first.mutate(mutate_prob_,dont_care_prob_,training_set_.attribute_quantiles_);
+		offspring.second.mutate(mutate_prob_,dont_care_prob_,training_set_.attribute_quantiles_);
+		
+		// add the children to the vector of new rules to be returned
+		new_rules[i] = offspring.first;
+		new_rules[i+1] = offspring.second;
+	}
+
+	return new_rules;
+
+} // end crossoverAndMutate
 
 /****************************************************************************
  * Inputs:      i,j: the indices in the general population of the rules
@@ -286,15 +376,6 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
 	return make_pair(off1, off2);
 
 } // end crossover
-
-/****************************************************************************
- * Inputs:      None.
- * Outputs:     None.
- * Description: Applies the crossover and mutation operators to the population
- ****************************************************************************/
-vector<Rule> Population::crossoverAndMutate() {
-
-} // end crossoverAndMutate 
 
 /****************************************************************************
  * Input:       

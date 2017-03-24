@@ -85,6 +85,7 @@ class Population {
 		// removes a rule from the population
 		void remove(int index);
 
+		// resets the population
 		void reset() {
 
 			// the fitness sums must be recomputed at each iteration
@@ -125,21 +126,18 @@ class Population {
 
 		// calculate fitness2 for all rules
 		void evaluateFitness2();
-
-		// returns the size of the population
-		int size() {return rules_.size();}
-
-		// indicates whether the population is empty
-		bool empty() {return (rules_.size() == 0);}
-
-		// selects the rules that will breed to produce the next generation
-		void select();
-
-		// executes the genetic operators on the appropriate rules
-		std::vector<Rule> crossoverAndMutate();
+		
+		// choose parents for crossover using stochastic universal sampling
+		std::vector<int> sus(int num_to_select);
 
 		// creates two new rules using single-point crossover
 		std::pair<Rule,Rule> crossover(int i, int j);
+
+		// applies both genetic operators
+		std::vector<Rule> crossoverAndMutate(std::vector<int> selected);
+
+		// executes a single run of the genetic algorithm
+		void applyGA();
 
 		// generate a random population
 		static Population random1(int pop_size, int attributes_per_rule, int num_classes);
@@ -153,6 +151,12 @@ class Population {
 						double dont_care_prob,
 						Dataset training_set, 
 						Dataset test_set);
+
+		// returns the size of the population
+		int size() {return rules_.size();}
+
+		// indicates whether the population is empty
+		bool empty() {return (rules_.size() == 0);}
 
 		// prints all the rules in the population
 		void print() {
