@@ -29,6 +29,7 @@ class Population {
 
 			id_count_ = 0;
 			max_size_ = 0;
+			num_iters_ = 0;
 			target_class_ = 0;
 			fitness1_sum_ = 0;
 			fitness2_sum_ = 0;
@@ -43,6 +44,7 @@ class Population {
 
 			id_count_ = 0;
 			max_size_ = max_size;
+			num_iters_ = 0;
 			target_class_ = 0;
 			fitness1_sum_ = 0;
 			fitness2_sum_ = 0;
@@ -54,6 +56,7 @@ class Population {
 
 		// custom constructor
 		Population(int max_size, 
+				int num_iters,
 				int target_class,
 				double elitism_rate,
 				double crossover_prob,
@@ -68,6 +71,7 @@ class Population {
 		      	fitness2_sum_ = 0;
 
        	       		max_size_ = max_size;	       
+			num_iters_ = num_iters;
 			target_class_ = target_class;
 			elitism_rate_ = elitism_rate;
 			crossover_prob_ = crossover_prob;
@@ -139,11 +143,9 @@ class Population {
 		// executes a single run of the genetic algorithm
 		void applyGA();
 
-		// generate a random population
-		static Population random1(int pop_size, int attributes_per_rule, int num_classes);
-
 		// generate a random population from a data set
-		static Population random2(int pop_size,
+		static Population random(int pop_size,
+						int num_iters,
 						int target_class,
 						double elitism_rate,
 						double crossover_prob,
@@ -151,6 +153,10 @@ class Population {
 						double dont_care_prob,
 						Dataset training_set, 
 						Dataset test_set);
+
+		// categorizes inputs in the test set based on the rules
+		// in the current population
+		double classify(int default_class);
 
 		// returns the size of the population
 		int size() {return rules_.size();}
@@ -166,7 +172,7 @@ class Population {
 			}
 		}
 
-		// prints all the rules in the population with additional detail
+		// prints all the rules in the population with additional details
 		void printVerbose() {
 			int num_rules = rules_.size();
 			for (size_t i=0; i<num_rules; i++) {
@@ -177,6 +183,7 @@ class Population {
 		// getters
 		int size() const {return rules_.size();}
 		int max_size() const {return max_size_;}
+		int num_iters() const {return num_iters_;}
 		int target_class() const {return target_class_;}
 		double fitness1_sum() const {return fitness1_sum_;}
 		double fitness2_sum() const {return fitness2_sum_;}
@@ -187,6 +194,7 @@ class Population {
 
 		// setters
 		void setMaxSize(int max_size) {max_size_ = max_size;}
+		void setNumIters(int num_iters) {num_iters_ = num_iters;}
 		void setTargetClass(int target_class) {target_class_ = target_class;}
 		void setFitness1Sum(double fitness1_sum) {fitness1_sum_ = fitness1_sum;}
 		void setFitness2Sum(double fitness2_sum) {fitness2_sum_ = fitness2_sum;}
@@ -197,6 +205,7 @@ class Population {
 
 	private:
 		int max_size_;         		
+		int num_iters_;
 		int target_class_;
 		double fitness1_sum_;   
 		double fitness2_sum_;

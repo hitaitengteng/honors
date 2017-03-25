@@ -170,7 +170,6 @@ void Rule::mutate(double p_mutate, double p_dont_care, vector<vector<double> > q
 
 				// update the attribute's quantile
 				condition_[i].setQuantile(new_quantile);
-				cout << new_quantile << endl;
 
 				// and update the upper and lower bounds
 				condition_[i].setLowerBound(quantiles[i][new_quantile]);

@@ -229,7 +229,6 @@ vector<int> Population::sus(int num_to_select) {
 			}
 			selected[i] = j-1;
 		}
-
 	} 
 
 	return selected;
@@ -306,8 +305,10 @@ vector<Rule> Population::crossoverAndMutate(vector<int> selected) {
 		offspring = crossover(selected[i],selected[i+1]);
 
 		// mutate the children
-		offspring.first.mutate(mutate_prob_,dont_care_prob_,training_set_.attribute_quantiles_);
-		offspring.second.mutate(mutate_prob_,dont_care_prob_,training_set_.attribute_quantiles_);
+		offspring.first.mutate(mutate_prob_,dont_care_prob_,
+				training_set_.attribute_quantiles_);
+		offspring.second.mutate(mutate_prob_,dont_care_prob_,
+				training_set_.attribute_quantiles_);
 		
 		// add the children to the vector of new rules to be returned
 		new_rules[i] = offspring.first;
@@ -382,7 +383,8 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
  * Output:      
  * Description: 
  ****************************************************************************/ 
-Population Population::random2(int pop_size,
+Population Population::random(int pop_size,
+				int num_iters,
 				int target_class,
 				double elitism_rate,
 				double crossover_prob,
@@ -392,8 +394,8 @@ Population Population::random2(int pop_size,
 				Dataset test_set) {
 
 	// initialize the population of rules
-	Population p = Population(pop_size, target_class, elitism_rate, crossover_prob, 
-			mutate_prob, dont_care_prob, training_set, test_set);
+	Population p = Population(pop_size, num_iters, target_class, elitism_rate, 
+			crossover_prob, mutate_prob, dont_care_prob, training_set, test_set);
 
 	// a rule variable for generating random rules
 	Rule r;
@@ -418,3 +420,73 @@ Population Population::random2(int pop_size,
 	return p;
 
 } // end random
+
+/****************************************************************************
+ * Input:       
+ * 		default_class: the default class to be assigned to an
+ * 		example if no matching rule is found.
+ * Output:      The fraction of examples that were correctly classified.
+ * Description: Classifies examples from the test set based on the rules
+ * 		in the current population.
+ ****************************************************************************/ 
+double Population::classify(int default_class) {
+
+	// The class chosen for the current example
+	int selected_class = NO_CLASS;
+
+	// the number of correctly classified examples
+	int num_correct = 0;
+
+	// the number of examples in the target class
+	int target_class_size = 0;
+	
+	// rank the population by fitness2
+	rankByFitness2();
+
+	// a counter for the rules in the population
+	int rule_counter;
+
+	// the current example under consideration
+	vector<double> curr_ex;
+
+	// iterate over the examples in the test set
+	int test_set_size = test_set_.data_points_.size();
+	for (int i=0; i<test_set_size; i++) {
+	
+		// get the current example
+		curr_ex = test_set_.data_points_[i];
+
+		// iterate over the rules in the population until either:
+		// 	1. A rule is found that matches the example
+		// 	2. There are no more rules to consider
+		rule_counter = 0;
+		while ((rule_counter<max_size_) && (!rules_[rule_counter].matches(curr_ex)))
+			rule_counter++;	
+		
+		// if the rule counter has the same value as the size of the
+		// population, no matching rule was found
+		if (rule_counter == max_size_) {
+			selected_class = default_class;
+
+		// otherwise, a matching rule must have been found
+		} else {
+			selected_class = rules_[rule_counter].classification();
+		}
+
+		// if the example was classified correctly, increment the counter
+		if (selected_class == curr_ex.back())
+			num_correct++;
+
+		// if the example has the same class as the target class, increment
+		// the number of examples in the target class
+		if (curr_ex.back() == target_class_)
+			target_class_size++;
+	}	
+
+	// the percentage of examples that were correctly classified
+	printf("target class: %d\n", target_class_);
+	printf("target class size: %d\n", target_class_size);
+	printf("num correct: %d\n", num_correct);
+	return (double) num_correct / (double) target_class_size;
+
+} // end classify
