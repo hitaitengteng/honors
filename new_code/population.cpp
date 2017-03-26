@@ -279,9 +279,11 @@ void Population::applyGA() {
 } // end select
 
 /****************************************************************************
- * Inputs:
- * Outputs:
- * Description:
+ * Inputs:      A vector containing the indices of the rules that have
+ * 		been selected for crossover and mutation.
+ * Outputs:     The mutated and crossed-over rules.
+ * Description: Applies the crossover and mutation operators to a subset of
+ * 		the population.
  ****************************************************************************/
 vector<Rule> Population::crossoverAndMutate(vector<int> selected) {
 	
@@ -434,14 +436,20 @@ double Population::classify(int default_class) {
 	// The class chosen for the current example
 	int selected_class = NO_CLASS;
 
-	// the number of correctly classified examples
-	int num_correct = 0;
+	// the number of true and false positives and negatives
+	int tp = 0;
+	int tn = 0;
+	int fp = 0;
+	int fn = 0;
 
 	// the number of examples in the target class
 	int target_class_size = 0;
 	
 	// rank the population by fitness2
 	rankByFitness2();
+
+	// the number of rules retained through elitism
+	int num_elites = round(max_size_ * elitism_rate_);
 
 	// a counter for the rules in the population
 	int rule_counter;
@@ -460,12 +468,12 @@ double Population::classify(int default_class) {
 		// 	1. A rule is found that matches the example
 		// 	2. There are no more rules to consider
 		rule_counter = 0;
-		while ((rule_counter<max_size_) && (!rules_[rule_counter].matches(curr_ex)))
+		while ((rule_counter<num_elites) && (!rules_[rule_counter].matches(curr_ex)))
 			rule_counter++;	
 		
 		// if the rule counter has the same value as the size of the
 		// population, no matching rule was found
-		if (rule_counter == max_size_) {
+		if (rule_counter == num_elites) {
 			selected_class = default_class;
 
 		// otherwise, a matching rule must have been found
@@ -473,20 +481,38 @@ double Population::classify(int default_class) {
 			selected_class = rules_[rule_counter].classification();
 		}
 
-		// if the example was classified correctly, increment the counter
-		if (selected_class == curr_ex.back())
-			num_correct++;
+		// determine whether the rule is a true positive, false positive,
+		// true negative, or false negative
 
-		// if the example has the same class as the target class, increment
-		// the number of examples in the target class
-		if (curr_ex.back() == target_class_)
+		// current example matches the target class
+		if (curr_ex.back() == target_class_) {
 			target_class_size++;
+
+			// the chosen class also matches the target class
+			if (selected_class == target_class_)
+				tp++; // then it's a true positive
+			else
+				fn++; // otherwise, it's a false negative
+
+		// current example does not match the target class
+		} else {
+
+			// but the chosen class matches the target class
+			if (selected_class == target_class_)
+				fp++; // then it's a false positive
+			else
+				tn++; // otherwise, it's a true negative
+		}
 	}	
 
-	// the percentage of examples that were correctly classified
 	printf("target class: %d\n", target_class_);
 	printf("target class size: %d\n", target_class_size);
-	printf("num correct: %d\n", num_correct);
-	return (double) num_correct / (double) target_class_size;
+	printf("num elites: %d\n", num_elites);
+	printf("TP: %d\n", tp);
+	printf("TN: %d\n", tn);
+	printf("FP: %d\n", fp);
+	printf("FN: %d\n", fn);
+
+	return tp;
 
 } // end classify

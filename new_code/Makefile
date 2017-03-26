@@ -11,7 +11,7 @@ OBJS = dataset.o population.o rule.o attribute.o main.o
 classify: $(OBJS)
 	$(CXX) $(CPPFLAGS) $(OBJS) -o $@
 
-main.o: main.cpp lcs.cpp
+main.o: main.cpp
 	$(CXX) $(CPPFLAGS) -c main.cpp -o $@
 
 dataset.o: dataset.cpp dataset.h rule.cpp rule.h
