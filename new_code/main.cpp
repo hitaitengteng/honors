@@ -4,7 +4,7 @@
 /****************************************************************************
  * File:        main.cpp
  * Author:      William Gantt
- * Description: 
+ * Description: Runs the LCS.
  ****************************************************************************/ 
   
 using namespace std;
@@ -17,7 +17,7 @@ uniform_int_distribution<int> int_dist(1,10);
 
 // named constants for testing
 const int POP_SIZE = 20;
-const int NUM_ITERS = 100;
+const int NUM_ITERS = 1000;
 const int TARGET_CLASS = 0;
 const int DEFAULT_CLASS = 2;
 const double E_RATE = 0.8;
@@ -79,6 +79,7 @@ int main(int argc, char **argv) {
 	int num_iters = p.num_iters();
 	for (int i=0; i<num_iters; i++)
 		p.applyGA();
+
 	p.evaluateFitness1();
 	p.evaluateFitness2();
 
