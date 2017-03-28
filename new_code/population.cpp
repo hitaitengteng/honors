@@ -430,6 +430,10 @@ Population Population::random(int pop_size,
  * Output:      The fraction of examples that were correctly classified.
  * Description: Classifies examples from the test set based on the rules
  * 		in the current population.
+ *
+ * Note:        The default class and the target class MUST be different.
+ * 		Otherwise, all examples will be classified as the target
+ * 		class. 
  ****************************************************************************/ 
 double Population::classify(int default_class) {
 
@@ -451,23 +455,17 @@ double Population::classify(int default_class) {
 	// the number of rules retained through elitism
 	int num_elites = round(max_size_ * elitism_rate_);
 
-	// a counter for the rules in the population
-	int rule_counter;
-
-	// the current example under consideration
-	vector<double> curr_ex;
-
 	// iterate over the examples in the test set
 	int test_set_size = test_set_.data_points_.size();
 	for (int i=0; i<test_set_size; i++) {
 	
 		// get the current example
-		curr_ex = test_set_.data_points_[i];
+		vector<double> curr_ex = test_set_.data_points_[i];
 
 		// iterate over the rules in the population until either:
 		// 	1. A rule is found that matches the example
 		// 	2. There are no more rules to consider
-		rule_counter = 0;
+		int rule_counter = 0;
 		while ((rule_counter<num_elites) && (!rules_[rule_counter].matches(curr_ex)))
 			rule_counter++;	
 		
@@ -486,6 +484,8 @@ double Population::classify(int default_class) {
 
 		// current example matches the target class
 		if (curr_ex.back() == target_class_) {
+
+			// increment the size of the target class
 			target_class_size++;
 
 			// the chosen class also matches the target class
