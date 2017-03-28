@@ -1,0 +1,25 @@
+Notes for Will
+Mon Mar  6 14:53:44 2017
+CBC
+
+
+Files in this folder:
+1. one xlsx file, from March 17, 2016, from Erik
+
+2. three csv versions of that
+   a. Nelson.160317.withFert.csv -- xlsx converted to csv
+   b. Nelson.v2.fert.csv -- with / in header names removed
+   c. Nelson.v2.csv -- a mystery, meaning that the relevant xlsx file is no
+                       longer in the same directory on my computer
+   d. Just added:
+      ForClarewitFert.160208.xlsx, which might or might not be what
+                                   Nelson.v2.csv derived from
+
+3. reformat.v8b.R
+   v8 of this R program was the last one I worked with
+   ... but I failed to update all the comments
+   So 8b is with comments updated for you (and for me, in the future)
+
+
+4. The folder 0.Data, which has the 8 * 2 ARFF files output from the R program
+   (and which we moved forward with), I think.
