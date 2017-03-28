@@ -1,0 +1,35 @@
+Week of 3/20/17
+Will Gantt
+
+This week:
+
+I finished all major revisions to the code, including alterations to the
+rule representation schema. I have made it so that all attributes---and not
+just the class attribute---may be discretized into an arbitrary number of
+quantiles.
+
+I ran the LCS on the iris and wine data sets from the UCI Machine Learning
+Repository with interesting results. It performs very well on the iris data
+(as one would hope), and seems to do reasonably well on the wine data on most
+runs. Occasionally, however, it will do abysmally, generating an extroardinarily
+large number of false positives. I'm still trying to figure out why this might
+be.
+
+Next week:
+
+I have not gotten around to running the LCS on Erik's data because I need to
+make a few small transformations to the files you've given me in order for
+the program to be able to read them properly. This will be one of my goals
+for next week.
+
+Additionally, I will continue to try to figure out why the program periodically
+returns large numbers of false positives (at least on the wine data set). I
+also hope to talk to you about further ways of improving the system (perhaps
+during our meeting this week, if we have one.)
+
+Lastly, the program is pretty slow. In the interest of getting the code on its
+feet as soon as possible, I did not pay as much attention to efficiency as I 
+might have. It may be the case that making improvements in this regard just
+isn't something I have time for at this point, but I'll keep it in the back
+of my mind.
+
