@@ -334,7 +334,7 @@ Rule Dataset::createRuleFromDataPoint(int i, double range_scalar) {
  * Description: generates a random data point
  ****************************************************************************/ 
 vector<double> Dataset::randomDataPoint(int num_attributes) {
-
+/*
 	// generate random values for the attributes
 	vector<double> data_point;
 	for (int i=0; i<num_attributes; i++) 
@@ -344,5 +344,5 @@ vector<double> Dataset::randomDataPoint(int num_attributes) {
 	data_point.push_back(int_dist(rng) % NUM_CLASSES);
 
 	return data_point;
-
+*/
 } // end randomDataPoint

@@ -1,27 +1,42 @@
 #include "attribute.h"
 
 /****************************************************************************
- * File: attribute.h
- * Author: Will Gantt
- * Description:
+ * File:        attribute.cpp
+ * Author:      Will Gantt
+ * Description: Defines functions for the Attribute class.
  ****************************************************************************/ 
 
 
 /****************************************************************************
  * Inputs:     
- * Outputs:
- * Description:
+ * 		quantiles: a vector of doubles demarcating the quantiles
+ * 		of this attribute.
+ *
+ * 		quantile: the index of the quantile in the quantiles vector
+ * 		specifying the range of values covered by the attribute
+ *
+ * 		dont_care_prob: the probability that the attribute will have
+ * 		its 'dont_care_' value set to true.
+ *
+ * Outputs:     A random attribute object
+ * Description: Creates a random attribute from a vector of quantiles, a
+ * 		quantile index, and a 'dont_care_' probability. Note that
+ * 		the only real randomness here is in the selection of the 
+ * 		value of dont_care_. This is by design.
  ****************************************************************************/ 
-Attribute Attribute::random(std::vector<double> quantiles, int quantile, double dont_care_prob) {
+Attribute Attribute::random(std::vector<double> quantiles, int quantile, 
+		double dont_care_prob) {
 
 	bool dont_care = false;
 
-	// randomly set the dontCare value
+	// randomly set the dont_care_ value
 	double dc = real_dist(rng);
 	if (dc <= dont_care_prob)
 		dont_care = true;
 
-	Attribute a = Attribute(quantiles[quantile], quantiles[quantile+1], quantile, dont_care);
+	// create the attribute
+	Attribute a = Attribute(quantiles[quantile], 
+			quantiles[quantile+1], quantile, dont_care);
 	return a;
 
 } // end getRandom
@@ -29,8 +44,7 @@ Attribute Attribute::random(std::vector<double> quantiles, int quantile, double 
 /****************************************************************************
  * Inputs:      None
  * Outputs:     None
- * Description: Prints information about an attribute, including its name,
- * 		center, spread, and "don't care" values.
+ * Description: Prints the values of all member variables of an attribute
  ****************************************************************************/ 
 void Attribute::print() {
 

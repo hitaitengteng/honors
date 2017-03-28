@@ -1,11 +1,9 @@
 #include "rule.h"
 
 /****************************************************************************
- * File:        Rule.cpp
- * Author:      William Gantt
- * Description: Implements functions for the Rule class.
- *
- * TODO:
+ * File:        rule.cpp
+ * Author:      Will Gantt
+ * Description: Defines function for the Rule class.
  ****************************************************************************/ 
 using namespace std;
 
