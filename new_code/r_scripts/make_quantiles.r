@@ -13,6 +13,9 @@
 #	4. the target class.
 args = commandArgs(trailingOnly=TRUE)
 
+# For debugging
+options(warn=1)
+
 # Exit if the user doesn't specify enough arguments
 stopifnot(length(args) >= 4)
 
@@ -22,7 +25,7 @@ data.set = read.csv(args[1],header=TRUE,sep=",")
 # Pare the data set down to only those examples whose
 # class attribute value matches the target class
 target.class = as.integer(args[4])
-data.set = data.set[which(data.set$class==target.class),]
+data.set = data.set[which(data.set$BcHA_3==target.class),]
 
 # Get the number of quantiles
 num_quantiles = as.integer(args[3])
