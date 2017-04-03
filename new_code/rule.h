@@ -148,9 +148,6 @@ class Rule {
 		void specify(std::vector<double> input, 
 			     std::vector< std::vector<double> > quantiles);
 	
-		// checks whether this rule is a more general version of another
-		bool generalizes(Rule &rule) const;
-
 		// checks whether this rule matches an input datum
 		bool matches(std::vector<double> input);
 

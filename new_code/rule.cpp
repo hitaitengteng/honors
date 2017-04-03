@@ -3,7 +3,8 @@
 /****************************************************************************
  * File:        rule.cpp
  * Author:      Will Gantt
- * Description: Defines function for the Rule class.
+ * Description: Defines function for the Rule class. See rule.h for a detailed
+ * 		description of the class.
  ****************************************************************************/ 
 using namespace std;
 
@@ -14,10 +15,9 @@ using namespace std;
  * 		and class are matching. The values of other member variables
  * 		are considered irrelevant.
  *
- * 		NOTE: ID number is considered irrelevant because there
- * 		should never be duplicates of these. If one needs to
- * 		determine whether two rules are literally the same object,
- * 		then the comparison is easily made using the getID function.
+ * NOTE:	I do not believe this operator is currently used anywhere
+ * 		in the program. However, it may be useful for a future
+ * 		application, so I have kept it.
  ****************************************************************************/ 
 bool Rule::operator==(const Rule &rule) const {
 
@@ -57,44 +57,48 @@ bool Rule::operator==(const Rule &rule) const {
 } // end operator ==
 
 /****************************************************************************
- * Inputs:
- * Outputs:
- * Description:
+ * Inputs:      The example to be evaluated.
+ * Outputs:     An integer indicating the type of the example with respect
+ * 		to the rule (true positive, true negative, false positive,
+ * 		false negative).
+ * Description: Determines whether a given example should count as a true
+ * 		positive, a false positive, a true negative, or a false
+ * 		negative for the rule.
  ****************************************************************************/ 
 int Rule::processInput(std::vector<double> &input) {
 
-	// get the input's class
+	// get the example's class
 	int classification = input.back();
 
-	// if the rule's condition matches the input...
+	// if the rule's condition matches the example...
 	if (matches(input)) {
 
-		// ...and if the rule correctly classifies the input,
-		// then the input counts as a true positive for this rule
+		// ...and if the rule correctly classifies the example,
+		// then the example counts as a true positive for this rule
 		if (classification_ == classification) {
 			true_positives_++;
 			return TP;
 		}
 
-		// if the rule doesn't correctly classify the input,
+		// if the rule doesn't correctly classify the example,
 		// it's a false positive
 		else {
 			false_positives_++;
 			return FP;
 		}
 
-	// if the rule's condition DOES NOT match the input...
+	// if the rule's condition DOES NOT match the example...
 	} else {
 
 		// ...but the class of the rule matches the class of
-		// the input, then the input counts as a false negative
+		// the example, then the example counts as a false negative
 		// for this rule
 		if (classification_ == classification) {
 			false_negatives_++;
 			return FN;
 		}
 
-		// if the rule doesn't correctly classify the input,
+		// if the rule doesn't correctly classify the example,
 		// it's a true negative
 		else {
 			true_negatives_++;
@@ -115,7 +119,8 @@ int Rule::processInput(std::vector<double> &input) {
  * Description: Mutates a rule. This involves probabilistically altering the
  * 		values of the attributes in its condition.
  ****************************************************************************/ 
-void Rule::mutate(double p_mutate, double p_dont_care, vector<vector<double> > quantiles) {
+void Rule::mutate(double p_mutate, double p_dont_care, 
+		vector<vector<double> > quantiles) {
 
 	// a random values on [0,1]
 	double result1;
@@ -175,6 +180,7 @@ void Rule::mutate(double p_mutate, double p_dont_care, vector<vector<double> > q
 			}
 		}
 	}
+
 } // end mutate
 
 /****************************************************************************
@@ -221,59 +227,6 @@ void Rule::specify(vector<double> input, vector<vector<double> > quantiles) {
 } // end specify
 
 /****************************************************************************
- * Inputs:      rule: the rule to be checked for generalization.
- * Outputs:     a boolean indicating whether one rule generalizes another.
- * Description: Determines whether one rule generalizes another. This occurs
- * 		when the following criteria are met:
- * 			(1) both rules have the same class value.
- * 			(2) the range of values for each attribute in one
- * 			    of the rules's condition is greater than the 
- * 			    range of values for the corresponding attribute
- * 			    in the other rule.
- *
- * NOTE: In looking through the code below, one may wonder why a boolean is
- *       used in checking for the equivalence of the rules instead of the
- *       '==' operator. The reason for this is that a boolean saves a lot
- *       of time; using the '==' operator would mean doing a second iteration
- *       through the conditions of both rules.
- ****************************************************************************/ 
-bool Rule::generalizes(Rule &rule) const {
-
-	// immediately return false if the rules' classes are different or
-	// if they have the same ID number (that is, if they are *literally*
-	// the same rule)
-	if ((classification_ != rule.classification()) || (id_ == rule.id()))
-		return false;
-
-	// iterate over the conditions of both rules
-	int condition_length = condition_.size();
-	for (size_t i=0; i<condition_length; i++) {
-
-		// only want to check attributes that aren't "don't cares"
-		// (if this rule has the "don't care" variable set for a
-		// particular attribute, it is at least as general as the
-		// other rule with respect to that attribute).
-		if (condition_[i].dont_care() == false) {
-
-			// if this rule has a specific value for an
-			// attribute for which the other rule has the
-			// "don't care" variable set, then the former
-			// cannot be more general than the latter
-			if (rule.condition_[i].dont_care() == true)
-				return false;
-
-			// return false if the interval described by rule 2
-			// does not fall within that described by rule 1
-			if ((rule.condition_[i].l_bound() < condition_[i].l_bound()) ||
-			    (rule.condition_[i].u_bound() > condition_[i].u_bound()))
-				return false;
-		}
-	}
-	return true;
-
-} // end generalizes
-
-/****************************************************************************
  * Inputs:      input: the data instance to be checked for matching.
  * Outputs:     A boolean indicating whether the rule matches the data
  * 		instance.
@@ -284,9 +237,10 @@ bool Rule::generalizes(Rule &rule) const {
  ****************************************************************************/ 
 bool Rule::matches(vector<double> input) {
 
-	// the center and spread of the current attribute
-	double l_bound = 0;
+	// variables to keep track of the upper and lower bound of
+	// the current attribute when iterating over a rule's condition
 	double u_bound = 0;
+	double l_bound = 0;
 
 	// iterate over the attributes of the rule's condition
 	int condition_length = condition_.size();
@@ -296,14 +250,13 @@ bool Rule::matches(vector<double> input) {
 		// "don't care" in the condition
 		if (condition_[i].dont_care() == false) {
 
-			// get the center and spread of the current 
-			// attribute in the condition
+			// get the upper and lower bound of the range
+			// of the current attribute.
 			l_bound = condition_[i].l_bound();
 			u_bound = condition_[i].u_bound();
 
 			// check whether the input value for the current
-			// attribute falls within the range [center - spread,
-			// center + spread]. If not, return false.
+			// attribute falls within the range [l_bound, u_bound]
 			if ((input[i] < l_bound) || (input[i] > u_bound))
 				return false;
 		}
@@ -313,11 +266,19 @@ bool Rule::matches(vector<double> input) {
 } // end matches
 
 /****************************************************************************
- * Inputs:      
- * Outputs:     
- * Description: 
+ * Inputs:     
+ * 		num_classes: the number of possible values of the class
+ * 		attribute.
+ * 		quantiles: a vector of vectors of attribute quantiles, by
+ * 		class.
+ * 		dont_care_prob: the probability that a given attribute's
+ * 		"don't care" variable will be set to true.
+ *
+ * Outputs:     A rule randomly generated using the above parameters.
+ * Description: Generates a random rule.
  ****************************************************************************/ 
-Rule Rule::random(int num_classes, vector<vector<double> > quantiles, double dont_care_prob) {
+Rule Rule::random(int num_classes, vector<vector<double> > quantiles, 
+		double dont_care_prob) {
 
 	Rule r;
 
@@ -346,6 +307,7 @@ Rule Rule::random(int num_classes, vector<vector<double> > quantiles, double don
 			r.num_dont_care_++;
 		r.condition_.push_back(a);
 	}
+
 	return r;
 
 } // end random

@@ -16,11 +16,11 @@ uniform_real_distribution<double> real_dist(0,1);
 uniform_int_distribution<int> int_dist(1,10);
 
 // named constants for testing
-const int POP_SIZE = 20;
+const int POP_SIZE = 60;
 const int NUM_ITERS = 1000;
 const int TARGET_CLASS = 0;
 const int DEFAULT_CLASS = 2;
-const double E_RATE = 0.8;
+const double E_RATE = 0.6;
 const double XOVER_PROB = 1.0;
 const double MUTATE_PROB = 0.25;
 const double DONT_CARE_PROB = 0.25;

@@ -3,7 +3,8 @@
 /****************************************************************************
  * File:        attribute.cpp
  * Author:      Will Gantt
- * Description: Defines functions for the Attribute class.
+ * Description: Defines functions for the Attribute class. See attribute.h
+ * 		for a detailed description of the class.
  ****************************************************************************/ 
 
 
