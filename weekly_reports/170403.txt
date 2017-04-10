@@ -1,0 +1,19 @@
+Week of 4/3/17
+Will Gantt
+
+This week:
+
+I devoted nearly all of my time to writing, which was more than I intended.
+However, I did make substantial progress. I have finished rough drafts of 
+the introduction, background, and system design sections and am currently
+editing them. They do not have all of the figures I hope to eventually
+include, but I thought it best to just plow ahead with the writing and see
+how much time I have for figures later. Anyhow, these are the only sections 
+I think I can write without results.
+
+Next week:
+
+I plan to have finished my preliminary edits by tomorrow or Wednesday, at 
+which point I will submit what I have to you for critique. Once I have
+done that, I will begin the serious experimentation.
+
