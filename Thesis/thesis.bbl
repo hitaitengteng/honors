@@ -1,0 +1,136 @@
+\begin{thebibliography}{10}
+
+\bibitem{us_epa_climate_2017}
+O.~US~EPA, ``Climate {Impacts} on {Agriculture} and {Food} {Supply},'' 2017.
+
+\bibitem{noauthor_world_2015}
+``World population projected to reach 9.7 billion by 2050 {\textbar} {UN}
+  {DESA} {\textbar} {United} {Nations} {Department} of {Economic} and {Social}
+  {Affairs},'' July 2015.
+
+\bibitem{nelson_measuring_2016}
+E.~Nelson and C.~B. Congdon, ``Measuring the {Relative} {Importance} of
+  {Different} {Agricultural} {Inputs} to {Global} and {Regional} {Crop} {Yield}
+  {Growth} {Since} 1975,'' {\em Economics Department Working Paper Series},
+  Sept. 2016.
+
+\bibitem{kovacs_genetics-based_2012}
+T.~Kovacs, ``Genetics-{Based} {Machine} {Learning},'' in {\em Handbook of
+  {Natural} {Computing}} (G.~Rozenberg, T.~Bäck, and J.~N. Kok, eds.),
+  pp.~937--986, Springer Berlin Heidelberg, 2012.
+\newblock DOI: 10.1007/978-3-540-92910-9\_30.
+
+\bibitem{holland_adaptation_1975}
+J.~H. Holland, {\em Adaptation in natural and artificial systems: {An}
+  introductory analysis with applications to biology, control, and artificial
+  intelligence}, vol.~viii.
+\newblock Oxford, England: U Michigan Press, 1975.
+
+\bibitem{holmes_learning_2002}
+J.~H. Holmes, P.~L. Lanzi, W.~Stolzmann, and S.~W. Wilson, ``Learning
+  classifier systems: {New} models, successful applications,'' {\em Information
+  Processing Letters}, vol.~82, pp.~23--30, Apr. 2002.
+
+\bibitem{holland_properties_1985}
+J.~H. Holland, ``Properties of the {Bucket} {Brigade},'' in {\em Proceedings of
+  the 1st {International} {Conference} on {Genetic} {Algorithms}}, (Hillsdale,
+  NJ, USA), pp.~1--7, L. Erlbaum Associates Inc., 1985.
+
+\bibitem{c._j._c._h._learning_1989}
+W.~C.~J. C.~H., {\em Learning from {Delayed} {Rewards}}.
+\newblock PhD thesis, 1989.
+
+\bibitem{orriols-puig_fuzzy-ucs:_2009}
+A.~Orriols-Puig, J.~Casillas, and E.~Bernado-Mansilla, ``Fuzzy-{UCS}: {A}
+  {Michigan}-{Style} {Learning} {Fuzzy}-{Classifier} {System} for {Supervised}
+  {Learning},'' {\em IEEE Transactions on Evolutionary Computation}, vol.~13,
+  pp.~260--283, Apr. 2009.
+
+\bibitem{llora_towards_2007}
+X.~Llorà, R.~Reddy, B.~Matesic, and R.~Bhargava, ``Towards {Better} {Than}
+  {Human} {Capability} in {Diagnosing} {Prostate} {Cancer} {Using} {Infrared}
+  {Spectroscopic} {Imaging},'' in {\em Proceedings of the 9th {Annual}
+  {Conference} on {Genetic} and {Evolutionary} {Computation}}, {GECCO} '07,
+  (New York, NY, USA), pp.~2098--2105, ACM, 2007.
+
+\bibitem{gao_learning_2005}
+Y.~Gao, J.~Z. Huang, H.~Rong, and D.~Gu, ``Learning {Classifier} {System}
+  {Ensemble} for {Data} {Mining},'' in {\em Proceedings of the 7th {Annual}
+  {Workshop} on {Genetic} and {Evolutionary} {Computation}}, {GECCO} '05, (New
+  York, NY, USA), pp.~63--66, ACM, 2005.
+
+\bibitem{hai_h._dam_bcs:_2006}
+{Hai H. Dam}, {Hussien A. Abbass}, and {Chris Lokan}, ``{BCS}: {Bayesian}
+  {Learning} {Classifier} {System},'' Tech. Rep. TR-ALAR-200604005, The
+  Artificla and Adaptive Robotics Laboratory, School of Information Technology
+  and Electrical Engineering, University of New South Wales, Cardiff, UK, 2006.
+
+\bibitem{wilson_classifier_1995}
+S.~W. Wilson, ``Classifier {Fitness} {Based} on {Accuracy},'' {\em Evolutionary
+  Computation}, vol.~3, pp.~149--175, June 1995.
+
+\bibitem{bernado-mansilla_accuracy-based_2003}
+E.~Bernadó-Mansilla and J.~M. Garrell-Guiu, ``Accuracy-based learning
+  classifier systems: models, analysis and applications to classification
+  tasks,'' {\em Evolutionary Computation}, vol.~11, no.~3, pp.~209--238, 2003.
+
+\bibitem{lanzi_study_1997}
+P.~L. Lanzi, ``A {Study} of the {Generalization} {Capabilities} of {XCS},'' in
+  {\em In {Proceedings} of the {Seventh} {International} {Conference} on
+  {Genetic} {Algorithms}}, pp.~418--425, Morgan Kaufmann, 1997.
+
+\bibitem{keijzer_evolving_2001}
+M.~Keijzer, J.~J. Merelo, G.~Romero, and M.~Schoenauer, ``Evolving {Objects}:
+  {A} {General} {Purpose} {Evolutionary} {Computation} {Library},'' in {\em
+  Artificial {Evolution}}, pp.~231--242, Springer Berlin Heidelberg, Oct. 2001.
+\newblock DOI: 10.1007/3-540-46033-0\_19.
+
+\bibitem{urbanowicz_learning_2009}
+R.~J. Urbanowicz and J.~H. Moore, ``Learning {Classifier} {Systems}: {A}
+  {Complete} {Introduction}, {Review}, and {Roadmap},'' {\em J. Artif. Evol.
+  App.}, vol.~2009, pp.~1:1--1:25, Jan. 2009.
+
+\bibitem{lanzi_roadmap_2000}
+P.~L. Lanzi and R.~L. Riolo, ``A {Roadmap} to the {Last} {Decade} of {Learning}
+  {Classifier} {System} {Research} ({From} 1989 to 1999),'' in {\em Learning
+  {Classifier} {Systems}} (P.~L. Lanzi, W.~Stolzmann, and S.~W. Wilson, eds.),
+  no.~1813 in Lecture {Notes} in {Computer} {Science}, pp.~33--61, Springer
+  Berlin Heidelberg, 2000.
+\newblock DOI: 10.1007/3-540-45027-0\_2.
+
+\bibitem{wilson_critical_1989}
+S.~W. Wilson and D.~E. Goldberg, ``A {Critical} {Review} of {Classifier}
+  {Systems},'' in {\em Proceedings of the {Third} {International} {Conference}
+  on {Genetic} {Algorithms}}, (San Francisco, CA, USA), pp.~244--255, Morgan
+  Kaufmann Publishers Inc., 1989.
+
+\bibitem{wilson_state_2000}
+S.~W. Wilson, ``State of {XCS} {Classifier} {System} {Research},'' in {\em
+  Learning {Classifier} {Systems}} (P.~L. Lanzi, W.~Stolzmann, and S.~W.
+  Wilson, eds.), no.~1813 in Lecture {Notes} in {Computer} {Science},
+  pp.~63--81, Springer Berlin Heidelberg, 2000.
+\newblock DOI: 10.1007/3-540-45027-0\_3.
+
+\bibitem{schaffer_multi-objective_1985}
+J.~D. Schaffer and J.~J. Grefenstette, ``Multi-objective {Learning} via
+  {Genetic} {Algorithms},'' in {\em Proceedings of the 9th {International}
+  {Joint} {Conference} on {Artificial} {Intelligence} - {Volume} 1},
+  {IJCAI}'85, (San Francisco, CA, USA), pp.~593--595, Morgan Kaufmann
+  Publishers Inc., 1985.
+
+\bibitem{manuel_valenzuela-rendon_fuzzy_1991}
+{Manuel Valenzuela-Rendón}, ``The {Fuzzy} {Classifier} {System}: {A}
+  {Classifier} {System} for {Continuously} {Varying} {Variables}",'' (San
+  Diego, CA), 1991.
+
+\bibitem{holland_cognitive_1977}
+J.~H. Holland and J.~S. Reitman, ``Cognitive {Systems} {Based} on {Adaptive}
+  {Algorithms},'' {\em SIGART Bull.}, pp.~49--49, June 1977.
+
+\bibitem{j_reducing_1987}
+B.~J, ``Reducing {Bias} and {Inefficiency} in the {Selection} {Algorithm},'' in
+  {\em Proceedings of the {Second} {International} {Conference} on {Genetic}
+  {Algorithms} and their {Application}}, (Hillsdale, New Jersey), pp.~14--21,
+  L. Eerlbaum Associates, 1987.
+
+\end{thebibliography}

@@ -1,43 +1,149 @@
 \documentclass[11pt]{article}
+\usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
 
 \begin{document}
+
+
 \title{An Investigation of Genetics-Based Machine Learning as Applied to Global Crop Yields}
 \author{Will Gantt}
 \maketitle
 
 \section{Introduction}
+
+% What is the problem that your project is trying to address?
+As Earth's population continues to grow and as the effects of climate change intensify, it is vital to global food security and market stability that we better understand the environmental and economic factors that most affect agricultural output around the world. While rising temperatures may benefit certain crops in the short term, extreme weather and higher levels of atmospheric $\text{CO}_2$ will, if left unchecked,  have disastrous consequences for water supply, soil fertility, and, consequently, for yields. \cite{us_epa_climate_2017}. Furthermore, the United Nations Department of Economic and Social Affairs predicts that the world population will reach 9.7 billion by 2050 and 11.2 billion by the end of the century \cite{noauthor_world_2015}.
+
+% How do you plan to address it?
+These forecasts demand prudent planning, and such planning requires that we discern trends in agricultural data. To that end, I have designed and written a learning classifier system (LCS)---a powerful and versatile tool  for data mining---and applied it to data collected by Erik Nelson in order to identify correlations between various agricultural inputs and changes in crop yields.
+This paper presents the preliminary results of those investigations.
+
+% Outline of rest of paper
+The following section gives a brief overview of genetics-based machine learning (GBML) and LCSs, and of the research done by Nelson and Congdon that gave rise to this project \cite{nelson_measuring_2016}. Section III provides a thorough description of the system design of my own LCS. Sections IV and V detail the experiments conducted and the results, respectively. Finally, section VI offers some concluding remarks and suggests directions for future work.
+
 \section{Background}
 
-In this section, I provide some context for this project. First, I introduce the Genetics-Based Machine Learning paradigm and show where learning classifier systems fit into it. Next, I give a general overview of learning classifier systems and how they work. I then highlight relevant previous research in the field, and I conclude by talking specifically about the earlier work of Nelson and Congdon in [citation] out of which my project developed.
+In this section, I provide some context for my project. First, I introduce the GBML paradigm and consider the place of LCSs within it. Next, I give a general overview of LCSs and their basic structure. I then discuss a few important developments in the history of LCSs for supervised learning. Finally, I conclude by talking specifically about the earlier work of Nelson and Congdon \cite{nelson_measuring_2016}.
 
 \subsection{Genetics-Based Machine Learning}
 
-Genetics-Based Machine Learning (GBML) is a machine learning approach based on the use of evolutionary computation (EC). Briefly, EC comprises a set of optimization algorithms that evolve populations of candidate solutions to a particular problem over a number of generations via a process inspired by biological evolution. Many of the most interesting and important problems in machine learning have large and noisy solution spaces, and it is in such a contexts that EC techniques have proved particularly effective.
+GBML is a machine learning approach based on the use of evolutionary computation. Briefly, evolutionary computation comprises a set of optimization algorithms that evolve populations of candidate solutions to a particular problem through a process inspired by biological evolution. Many of the most interesting and important problems in machine learning have large and noisy search spaces, and it is in such contexts that techniques from evolutionary computation have proved particularly effective.
 
-The precise relationship between various GBML-related terms and concepts is difficult to articulate, and usage in the community is often loose. GBML, once taken to refer exclusively to LCSs, is now considered a broader term that encompasses a number of other algorithms, including genetic programming, evolutionary ensembles, evolutionary neural networks, and genetic fuzzy systems [Kovacs, 2012]. What is important to note here is simply that LCSs exist within a larger machine learning problem-solving framework that covers a number of different EC-based algorithms.
+The precise relationships between various GBML-related terms and concepts have changed over the years, and usage in the community is often loose. GBML, once taken to refer exclusively to LCSs, is now considered a broader term that encompasses a number of other algorithms, including genetic programming, evolutionary ensembles, evolutionary neural networks, and genetic fuzzy systems \cite{kovacs_genetics-based_2012}. For the purposes of this paper, it is important only to recognize that LCSs exist within a larger machine learning problem-solving framework that covers a number of different evolutionary algorithms.
 
 \subsection{What is a Learning Classifier System?}
 
-Introduced by John Holland in 1975, Learning Classifier Systems (LCSs) are GBML algorithms that evolve a population of rules (footnote about how these are often called “classifiers”). Each rule consists of a condition that indicates when the rule applies, as well as an action to take if the condition is met. As LCSs have applications to a variety of learning problems, the exact function of the rules depends largely on the task. With supervised learning problems, rules typically try to categorize a set of training examples by mapping the features of those examples to particular classes. In these cases, the rule’s condition describes the features of the examples to which it applies, and the action specifies the class to be assigned to examples matching the condition. Problems in reinforcement learning, by contrast, often involve determining the best action for an agent to take in response to various environmental cues. Here, a rule’s condition describes a set of cues and its action determines how the agent should react given those cues.
+\subsubsection{Structure}
+Introduced by John Holland in 1975, LCSs are GBML algorithms that evolve a population of rules\footnote{Rules are also frequently referred to as ``classifiers.'' To maintain a clear distinction between individual \emph{classifiers} and the \emph{classifier systems} that comprise them, I use the term ``rule'' exclusively throughout to denote the former, and ``LCS'' to denote the latter.} \cite{holland_adaptation_1975}. Each rule consists of a condition that indicates when the rule applies, as well as an action to take if the condition's criteria are met. As LCSs have applications to a variety of learning problems, the function of the rules depends largely on the task. With supervised learning problems, rules attempt to categorize a set of training examples by mapping the features of those examples to particular classes. In these cases, a rule's condition describes the features of the examples to which it applies, and the action specifies the class to be assigned to examples matching the condition. Problems in reinforcement learning, by contrast, often involve determining the best action for an agent to take in response to certain inputs or stimuli from the environment. Here, a rule's condition describes a set of inputs and its action determines how the agent should react given those inputs.
 
-Regardless of the types of problems to which they are applied, all LCSs share certain basic structures and mechanisms. Roughly, these are:
-
+Regardless of the types of problems to which they are applied, all LCSs share certain basic structures and mechanisms. Holmes et al. have identified four such components  \cite{holmes_learning_2002}. However, their model is more characteristic of LCSs used in reinforcement learning than those used in supervised learning. I suggest a slight modification of their model that covers both:
 \begin{enumerate}
-\item \textit{Population.}
-\item \textit{Discovery Component.}
-\item \textit{Learning Component.}
+\item \emph{Population.} All LCSs have a population of rules. Although some systems allow for the growth or reduction of the population, there is typically a limit on the maximum number of rules it may contain.
+\item \emph{Learning.} An LCS must have a means of coercing its population toward rules that generate good actions or accurate classifications. Numerous methods have been used for this purpose and they tend to vary based on the kind of learning. Many early LCSs designed for reinforcement learning used the bucket brigade algorithm \cite{holland_properties_1985}, while more contemporary systems often rely on Q-learning \cite{c._j._c._h._learning_1989, orriols-puig_fuzzy-ucs:_2009} or Q-learning-inspired algorithms. For supervised learning tasks, other systems have used genetic algorithms exclusively \cite{llora_towards_2007}. Still others have used different approaches, including ensemble learning \cite{gao_learning_2005} and bayesian methods \cite{hai_h._dam_bcs:_2006}.
+\item \emph{Discovery.} An LCS must also have mechanisms for generating new rules. For that purpose, a vast majority of systems employ genetic algorithms (GAs), which provide two useful operations: crossover and mutation. Crossover produces two ``offspring'' rules from two existing ``parent'' rules, and mutation alters some of the attribute values of the offspring. However, many LCSs make use of additional operators. The \emph{covering} operator, for example, which creates a new rule when there are none that match the current input, has been widely used \cite{orriols-puig_fuzzy-ucs:_2009, wilson_classifier_1995, bernado-mansilla_accuracy-based_2003}. \emph{Specify}, a second popular operator, which was proposed by Lanzi in \cite{lanzi_study_1997},  attempts to counteract the over-generalization of rules by specifying the attribute values of a rule according to a particular input. 
+\item \emph{Classification or Action Selection.} Finally, an LCS must have some procedure for deciding what action to take or how to classify a particular example. In the typical case, the action or classification is selected based on the actions recommended by the rules in the \emph{match set}---the set of rules matching a particular input. One possibility is simply to choose the action of the fittest rule in the match set. Another is to conduct a weighted vote of all the rules in the set, where each rule casts a ``vote'' for its action, weighted by its fitness. The selected action, then, is the one receiving the greatest number of points. Some systems have also incorporated random action selection alongside one of these first two methods \cite{wilson_classifier_1995}.
 \end{enumerate}
+
+These are, at the broadest level, the modules that feature in all LCSs. There is, of course, substantial variation between implementations, which is to be expected of a paradigm with applications as diverse as those of the LCS algorithm.
+
+\subsubsection{Genetic Algorithms}
+
+As GAs constitute such a critical component of LCSs, they are worth a quick and very general overview. GAs evolve populations of candidate solutions to a particular problem by a process inspired by biological evolution. In a traditional implementation, individuals are represented as bit strings, where each index in the strings corresponds to a particular property of the solution and a 1 or 0 at that index indicates the presence or absence of the property, respectively. In LCSs, a third character (a ``don't care'' value, often denoted by ``\#'') is often used to indicate that the property is not relevant for a given rule. In principle, solutions may take any form, and GA variants have been developed to accommodate structures of different kinds, including whole objects \cite{keijzer_evolving_2001}. The canonical GA works as follows\footnote{For ease of illustration, I have used bit strings as the solution type in this example.}:
+\begin{enumerate}
+\item \emph{Initialization.} Generate a random population of candidate solutions.
+\item \emph{Evaluation.} Evaluate the fitness of each individual according to some fitness function.
+\item \emph{Selection.} Select $n$ individuals from the population to reproduce. The probability that a given individual will be selected is usually proportional to its fitness.
+\item \emph{Crossover.} Randomly pair the $n$ selected individuals. For each pair, combine the bits of one member of the pair with that of the other (e.g. via one-point crossover) to produce two new solutions (``offspring'').
+\item \emph{Mutation.} Flip some number of the bits of each of the offspring with probability $p$.
+\item \emph{Replacement.} Replace the $n$ least-fit members of the original population with the offspring created in (5).
+\item Repeat (2)-(6) until the stopping condition (e.g. a target average fitness, a specific number of generations, or a runtime limit) is met.
+\end{enumerate}
+The structure of the GA is just one vector along which different implementations of LCSs can differ. The next section outlines a second.
+
+\subsubsection{Pittsburgh and Michigan Styles}
+
+One of the most common and useful categorizations of LCSs distinguishes between \emph{Michigan-} and \emph{Pittsburgh-} or \emph{Pitt-style} systems. The difference pertains to what counts as an ``individual'' in the population. In Michigan systems, an individual is a single rule. In Pitt systems, however, an individual is an entire rule \emph{set}. Correspondingly, a solution in a Michigan system often comprises the entire population, while a solution in a Pitt system consists of a single individual (a rule set). This difference has important implications for many aspects of LCS design, including the learning algorithm, credit assignment, rule syntax, and genetic operators. Perhaps unsurprisingly, each style has notable advantages and disadvantages with respect to the other. Michigan systems, for example, typically require less memory and are less computationally intensive, while Pitt systems avoid the difficulties involved in distributing credit across individual rules. Neither type has emerged as obviously superior to the other, but Michigan systems do appear to predominate in the literature \cite{urbanowicz_learning_2009}.
+
 \subsection{Developments in LCS Research}
+
+Numerous thorough histories and comparisons of LCS research have been written over the years \cite{urbanowicz_learning_2009, lanzi_roadmap_2000, wilson_critical_1989, wilson_state_2000}, and it is beyond the scope of this paper to undertake another one. Instead, I wish to highlight just a few key milestones in the particular domain of LCS research with which my project is concerned---namely, supervised learning and data mining. Each of the systems listed below introduced at least one important concept to that domain.
+
+\subsubsection{LS-2}
+
+Schaffer and Grefenstette's LS-2 \cite{schaffer_multi-objective_1985} was the first attempt to use an LCS for a genuine supervised learning classification task. Specifically, they applied their system to the multi-class problem of classifying five human gait types based on EMG signals from the leg muscles. A total of 11 training examples were used, and rules were represented as 12-bit strings from the ternary alphabet, with each index representing a particular signal.
+
+LS-2 evolved a population of rule \emph{sets} and may thus anachronistically be categorized as a Pitt-style LCS, though the distinction had yet to be formulated when their article was published. Of particular note in this system is the fitness scheme. LS-2 represented fitnesses, not as scalar quantities, but as vectors whose elements corresponded to the different possible classes (gait types). For each rule set, a fitness vector was computed as a function of the number of correctly and incorrectly classified examples in each class. When constructing the population for the next generation, a portion of the rules were selected on the basis of each element in the fitness vector. In allowing fitness to be relativized to individual classes, Schaffer and Grefenstette introduced the notion of \emph{niching}---the specialization of rules to particular regions of the solution space---which  featured heavily in later systems, and which remains a critical topic in contemporary research.
+
+\subsubsection{FCS}
+
+Many kinds of data in the real world have continuous-valued attributes. Given the traditional bit string rule representation of an LCS, determining the best way to handle data of this sort is a challenge. In 1991, Manuel Valenzuela-Rend\'on proposed a solution to this problem using fuzzy sets \cite{manuel_valenzuela-rendon_fuzzy_1991}. In fuzzy set theory, the membership of an element in a set is determined by a membership function. Defining membership in this way allows for elements to be \emph{partial} members of sets.
+
+Valenzuela-Rend\'on's ``fuzzy classifier system'' (FCS) applied this logic to rule representation. Suppose the condition of a rule $R$ contains a ``temperature'' attribute, whose possible values are ``cold,'' ``mild,'' and ``hot.'' Instead of assigning $R$ one of those values, FCS would define a membership function for each value, and $R$ would be assigned some combination of those functions. If, for example, $R$ was assigned the functions for ``cold'' and ``mild,'' the result would be a curve for the temperature attribute that, given a real-valued temperature, indicated the \emph{degree} to which that temperature should be considered ``cold'' or ``mild.''
+
+In short, structuring rules in this way introduced two valuable concepts to the LCS community: (1) the capability of LCSs of handling real-valued inputs, and (2) the possibility of eliminating hard boundaries between classes.
+
+\subsubsection{XCS}
+
+Although designed explicitly for reinforcement learning, the ``eXtended Classifier System'' (XCS), proposed by Wilson in 1995, exerted such a profound influence on LCS research of all kinds that it deserves mention here \cite{wilson_classifier_1995}. Nearly all of the key features of XCS had been implemented in earlier systems, but its impressive accuracy and generalization capabilities made clear for the first time their potential effectiveness.
+
+XCS pioneered a slew of techniques that have since become staples of LCS design, particularly in reinforcement learning, including the use of Watkins's Q-learning algorithm for credit assignment and the use of a niche GA \cite{urbanowicz_learning_2009}. However the technique of greatest relevance to supervised learning was the use of accuracy-based fitness. Wilson was not the first to use accuracy-based fitness (credit for that goes to Holland's first LCS, CS-1 \cite{holland_cognitive_1977}), but a substantial majority of previous systems used a different parameter known as \emph{strength}. Strength was decidedly a reinforcement learning mechanism, and measured the expected reward (or ``reward prediction'') from the environment if the action of a particular rule was taken. The problem with strength-based fitness was that it tended to eliminate rules that predicted lesser rewards, but that nonetheless reliably led to the best action in specific circumstances. Even though accuracy had been used before, XCS radically increased its popularity and is now considered the primogenitor of all contemporary accuracy-based systems \cite{urbanowicz_learning_2009}.
+
+\subsubsection{UCS}
+
+In 2003, Bernad\'o-Mansilla and Garrell-Guiu presented a supervised learning variation on XCS \cite{bernado-mansilla_accuracy-based_2003}. Dubbed ``UCS,'' their system adapted the reinforcement learning model of XCS to better suit multi-objective classification tasks. UCS retained all of the main features of XCS, including its accuracy-based fitness scheme, a GA that encouraged niching, and an online learning style, but it changed the manner in which accuracy was computed. The details of the differences are not salient; rather, the significance of UCS consists in its demonstration that ideas from reinforcement learning within LCS research could, with some effort, be refashioned to yield good solutions to problems in supervised learning.
+
 \subsection{Global Crop Yields}
+The data used for this project were collected by Erik Nelson and his students in the Economics department. The data relate various environmental and economic variables to the agricultural output of countries, both in units of mass (Mg/ha) and in units of energy (Mkcal/ha), from 1975 to 2007. The variables considered cover such categories as growing season weather; crop choice; investment in irrigation capability, land, and machinery; agricultural technology; fertilizer use; and cropped footprint. 
+
+Using these data, Nelson and Congdon evaluated the relative impact of the different variables on global and regional crop yields and, based on those results, offered suggestions for sustaining yield growth \cite{nelson_measuring_2016}. The authors applied two analytical methods to the data: fixed-effects econometric modeling and decision trees. In both cases, year-to-year changes in yield were discretized to the categories ``high'' (H), ``medium'' (M), and ``low'' (L). 
+
+
+% Fixed-Effects Modeling
+\subsubsection{Fixed Effects Modeling}
+Fixed-effects models offer a means of accounting for any unobserved, time-independent factors that affect a dependent variable in the analysis of panel data---that is, multi-dimensional data containing measurements across time. In Nelson and Congdon's work, one of the dependent variables considered was the per-hectare crop yield for a country $c$ in a year $t$, denoted $y_{ct}$. The fixed effects model, then, has the form:
+$$y_{ct} = \beta_1x_{ct1} + \beta_2x_{ct2} + \ldots + \beta_Nx_{ctN} + \mu_{ct} + a_c$$
+Where $x_{cti}$ is the value of the independent variable $x_i$ for country $c$ in year $t$; $\beta_i$ is the coefficient for the independent variable $x_i$; $\mu_{ct}$ (the ``idiosyncratic error'') covers all unobserved, time-\emph{variant} effects  on $y_{ct}$; and $a_c$ (the ``fixed effect'') captures all unobserved and time-invariant effects. The actual model used by the authors was:
+$$Y_{ct} = \beta_0 + \pmb{\beta_1}\pmb{X_{ct}} + \pmb{\beta_2}\pmb{K_{ct}} + \beta_3A_{ct} + \beta_4S_{ct} + \beta_5I{ct} + \beta_6\pmb{Z_{ct}} + \beta_7t + \beta_8F_{ct}$$
+Where the variables are as follows:
+\begin{description}
+\item $\pmb{X}$: a vector of harvested hectare percentages across different crops.
+\item $\pmb{K}$: a vector of variables measuring investment in agricultural machinery and equipment per harvested hectare.
+\item $A$: the total harvested hectarage.
+\item $S$: the soil quality.
+\item $I$: the percentage of harvested land equipped for irrigation.
+\item $\pmb{Z}$: a vector of various annual weather statistics.
+\item $F$: the total amount of fertilizer used.
+\end{description}
+% Decision Trees
+\subsubsection{Decision Trees}
+
+Decision trees are machine learning tools for classification that, much like LCSs, attempt to group the outcomes of a process based on the inputs to the process. In this case, the outcomes are simply the country-level crop yields and the inputs are the year-to-year changes in the values of the variables listed above. Each node in the tree corresponds to an attribute of the input (e.g. growing season weather) and specifies a value of that attribute based on which the training examples may be partitioned into two groups: examples whose value for that attribute falls above the specified value and those whose value is at or below the specified value. Beginning at the root node and partitioning in this way generates some number of leaves, each containing a subset of the examples ideally of the same class. A path from the root node to one of the leaves thus characterizes the attribute values of the examples in that leaf.
+
+% Results
+\subsubsection{Results}
+Both methods found that changes in crop mix accounted for more of the growth in yield between 1975 and 2007 than any other single variable. In the tropics, an increase in the average daytime growing season temperature correlated with a noticeable decrease in yields. Surprisingly, investment in irrigation, land, and machinery and equipment, as well as the quality of the cropped soil, had a negligible impact. The methods disagreed, however, on the importance of fertilizer use: Where the econometric model showed it to have a significant positive influence on yields, the decision trees revealed no such relationship.
+
+% Why use LCSs?
+With all of this analysis already done, one may reasonably question the utility of re-examining the same data with an LCS. There are at least two advantages:
+\begin{enumerate}
+\item LCSs have proved themselves effective in supervised learning tasks of precisely this sort and has the potential to reveal important patterns in the data not made evident by either decision tree or regression analysis.
+\item An LCS may help to resolve the conflicting aspects of the results of these first two methods. Specifically, the discrepancy in the reported impact of fertilizer use on yield gains.
+\end{enumerate}
+The following section outlines my own LCS design in considerable detail.
+
 \section{System Design}
+
 Below, I present my design for a Michigan-style LCS for the classification of examples with real-valued attribute vectors. I have divided the explanation into four parts. The first part explains the representation of rules, including a short description of all of their attributes and a longer discussion of the choice of representation of the condition in particular. The second describes the learning component and offers a general overview of the GA as well as more detailed analysis of its constituent modules. The third covers the testing component---the algorithm for the classification of new examples once a rule set has been created. Finally, the fourth enumerates the parameters of the LCS.
 
 \subsection{Rule Representation}
 
 Rules are represented as objects with the following attributes:
 
-\begin{itemize}
+\begin{description}
 \item ID: A variable that uniquely identifies the rule in the population.
 \item Classification: The class, given by an integer value, according to which an example matching the rule will be classified.
 \item \# True Positives: The number of examples that the rule both matches and correctly classifies.
@@ -48,8 +154,7 @@ Rules are represented as objects with the following attributes:
 \item Fitness 1: An initial fitness value used to determine a preliminary ranking of the rules.
 \item Fitness 2: A fitness value based on Fitness 1, but that takes into account the fact that there may be multiple rules that cover the same examples.
 \item Condition: A vector of Attribute objects that describes the attribute values an example must have to be matched by the rule.
-
-\end{itemize}
+\end{description}
 
 As mentioned earlier, much of LCS research has concerned itself with the classification of examples with binary-valued attributes that simply indicate the presence or absence of some feature in the example. The conditions of rules used in LCSs of this sort may therefore be represented as strings of characters from the ternary alphabet {0,1,\#}, where the `\#' indicates an attribute that is irrelevant. When dealing with real values, however, determining how best to represent the condition is more difficult. With real values, not only does the search space expand to a theoretically infinite size, but the genetic operators (crossover and mutation) have to be adapted as well. Thus, the condition must be constructed in a manner that (a) reduces the search space to a reasonable size, and (b) does not hinder or over-complicate the functioning of the genetic operators.
 
@@ -81,17 +186,42 @@ $$\frac{\Big(\frac{a}{c}\Big)}{\Big(\frac{b}{d}\Big)} = \frac{ad}{bc} = \frac{|T
 
 \subsubsection*{Selection}
 
-Selection is done on the basis of the second fitness alone using stochastic universal sampling (SUS), a superior alternative to traditional roulette wheel selection developed by James Baker in [citation]. In roulette wheel selection (also known as fitness-proportionate selection), members of a population are selected randomly, where the probability of a member’s being selected is given by:
+Selection is done on the basis of the second fitness alone using stochastic universal sampling (SUS), a superior alternative to traditional roulette wheel selection developed by James Baker in \cite{j_reducing_1987}. In roulette wheel selection (also known as fitness-proportionate selection), members of a population are selected randomly, where the probability of a member’s being selected is given by:
 $$ \frac{fitness_k}{\sum_{i=1}^Nfitness_i}$$
-The basic algorithm is shown in [figure \#]. First, the sum of the fitnesses of all members of the population is computed. Next, a number r in the range $[0, fitness_sum]$ is determined by randomly selecting a value from the interval $[0,1]$ and multiplying that value by the sum of the fitnesses. The members of the population are then iterated over. At each iteration, the fitness of the current member is subtracted from $r$. The member whose fitness, when subtracted from $r$, causes $r$ to fall below 0 is the one selected. It is clear, therefore, that the larger the the fitness of a member, the more likely it is that that member will be chosen.
+The basic algorithm is shown in [figure \#]. First, the sum of the fitnesses of all members of the population is computed. Next, a number r in the range $[0, fitness\_sum]$ is determined by randomly selecting a value from the interval $[0,1]$ and multiplying that value by the sum of the fitnesses. The members of the population are then iterated over. At each iteration, the fitness of the current member is subtracted from $r$. The member whose fitness, when subtracted from $r$, causes $r$ to fall below 0 is the one selected. It is clear, therefore, that the larger the the fitness of a member, the more likely it is that that member will be chosen.
 
 The primary shortcoming of roulette wheel selection is the extent to which it is biased against rules of lesser fitness. Generally speaking, we want the rules selected to be among the fitter ones, but in order to avoid premature convergence, some low-fitness rules must participate regularly in the crossover.
 
 SUS reduces this bias. Instead of generating a new random variable for each selection, SUS uses a single random variable to make all of its selections. This turns out to be of great utility in increasing the frequency with which low-fitness rules are selected.
 
-[Figure \#] shows the SUS algorithm in pseudocode. It will help, in understanding the behavior of SUS, to imagine the interval $[0, fitness_sum]$ on the number line. Further, imagine that each member of the population is given its own subinterval within the larger interval that is equivalent in length to its fitness (see [figure \#]). Finally, suppose that the subintervals are arranged left-to-right in descending order of fitness. 
+[greater efficiency, less variance]
 
-To begin, a value known as the ``pointer interval'' is computed by dividing the sum of the fitnesses ($fitness\_sum$) by the number of rules to be selected ($N$). Then, a random number $r$ is chosen from the range $[0, pointer interval]$. Beginning at $r$, the algorithm selects $N$ positions along $[0, fitness\_sum]$ by counting out intervals of length $pointer_interval$. The rules corresponding to the subintervals in which the positions fall are the ones selected.
+\begin{algorithm}
+\begin{algorithmic}
+\Function{SUS}{$Pop, N$}
+\State $fitness\_sum \gets \text{sumFitnesses}(Pop)$
+\State $pointer\_dist \gets fitness\_sum/N$
+\State $pointer\_start \gets$ random($0,pointer\_dist$)
+\State $pointers \gets \text{newArray($N$)}$
+\For{$i \textbf{ in } \{0,\ldots,N\}$}
+\State $pointers[i] \gets pointer\_start + (i \cdot pointer\_dist)$
+\EndFor
+\State $selected \gets \text{newArray($N$)}$
+\For{$p \textbf{ in } pointers$}
+\EndFor
+\EndFunction
+\end{algorithmic}
+\end{algorithm}
+
+[Figure \#] shows the SUS algorithm in pseudocode. It will help, in understanding the behavior of SUS, to imagine the interval $[0, fitness_sum]$ on the number line. Further, imagine that each member of the population is given its own subinterval within the larger interval that is equivalent in length to its fitness (see fig. \ref{sus_graphic}). Finally, suppose that the subintervals are arranged left-to-right in descending order of fitness. 
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.7]{images/sus.png}
+\caption{ }
+\label{sus_graphic}
+\end{figure}
+To begin, a value known as the ``pointer interval'' is computed by dividing the sum of the fitnesses (\emph{fitness\_sum}) by the number of rules to be selected ($N$). Then, a random number $r$ is chosen from the range $[0, pointer interval]$. Beginning at $r$, the algorithm selects $N$ positions along $[0, fitness\_sum]$ by counting out intervals of length $pointer_interval$. The rules corresponding to the subintervals in which the positions fall are the ones selected.
 
 [A graphic comparing roulette wheel selection and SUS]
 
@@ -106,7 +236,9 @@ Mutation. Following crossover, the mutation operator iterates over the condition
 [A graphic of how crossover works.]
 
 After both operators have been applied, all of the offspring replace all of the non-elite ($pop\_size - N$) members of the current generation. The resulting population will be the one used in the next generation.
+
 \subsection{Classification of Examples}
+
 The classification of examples in the test set is very straightforward. At the end of \textit{num\_iters} iterations, the genetic algorithm terminates. The elite rules of the final population are the only ones used for the classification task. The reason for this is two-fold:
 \begin{enumerate}
 \item \textit{Survival of the Fittest.} The elite rules in the final population are (mostly) those that have weathered repeated applications of the selection procedure and have come out on top. Among the non-elites, which will have just been generated through crossover and mutation on the final iteration, there are likely to be many bad rules.
@@ -119,7 +251,7 @@ Once these rules have been identified, the LCS iterates over the examples in the
 
 The LCS has the following parameters:
 
-\begin{itemize}
+\begin{description}
 \item \textit{pop\_size:} the number of rules in the population.
 \item \textit{num\_iters:} the number of iterations the LCS will run before terminating.
 \item \textit{target\_class:} the class in the training data that the LCS will attempt to characterize.
@@ -128,8 +260,11 @@ The LCS has the following parameters:
 \item \textit{p\_dont\_care:} if it has been determined that an attribute is to be mutated, the probability that its ``don't care'' variable will be set to true (instead of assigning it a new quantile).
 \item \textit{training\_set:} an object of the Dataset class containing all of the examples in the training set and other relevant information.
 \item \textit{test\_set:} another object of the Dataset class containing all of the examples in the test set and other relevant information.
-\end{itemize}
+\end{description}
 \section{Experimental Setup}
 \section{Results and Discussion}
 \section{Future Work and Conclusion}
+
+\bibliography{Thesis}
+\bibliographystyle{ieeetr}
 \end{document}

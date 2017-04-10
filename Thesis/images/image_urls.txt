@@ -1,0 +1,3 @@
+sus_graphic: 
+
+en.wikipedia.org/wiki/Stochastic_universal_sampling#/media/File:Statistically_Uniform.png
