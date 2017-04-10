@@ -1,0 +1,26 @@
+Week of 3/27/17
+Will Gantt
+
+This week:
+
+I modified your R script for manipulating Erik's data so that it would output
+CSV files in the format that my program expects, and then used the modified
+script to create all of the necessary files.
+
+I ran just a few of these through the LCS with (once again) mixed results.
+The system seems to do a really good job of avoiding false positives, but it
+identified less than half of the true positives, which is obviously very
+problematic. 
+
+Finally, I began writing. I have written essentially all of the section on
+the system design, but it still needs some editing and a few figures before
+I'll feel comfortable submitting it to you for revisions. I have also begun
+to write the Background section.
+
+Next week:
+
+I will continue to devote most of my time to the writing, but will spend
+some of it tinkering with the code to improve the true positive ID rate.
+I plan to have the System Design and Background sections complete by this
+time next week (at the latest). Hopefully, I will have begun writing the
+introduction as well.
