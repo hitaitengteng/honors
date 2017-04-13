@@ -133,4 +133,15 @@ B.~J, ``Reducing {Bias} and {Inefficiency} in the {Selection} {Algorithm},'' in
   {Algorithms} and their {Application}}, (Hillsdale, New Jersey), pp.~14--21,
   L. Eerlbaum Associates, 1987.
 
+\bibitem{tobias_blickle_comparison_1995}
+{Tobias Blickle} and {Lothar Thiele}, ``A {Comparison} of {Selection} {Schemes}
+  used in {Genetic} {Algorithms},'' Tech. Rep.~11, Computer Engineering and
+  Communication Networks Lab, Swiss Federal Institute of Technology (ETH),
+  Zurich, Dec. 1995.
+
+\bibitem{assumed_diagram_2007}
+S.~Hatthon, ``A diagram illustrating the {Stochastic} {Universal} {Sampling}
+  operation. {In} this illustration 4 individuals are being selected ({N}=4),
+  resulting in the selection of {A}, {B}, {C} and {F}.,'' Jan. 2007.
+
 \end{thebibliography}
