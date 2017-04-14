@@ -180,6 +180,20 @@ class Population {
 			}
 		}
 
+		// print elites
+		void printElites() {
+			rankByFitness2();
+			int num_elites = 0;
+			for (int i=0; rules_[i].true_positives() > 0.5; i++)
+				num_elites++;
+				
+			for (int i=0; i<num_elites; i++)
+				rules_[i].printVerbose();
+		}
+
+		// write the final population to a file (elites only)
+		void writeToFile(std::string filename);
+
 		// getters
 		int size() const {return rules_.size();}
 		int max_size() const {return max_size_;}

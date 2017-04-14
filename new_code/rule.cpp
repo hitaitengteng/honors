@@ -122,15 +122,15 @@ int Rule::processInput(std::vector<double> &input) {
 void Rule::mutate(double p_mutate, double p_dont_care, 
 		vector<vector<double> > quantiles) {
 
-	// a random values on [0,1]
+	// random values in [0,1]
 	double result1;
 	double result2;
 
 	// the quantile of the current attribute
 	int curr_quantile = -1;
 
-	// the number of quantiles
-	int num_quantiles = quantiles.size() - 1;
+	// the number of quantiles 
+	int num_quantiles = quantiles[0].size();
 
 	// iterate over all attributes in the condition
 	int condition_length = condition_.size();
@@ -168,13 +168,16 @@ void Rule::mutate(double p_mutate, double p_dont_care,
 				// randomly select a different quantile
 				int new_quantile = -1;
 				do {
-					new_quantile = rng() % num_quantiles;
+					new_quantile = rng() % (num_quantiles-1);
 				} while (new_quantile == curr_quantile);
 
 				// update the attribute's quantile
 				condition_[i].setQuantile(new_quantile);
 
-				// and update the upper and lower bounds
+				// and update the upper and lower bounds. The reason
+				// we subtract 1 from the number of quantiles above
+				// is to guarantee that quantiles[i][new_quantile+1] is
+				// a valid quantile
 				condition_[i].setLowerBound(quantiles[i][new_quantile]);
 				condition_[i].setUpperBound(quantiles[i][new_quantile+1]);
 			}
@@ -182,49 +185,6 @@ void Rule::mutate(double p_mutate, double p_dont_care,
 	}
 
 } // end mutate
-
-/****************************************************************************
- * Inputs:      input: the data instance that will be used to specify the
- * 		       rule.
- * 		ranges: the acceptable ranges of values for each attribute
- * 		range_scalar: used to scale the spread of an attribute
- * 		rng: a random number generator
- * Outputs:     a specified version of the rule
- * Description: Specifies a rule based on an input vector. For each attribute
- * 		in the rule's condition that is set to "don't care," we
- * 		assign it a particular range of values, using the value of
- * 		the corresponding attribute in the input as the center of
- * 		that range.
- ****************************************************************************/ 
-void Rule::specify(vector<double> input, vector<vector<double> > quantiles) {
-
-/*
-	// set the class attribute value of the rule to that of the input
-	setClass(input.back());
-
-	// iterate over all attributes in the condition
-	int condition_length = condition_.size();
-	for (size_t i=0; i<condition_length; i++) {
-
-		// if the current attribute is a "don't care" attribute...
-		if (condition_[i].dont_care() == true) {
-
-			// specify its value 
-			condition_[i].setDontCare(false);
-			condition_[i].setCenter(input[i]);
-			num_dont_care_--;
-
-			// and specify its spread (generate a random spread
-			// within a particular range)
-			double range = ranges[i].second - ranges[i].first;
-			double maxVal = range * range_scalar;
-			uniform_real_distribution<double> real_dist2(0, maxVal);
-			double spread = real_dist2(rng);
-			condition_[i].setSpread(spread);
-		}
-	}
-*/
-} // end specify
 
 /****************************************************************************
  * Inputs:      input: the data instance to be checked for matching.
@@ -292,7 +252,6 @@ Rule Rule::random(int num_classes, vector<vector<double> > quantiles,
 	int quantile = -1;
 
 	// random attributes
-	Attribute a;
 	int num_attributes = quantiles.size() - 1;
 	for (int i=0; i<num_attributes; i++) {
 
@@ -300,7 +259,7 @@ Rule Rule::random(int num_classes, vector<vector<double> > quantiles,
 		quantile = rng() % (num_quantiles - 1);
 
 		// generate the attribute
-		a = Attribute::random(quantiles[i], quantile, dont_care_prob);
+		Attribute a = Attribute::random(quantiles[i], quantile, dont_care_prob);
 
 		// count the number of don't cares
 		if (a.dont_care() == true)

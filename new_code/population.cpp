@@ -455,6 +455,18 @@ double Population::classify(int default_class) {
 	// the number of rules retained through elitism
 	int num_elites = round(max_size_ * elitism_rate_);
 
+	// in the classification, we want to use only those rules that
+	// correctly identify at least one positive example
+	vector<int> rules_to_use;
+	for (int i=0; i<num_elites; i++) {
+
+		if ((rules_[i].true_positives() > 1.5) && 
+		    (rules_[i].true_positives() > rules_[i].false_positives()))
+			rules_to_use.push_back(i);
+
+	}
+	num_elites = rules_to_use.size();
+
 	// iterate over the examples in the test set
 	int test_set_size = test_set_.data_points_.size();
 	for (int i=0; i<test_set_size; i++) {
@@ -466,7 +478,7 @@ double Population::classify(int default_class) {
 		// 	1. A rule is found that matches the example
 		// 	2. There are no more rules to consider
 		int rule_counter = 0;
-		while ((rule_counter<num_elites) && (!rules_[rule_counter].matches(curr_ex)))
+		while ((rule_counter<num_elites) && (!rules_[rules_to_use[rule_counter]].matches(curr_ex)))
 			rule_counter++;	
 		
 		// if the rule counter has the same value as the size of the
@@ -476,7 +488,7 @@ double Population::classify(int default_class) {
 
 		// otherwise, a matching rule must have been found
 		} else {
-			selected_class = rules_[rule_counter].classification();
+			selected_class = rules_[rules_to_use[rule_counter]].classification();
 		}
 
 		// determine whether the rule is a true positive, false positive,
@@ -516,3 +528,71 @@ double Population::classify(int default_class) {
 	return tp;
 
 } // end classify
+
+/*
+void Population::writeToFile(std::string filename) {
+
+	ofstream file_stream;
+	file_stream.open(filename.c_str());
+
+	int num_elites = round(max_size_ * elitism_rate_);
+
+	char dc[] = "[DC]";
+	char space[] = " ";
+
+	if (file_stream.good()) {
+		for (int i=0; i<num_elites; i++) {
+
+			printf("\nRule %d\n--------\n", id_);
+			printf("\nAttribute:        ");
+			int condition_length = condition_.size();
+			for (size_t i=0; i<condition_length; i++)
+				printf("%-7d", (int) i);
+			printf("\nDon't Care:      ");
+			for (size_t i=0; i<condition_length; i++) {
+				if (condition_[i].dont_care())
+					printf("%-7s",dc);
+				else
+					printf("%-7s", space);
+			}
+			printf("\nLower Bound:     ");
+			for (size_t i=0; i<condition_length; i++) {
+				if (!condition_[i].dont_care())
+					printf("%-7.3f", condition_[i].l_bound()); 
+				else 
+					printf("%-7s", space);
+			}
+			printf("\nUpper Bound:     ");
+			for (size_t i=0; i<condition_length; i++) {
+				if (!condition_[i].dont_care())
+					printf("%-7.3f", condition_[i].u_bound()); 
+				else 
+					printf("%-7s", space);
+	}
+				printf("\nQuantile:        ");
+	for (size_t i=0; i<condition_length; i++) {
+		if (!condition_[i].dont_care())
+			printf("%-7d", condition_[i].quantile());
+		else
+			printf("%-7s", space);
+	}
+
+	printf("\n\n");
+	printf("Class:           %d\n", classification_);
+	printf("# Don't Care:    %d\n", num_dont_care_);
+	printf("Fitness1:        %.3f\n", fitness1_);
+	printf("Fitness2:        %.3f\n", fitness2_);
+	printf("True Pos:        %.1f\n", true_positives_);
+	printf("False Pos:       %.1f\n", false_positives_);
+	printf("True Neg:        %.1f\n", true_negatives_);
+	printf("False Neg:       %.1f\n", false_negatives_);
+	printf("\n");
+
+		file_stream << rules_[i].printVerbose() << endl;		
+		}
+	}
+
+	file_stream.close();
+
+} // end writeToFile
+*/

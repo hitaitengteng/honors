@@ -143,12 +143,7 @@ class Rule {
 			    double p_dont_care, 
 			    std::vector< std::vector<double> > quantiles);
 
-		// assigns particular values to all "don't care" attributes based
-		// on the passed input vector
-		void specify(std::vector<double> input, 
-			     std::vector< std::vector<double> > quantiles);
-	
-		// checks whether this rule matches an input datum
+		// checks whether this rule matches an example
 		bool matches(std::vector<double> input);
 
 		// generate a random rule, supposing you already have some 

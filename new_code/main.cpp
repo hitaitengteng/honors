@@ -16,14 +16,14 @@ uniform_real_distribution<double> real_dist(0,1);
 uniform_int_distribution<int> int_dist(1,10);
 
 // named constants for testing
-const int POP_SIZE = 60;
+const int POP_SIZE = 100;
 const int NUM_ITERS = 1000;
-const int TARGET_CLASS = 0;
-const int DEFAULT_CLASS = 2;
+const int TARGET_CLASS = 2;
+const int DEFAULT_CLASS = 0;
 const double E_RATE = 0.6;
-const double XOVER_PROB = 1.0;
+const double XOVER_PROB = 1.0;     /* Currently, this is not used */
 const double MUTATE_PROB = 0.25;
-const double DONT_CARE_PROB = 0.25;
+const double DONT_CARE_PROB = 0.3;
 
 /*
  * Order of arguments in random function:
@@ -83,6 +83,7 @@ int main(int argc, char **argv) {
 	p.evaluateFitness1();
 	p.evaluateFitness2();
 
+	p.printElites();
 	double result = p.classify(DEFAULT_CLASS);
 
 	return 0;
