@@ -388,6 +388,7 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
 Population Population::random(int pop_size,
 				int num_iters,
 				int target_class,
+				int default_class,
 				double elitism_rate,
 				double crossover_prob,
 				double mutate_prob,
@@ -396,7 +397,7 @@ Population Population::random(int pop_size,
 				Dataset test_set) {
 
 	// initialize the population of rules
-	Population p = Population(pop_size, num_iters, target_class, elitism_rate, 
+	Population p = Population(pop_size, num_iters, target_class, default_class, elitism_rate, 
 			crossover_prob, mutate_prob, dont_care_prob, training_set, test_set);
 
 	// a rule variable for generating random rules
@@ -435,7 +436,7 @@ Population Population::random(int pop_size,
  * 		Otherwise, all examples will be classified as the target
  * 		class. 
  ****************************************************************************/ 
-double Population::classify(int default_class) {
+double Population::classify(Dataset* d, string output_file = "") {
 
 	// The class chosen for the current example
 	int selected_class = NO_CLASS;
@@ -460,7 +461,7 @@ double Population::classify(int default_class) {
 	vector<int> rules_to_use;
 	for (int i=0; i<num_elites; i++) {
 
-		if ((rules_[i].true_positives() > 1.5) && 
+		if ((rules_[i].true_positives() > 0.5) && 
 		    (rules_[i].true_positives() > rules_[i].false_positives()))
 			rules_to_use.push_back(i);
 
@@ -468,11 +469,11 @@ double Population::classify(int default_class) {
 	num_elites = rules_to_use.size();
 
 	// iterate over the examples in the test set
-	int test_set_size = test_set_.data_points_.size();
-	for (int i=0; i<test_set_size; i++) {
+	int data_set_size = d->data_points_.size();
+	for (int i=0; i<data_set_size; i++) {
 	
 		// get the current example
-		vector<double> curr_ex = test_set_.data_points_[i];
+		vector<double> curr_ex = d->data_points_[i];
 
 		// iterate over the rules in the population until either:
 		// 	1. A rule is found that matches the example
@@ -484,7 +485,7 @@ double Population::classify(int default_class) {
 		// if the rule counter has the same value as the size of the
 		// population, no matching rule was found
 		if (rule_counter == num_elites) {
-			selected_class = default_class;
+			selected_class = default_class_;
 
 		// otherwise, a matching rule must have been found
 		} else {
@@ -517,6 +518,26 @@ double Population::classify(int default_class) {
 		}
 	}	
 
+	if (!output_file.empty()) {
+
+		fstream file_stream;
+		file_stream.open(output_file.c_str(), fstream::in | fstream::out | fstream::app);
+
+		if (file_stream.good()) {
+
+			file_stream << "Target Class Size: " << target_class_size << endl;
+			file_stream << "True Positives:    " << tp << endl;
+			file_stream << "True Negatives:    " << tn << endl;
+			file_stream << "False Positives:   " << fp << endl;
+			file_stream << "False Negatives:   " << fn << endl << endl;
+
+			file_stream << "Accuracy:          " << (double) (tp + tn) / (double) (tp + tn + fp + fn) << endl;
+			file_stream << "Odds Ratio:        " << (double) (tp * tn) / (double) (fp * fn);
+		}
+
+		file_stream.close();
+
+	}
 	printf("target class: %d\n", target_class_);
 	printf("target class size: %d\n", target_class_size);
 	printf("num elites: %d\n", num_elites);
@@ -529,70 +550,121 @@ double Population::classify(int default_class) {
 
 } // end classify
 
-/*
-void Population::writeToFile(std::string filename) {
 
+/****************************************************************************
+ * Inputs:      filename: The file to be written to
+ * Outputs:     None.
+ * Description: Writes information about a single run of the LCS to a file.
+ ****************************************************************************/ 
+void Population::writeRunData(std::string training_file,
+		              std::string testing_file,
+			      std::string quantiles_file,
+			      std::string output_file) {
+
+	// attempt to open the file
 	ofstream file_stream;
-	file_stream.open(filename.c_str());
-
-	int num_elites = round(max_size_ * elitism_rate_);
-
-	char dc[] = "[DC]";
-	char space[] = " ";
-
+	file_stream.open(output_file.c_str());
+	
+	// if the file opened correctly, start writing
 	if (file_stream.good()) {
-		for (int i=0; i<num_elites; i++) {
 
-			printf("\nRule %d\n--------\n", id_);
-			printf("\nAttribute:        ");
-			int condition_length = condition_.size();
-			for (size_t i=0; i<condition_length; i++)
-				printf("%-7d", (int) i);
-			printf("\nDon't Care:      ");
-			for (size_t i=0; i<condition_length; i++) {
-				if (condition_[i].dont_care())
-					printf("%-7s",dc);
+		// population parameters
+		file_stream << "Population Parameters" << endl;
+	        file_stream << "---------------------" << endl << endl;
+		file_stream << "Size:            " << max_size_ << endl;
+		file_stream << "Iterations:      " << num_iters_ << endl;
+		file_stream << "Target Class:    " << target_class_ << endl;
+		file_stream << "Default Class:   " << default_class_ << endl;
+		file_stream << "Mutation Prob:   " << mutate_prob_ << endl;
+		file_stream << "Don't Care Prob: " << dont_care_prob_ << endl;
+		file_stream << "Elitism Rate:    " << elitism_rate_ << endl << endl << endl;
+
+		// final population
+		file_stream << "Final Population" << endl;
+		file_stream << "----------------" << endl << endl;
+
+		int condition_length = rules_[0].condition_.size();
+		char dc[] = "[DC]";
+		for (int i=0; i<max_size_; i++) {
+
+			Rule r = rules_[i];
+
+			// rule number
+			file_stream << "Rule " << r.id() << endl;
+			file_stream << "-------" << endl;
+
+			// attribute number
+			file_stream << "Attribute:        ";
+			for (int j=0; j<condition_length; j++)
+				file_stream << j << "      ";
+
+			// don't care values
+			file_stream << endl << "Don't Care:       ";
+			for (int j=0; j<condition_length; j++) {
+				if (r.condition_[j].dont_care())
+					file_stream << dc << "   ";
 				else
-					printf("%-7s", space);
+					file_stream << "       ";
 			}
-			printf("\nLower Bound:     ");
-			for (size_t i=0; i<condition_length; i++) {
-				if (!condition_[i].dont_care())
-					printf("%-7.3f", condition_[i].l_bound()); 
-				else 
-					printf("%-7s", space);
+
+			file_stream << setw(7);
+			file_stream << setprecision(3);
+			// lower bound
+			file_stream << endl << "Lower Bound:      ";
+			for (int j=0; j<condition_length; j++) {
+				if (!r.condition_[j].dont_care())
+					file_stream << r.condition_[j].l_bound();
+				else
+					file_stream << "       ";
+
 			}
-			printf("\nUpper Bound:     ");
-			for (size_t i=0; i<condition_length; i++) {
-				if (!condition_[i].dont_care())
-					printf("%-7.3f", condition_[i].u_bound()); 
-				else 
-					printf("%-7s", space);
-	}
-				printf("\nQuantile:        ");
-	for (size_t i=0; i<condition_length; i++) {
-		if (!condition_[i].dont_care())
-			printf("%-7d", condition_[i].quantile());
-		else
-			printf("%-7s", space);
-	}
 
-	printf("\n\n");
-	printf("Class:           %d\n", classification_);
-	printf("# Don't Care:    %d\n", num_dont_care_);
-	printf("Fitness1:        %.3f\n", fitness1_);
-	printf("Fitness2:        %.3f\n", fitness2_);
-	printf("True Pos:        %.1f\n", true_positives_);
-	printf("False Pos:       %.1f\n", false_positives_);
-	printf("True Neg:        %.1f\n", true_negatives_);
-	printf("False Neg:       %.1f\n", false_negatives_);
-	printf("\n");
+			// upper bound
+			file_stream << endl << "Upper Bound:      ";
+			for (int j=0; j<condition_length; j++) {
+				if (!r.condition_[j].dont_care())
+					file_stream << r.condition_[j].u_bound();
+				else
+					file_stream << "       ";
 
-		file_stream << rules_[i].printVerbose() << endl;		
+			}
+
+			// quantile
+			file_stream << endl << "Quantile:         ";
+			for (int j=0; j<condition_length; j++) {
+				if (!r.condition_[j].dont_care())
+					file_stream << r.condition_[j].quantile() << "      ";
+				else
+					file_stream << "       ";
+
+			}
+
+			// other rule info
+			file_stream << endl << endl;
+			file_stream << "Class:        " << r.classification() << endl;
+			file_stream << "# Don't Care: " << r.num_dont_care() << endl;
+			file_stream << "Fitness 1:    " << r.fitness1() << endl;
+			file_stream << "Fitness 2:    " << r.fitness2() << endl;
+			file_stream << "True Pos:     " << r.true_positives() << endl;
+			file_stream << "True Neg:     " << r.true_negatives() << endl;
+			file_stream << "False Pos:    " << r.false_positives() << endl;
+			file_stream << "False Neg:    " << r.false_negatives() << endl;
+			file_stream << endl << endl;
 		}
+
+		// training and testing files
+		file_stream << "Training and Testing Data" << endl;
+		file_stream << "-------------------------" << endl << endl;
+		file_stream << "Training File:  " << training_file << endl;
+		file_stream << "Testing File:   " << testing_file << endl;
+		file_stream << "Quantiles File: " << quantiles_file << endl << endl << endl;
+
+		// NOTE: data about classification accuracy and odds ratio and
+		// so forth are appended to the file by the classify function
+
 	}
 
 	file_stream.close();
 
-} // end writeToFile
-*/
+} // end writeRunData
+

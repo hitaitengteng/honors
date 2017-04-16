@@ -12,6 +12,7 @@
 #include <chrono>        // for timing
 #include <fstream>       // file I/O
 #include <iostream>      // file I/O
+#include <iomanip>       // I/O formatting
 #include <random>        // random number generation
 #include <unordered_map> // hash maps
 #include <vector>        // C++ vector class

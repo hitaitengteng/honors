@@ -16,7 +16,7 @@ uniform_real_distribution<double> real_dist(0,1);
 uniform_int_distribution<int> int_dist(1,10);
 
 // named constants for testing
-const int POP_SIZE = 100;
+const int POP_SIZE = 20;
 const int NUM_ITERS = 1000;
 const int TARGET_CLASS = 2;
 const int DEFAULT_CLASS = 0;
@@ -74,7 +74,7 @@ int main(int argc, char **argv) {
 	// The order of the arguments is given at the top of the file.
 	//
 	// NOTE: make sure the target class matches the class of the quantiles file being used.
-	Population p = Population::random(POP_SIZE,NUM_ITERS,TARGET_CLASS,
+	Population p = Population::random(POP_SIZE,NUM_ITERS,TARGET_CLASS, DEFAULT_CLASS,
 			E_RATE,XOVER_PROB,MUTATE_PROB,DONT_CARE_PROB,training_set,test_set);
 	int num_iters = p.num_iters();
 	for (int i=0; i<num_iters; i++)
@@ -83,8 +83,11 @@ int main(int argc, char **argv) {
 	p.evaluateFitness1();
 	p.evaluateFitness2();
 
-	p.printElites();
-	double result = p.classify(DEFAULT_CLASS);
+	p.writeRunData(training_set_file,
+		       test_set_file,
+		       quantiles_file,
+		       "output.txt");
+	double result = p.classify(&p.test_set_,"output.txt");
 
 	return 0;
 }

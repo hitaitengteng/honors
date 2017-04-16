@@ -31,6 +31,7 @@ class Population {
 			max_size_ = 0;
 			num_iters_ = 0;
 			target_class_ = 0;
+			default_class_ = 0;
 			fitness1_sum_ = 0;
 			fitness2_sum_ = 0;
 			elitism_rate_ = 0;
@@ -46,6 +47,7 @@ class Population {
 			max_size_ = max_size;
 			num_iters_ = 0;
 			target_class_ = 0;
+			default_class_ = 0;
 			fitness1_sum_ = 0;
 			fitness2_sum_ = 0;
 			elitism_rate_ = 0;
@@ -58,13 +60,14 @@ class Population {
 		Population(int max_size, 
 				int num_iters,
 				int target_class,
+				int default_class,
 				double elitism_rate,
 				double crossover_prob,
 				double mutate_prob,
 				double dont_care_prob,
 				Dataset training_set, 
 				Dataset test_set
-				) {
+			) {
 
 		      	id_count_ = 0;
 		      	fitness1_sum_ = 0;
@@ -73,6 +76,7 @@ class Population {
        	       		max_size_ = max_size;	       
 			num_iters_ = num_iters;
 			target_class_ = target_class;
+			default_class_ = default_class;
 			elitism_rate_ = elitism_rate;
 			crossover_prob_ = crossover_prob;
 			mutate_prob_ = mutate_prob;
@@ -147,6 +151,7 @@ class Population {
 		static Population random(int pop_size,
 						int num_iters,
 						int target_class,
+						int default_class,
 						double elitism_rate,
 						double crossover_prob,
 						double mutate_prob,
@@ -156,7 +161,7 @@ class Population {
 
 		// categorizes inputs in the test set based on the rules
 		// in the current population
-		double classify(int default_class);
+		double classify(Dataset* d, std::string output_file);
 
 		// returns the size of the population
 		int size() {return rules_.size();}
@@ -191,14 +196,18 @@ class Population {
 				rules_[i].printVerbose();
 		}
 
-		// write the final population to a file (elites only)
-		void writeToFile(std::string filename);
+		// output data from a complete run of the LCS to a file
+		void writeRunData(std::string training_file,
+				  std::string testing_file,
+				  std::string quantiles_file,
+				  std::string output_file);
 
 		// getters
 		int size() const {return rules_.size();}
 		int max_size() const {return max_size_;}
 		int num_iters() const {return num_iters_;}
 		int target_class() const {return target_class_;}
+		int default_class() const {return default_class_;}
 		double fitness1_sum() const {return fitness1_sum_;}
 		double fitness2_sum() const {return fitness2_sum_;}
 		double mutate_prob() const {return mutate_prob_;}
@@ -210,6 +219,7 @@ class Population {
 		void setMaxSize(int max_size) {max_size_ = max_size;}
 		void setNumIters(int num_iters) {num_iters_ = num_iters;}
 		void setTargetClass(int target_class) {target_class_ = target_class;}
+		void setDefualtClass(int default_class) {default_class_ = default_class;}
 		void setFitness1Sum(double fitness1_sum) {fitness1_sum_ = fitness1_sum;}
 		void setFitness2Sum(double fitness2_sum) {fitness2_sum_ = fitness2_sum;}
 		void setMutateProb(double mutate_prob) {mutate_prob_ = mutate_prob;}
@@ -221,6 +231,7 @@ class Population {
 		int max_size_;         		
 		int num_iters_;
 		int target_class_;
+		int default_class_;
 		double fitness1_sum_;   
 		double fitness2_sum_;
 		double mutate_prob_;
