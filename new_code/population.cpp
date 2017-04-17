@@ -106,14 +106,13 @@ void Population::evaluateFitness1() {
 	fitness1_sum_ = 0;
 
 	// get the number of rules
-	int pop_size = size();
 	int num_examples = training_set_.data_points_.size();
 
 	// a variable to store the current example
 	vector<double> curr_example;
 
 	// iterate over all the rules
-	for (int i=0; i<pop_size; i++) {
+	for (int i=0; i<max_size_; i++) {
 
 		// for each input, determine whether it is a true positive,
 		// true negative, false positive, or false negative for the
@@ -140,7 +139,6 @@ void Population::evaluateFitness1() {
 void Population::evaluateFitness2() {
 
 	// the population size and the number of examples
-	int pop_size = rules_.size();
 	int num_examples = training_set_.num_data_points();
 
 	// the classification of an example for the current rule (true
@@ -155,7 +153,7 @@ void Population::evaluateFitness2() {
 	rankByFitness1();
 
 	// iterate over the set of rules in rank order
-	for (int i=0; i<pop_size; i++) {
+	for (int i=0; i<max_size_; i++) {
 
 		// reset TP, TN, FP, FN to 0.5 (they were already counted once
 		// when we computed fitness1, so they have to be reset here
