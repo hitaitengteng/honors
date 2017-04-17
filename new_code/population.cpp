@@ -442,13 +442,17 @@ double Population::classify(Dataset* d, string output_file = "") {
 	int selected_class = NO_CLASS;
 
 	// the number of true and false positives and negatives
-	int tp = 0;
-	int tn = 0;
-	int fp = 0;
-	int fn = 0;
+	double tp = 0;
+	double tn = 0;
+	double fp = 0;
+	double fn = 0;
 
 	// the number of examples in the target class
 	int target_class_size = 0;
+
+	// the accuracy and odds ratio
+	double accuracy = 0;
+	double odds_ratio = 0;
 	
 	// rank the population by fitness2
 	rankByFitness2();
@@ -457,15 +461,18 @@ double Population::classify(Dataset* d, string output_file = "") {
 	int num_elites = round(max_size_ * elitism_rate_);
 
 	// in the classification, we want to use only those rules that
-	// correctly identify at least one positive example
+	// correctly identify at least one positive example, and that
+	// have more true positives than false positives
 	vector<int> rules_to_use;
 	for (int i=0; i<num_elites; i++) {
 
 		if ((rules_[i].true_positives() > 0.5) && 
 		    (rules_[i].true_positives() > rules_[i].false_positives()))
-			rules_to_use.push_back(i);
+			rules_to_use.push_back(rules_[i].id());
 
 	}
+
+	// the number of rules that will be used in the classification
 	num_elites = rules_to_use.size();
 
 	// iterate over the examples in the test set
@@ -479,7 +486,7 @@ double Population::classify(Dataset* d, string output_file = "") {
 		// 	1. A rule is found that matches the example
 		// 	2. There are no more rules to consider
 		int rule_counter = 0;
-		while ((rule_counter<num_elites) && (!rules_[rules_to_use[rule_counter]].matches(curr_ex)))
+		while ((rule_counter<num_elites) && (!rules_[rule_counter].matches(curr_ex)))
 			rule_counter++;	
 		
 		// if the rule counter has the same value as the size of the
@@ -489,7 +496,7 @@ double Population::classify(Dataset* d, string output_file = "") {
 
 		// otherwise, a matching rule must have been found
 		} else {
-			selected_class = rules_[rules_to_use[rule_counter]].classification();
+			selected_class = rules_[rule_counter].classification();
 		}
 
 		// determine whether the rule is a true positive, false positive,
@@ -518,6 +525,7 @@ double Population::classify(Dataset* d, string output_file = "") {
 		}
 	}	
 
+	// output testing data to file
 	if (!output_file.empty()) {
 
 		fstream file_stream;
@@ -525,28 +533,47 @@ double Population::classify(Dataset* d, string output_file = "") {
 
 		if (file_stream.good()) {
 
+			file_stream << endl << endl;
+
+			// number of rules in the target class and
+			// true and false positives and negatives
 			file_stream << "Target Class Size: " << target_class_size << endl;
 			file_stream << "True Positives:    " << tp << endl;
 			file_stream << "True Negatives:    " << tn << endl;
 			file_stream << "False Positives:   " << fp << endl;
 			file_stream << "False Negatives:   " << fn << endl << endl;
 
-			file_stream << "Accuracy:          " << (double) (tp + tn) / (double) (tp + tn + fp + fn) << endl;
-			file_stream << "Odds Ratio:        " << (double) (tp * tn) / (double) (fp * fn);
+			// lists which rules were actually used on the test set
+			file_stream << "Rules used for classification: ";
+			sort(rules_to_use.begin(), rules_to_use.end());
+			for (int i=0; i<num_elites; i++) {
+				file_stream << rules_to_use[i];
+			        if (i<(num_elites - 1))
+					file_stream << ", ";
+			}	
+			file_stream << endl;
+
+			// testing accuracy and testing odds ratio
+			accuracy = (tp + tn) / (tp + tn + fp + fn);
+			odds_ratio = ((tp + 0.5) + (tn + 0.5)) / ((fp + 0.5) + (fn + 0.5));
+			file_stream << "Accuracy:          " << accuracy << endl;
+			file_stream << "Odds Ratio:        " << odds_ratio << endl;
 		}
 
 		file_stream.close();
 
 	}
+
+	// for immediate viewing
 	printf("target class: %d\n", target_class_);
 	printf("target class size: %d\n", target_class_size);
 	printf("num elites: %d\n", num_elites);
-	printf("TP: %d\n", tp);
-	printf("TN: %d\n", tn);
-	printf("FP: %d\n", fp);
-	printf("FN: %d\n", fn);
+	printf("TP: %.3f\n", tp);
+	printf("TN: %.3f\n", tn);
+	printf("FP: %.3f\n", fp);
+	printf("FN: %.3f\n", fn);
 
-	return tp;
+	return accuracy;
 
 } // end classify
 
@@ -594,48 +621,52 @@ void Population::writeRunData(std::string training_file,
 			file_stream << "-------" << endl;
 
 			// attribute number
-			file_stream << "Attribute:        ";
-			for (int j=0; j<condition_length; j++)
-				file_stream << j << "      ";
-
-			// don't care values
-			file_stream << endl << "Don't Care:       ";
+			file_stream << "Attribute:     ";
 			for (int j=0; j<condition_length; j++) {
-				if (r.condition_[j].dont_care())
-					file_stream << dc << "   ";
-				else
-					file_stream << "       ";
+				file_stream << setw(7);
+				file_stream << j; 
 			}
 
-			file_stream << setw(7);
-			file_stream << setprecision(3);
-			// lower bound
-			file_stream << endl << "Lower Bound:      ";
+			// don't care values
+			file_stream << endl << "Don't Care:     ";
 			for (int j=0; j<condition_length; j++) {
+				file_stream << setw(7);
+				if (r.condition_[j].dont_care())
+					file_stream << dc;
+				else
+					file_stream << " ";
+			}
+
+			// lower bound
+			file_stream << endl << "Lower Bound:     ";
+			for (int j=0; j<condition_length; j++) {
+				file_stream << setw(7) << setprecision(3);
 				if (!r.condition_[j].dont_care())
 					file_stream << r.condition_[j].l_bound();
 				else
-					file_stream << "       ";
+					file_stream << " ";
 
 			}
 
 			// upper bound
-			file_stream << endl << "Upper Bound:      ";
+			file_stream << endl << "Upper Bound:     ";
 			for (int j=0; j<condition_length; j++) {
+				file_stream << setw(7) << setprecision(3);
 				if (!r.condition_[j].dont_care())
 					file_stream << r.condition_[j].u_bound();
 				else
-					file_stream << "       ";
+					file_stream << " ";
 
 			}
 
 			// quantile
-			file_stream << endl << "Quantile:         ";
+			file_stream << endl << "Quantile:        ";
 			for (int j=0; j<condition_length; j++) {
+				file_stream << setw(7) << setprecision(3);
 				if (!r.condition_[j].dont_care())
-					file_stream << r.condition_[j].quantile() << "      ";
+					file_stream << r.condition_[j].quantile();
 				else
-					file_stream << "       ";
+					file_stream << " ";
 
 			}
 
@@ -657,7 +688,7 @@ void Population::writeRunData(std::string training_file,
 		file_stream << "-------------------------" << endl << endl;
 		file_stream << "Training File:  " << training_file << endl;
 		file_stream << "Testing File:   " << testing_file << endl;
-		file_stream << "Quantiles File: " << quantiles_file << endl << endl << endl;
+		file_stream << "Quantiles File: " << quantiles_file << endl; 
 
 		// NOTE: data about classification accuracy and odds ratio and
 		// so forth are appended to the file by the classify function
