@@ -1,0 +1,52 @@
+Week of 4/10/17
+Will Gantt
+
+This week:
+
+I finished the first draft of the first three sections (introduction,
+background, and system design) of my thesis, which I submitted to you
+on Thursday. Since then, I have created all of the files I need to test
+the LCS on Erik's data. The variables I changed were just the ones you
+did:
+
+	- with/without year
+	- temperate, tropics, temperate and tropics
+	- Mkcal/ha, Mg/ha
+
+For each combination of these, I created 10 testing/training files,
+each consisting of half the data, as well as 3 quantile files---one for
+each value of the class attribute (H,M,L). (The quantiles are computed
+based on the class attribute.) For the non-class attributes, I used
+quartiles.
+
+However, I have not begun serious testing for two reasons:
+
+	1. Although the LCS performs very well on smaller data sets
+	   from the UCI Machine Learning Repository, it struggled in
+	   the preliminary tests I ran using Erik's data. It produces
+	   few to no false positives, which is good, but, as I mentioned,
+	   it's not getting very many of the positive examples (i.e.
+	   lots of false negatives). I want to try to remedy this at
+	   least somewhat before documenting my results. I would really
+	   appreciate suggestions on this front.
+	2. The LCS is slow and I want to speed it up a bit before 
+	   doing lots of runs. I had two ideas on this front that
+	   I thought would be easy gains, but it turns out one of them
+	   isn't:
+		(a) Run on the HPC (I have so far been running locally).
+		(b) Add optimization flags to Makefile. I somehow forgot
+		    to do this earlier. Unfortunately, adding them causes
+		    a segfault. Having googled the problem, I discovered
+		    that it's apparently not uncommon, but that the causes
+		    are very diverse. Still trying to work this one out.
+	   Any further improvements will obviously have to be obtained 
+	   through manual optimizations.
+
+Next week:
+
+I hope to meet with you to discuss some ways to go about trying to
+fix the problem with the detection of positive examples. I will also see
+what runtime gains I can get via the methods described above. Of course,
+I really don't have much time at this point to try to make improvements.
+By the end of the week (if not sooner), I should just stop and test with
+what I have.
