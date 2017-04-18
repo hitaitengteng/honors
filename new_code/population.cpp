@@ -106,7 +106,7 @@ void Population::evaluateFitness1() {
 	fitness1_sum_ = 0;
 
 	// get the number of rules
-	int num_examples = training_set_.data_points_.size();
+	int num_examples = training_set_.num_data_points();
 
 	// a variable to store the current example
 	vector<double> curr_example;
@@ -448,7 +448,6 @@ double Population::classify(Dataset* d, string output_file = "") {
 	// the number of examples in the target class
 	int target_class_size = 0;
 
-	// the accuracy and odds ratio
 	double accuracy = 0;
 	double odds_ratio = 0;
 	
@@ -484,7 +483,8 @@ double Population::classify(Dataset* d, string output_file = "") {
 		// 	1. A rule is found that matches the example
 		// 	2. There are no more rules to consider
 		int rule_counter = 0;
-		while ((rule_counter<num_elites) && (!rules_[rule_counter].matches(curr_ex)))
+		while ((rule_counter < num_elites) && 
+		       (!rules_[rule_counter].matches(curr_ex)))
 			rule_counter++;	
 		
 		// if the rule counter has the same value as the size of the
@@ -497,8 +497,10 @@ double Population::classify(Dataset* d, string output_file = "") {
 			selected_class = rules_[rule_counter].classification();
 		}
 
-		// determine whether the rule is a true positive, false positive,
-		// true negative, or false negative
+		// 
+		// determine whether the rule is a true positive, 
+		// false positive, true negative, or false negative
+		//
 
 		// current example matches the target class
 		if (curr_ex.back() == target_class_) {
@@ -523,12 +525,16 @@ double Population::classify(Dataset* d, string output_file = "") {
 		}
 	}	
 
-	// output testing data to file
+	// WRITE OUTPUT
 	if (!output_file.empty()) {
 
 		fstream file_stream;
+
+		// the flags for the open function here indicate that
+		// we want to *append* to the existing contents of the file
 		file_stream.open(output_file.c_str(), fstream::in | fstream::out | fstream::app);
 
+		// if file opened successfully, start writing
 		if (file_stream.good()) {
 
 			file_stream << endl << endl;
@@ -549,6 +555,7 @@ double Population::classify(Dataset* d, string output_file = "") {
 			        if (i<(num_elites - 1))
 					file_stream << ", ";
 			}	
+
 			file_stream << endl;
 
 			// testing accuracy and testing odds ratio
@@ -557,12 +564,11 @@ double Population::classify(Dataset* d, string output_file = "") {
 			file_stream << "Accuracy:          " << accuracy << endl;
 			file_stream << "Odds Ratio:        " << odds_ratio << endl;
 		}
-
+		// close the file
 		file_stream.close();
-
 	}
 
-	// for immediate viewing
+	// print some statistics to stdout for immediate viewing
 	printf("target class: %d\n", target_class_);
 	printf("target class size: %d\n", target_class_size);
 	printf("num elites: %d\n", num_elites);
@@ -608,6 +614,10 @@ void Population::writeRunData(std::string training_file,
 		file_stream << "Final Population" << endl;
 		file_stream << "----------------" << endl << endl;
 
+		// this makes it easier to see the fittest rules
+		rankByFitness2();
+
+		// print every rule in the population
 		int condition_length = rules_[0].condition_.size();
 		char dc[] = "[DC]";
 		for (int i=0; i<max_size_; i++) {

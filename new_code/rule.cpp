@@ -154,6 +154,7 @@ void Rule::mutate(double p_mutate, double p_dont_care,
 
 				if (condition_[i].dont_care() == true) {
 					condition_[i].setDontCare(false);
+					condition_[i].setQuantile(rng() % (num_quantiles-1));
 					num_dont_care_--;
 				} else {
 					condition_[i].setDontCare(true);

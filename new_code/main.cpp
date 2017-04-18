@@ -16,8 +16,10 @@ uniform_real_distribution<double> real_dist(0,1);
 uniform_int_distribution<int> int_dist(1,10);
 
 // named constants for testing
+//
+// NOTE: E_RATE * POP_SIZE must be an integer value
 const int POP_SIZE = 30;
-const int NUM_ITERS = 2000;
+const int NUM_ITERS = 100;
 const int TARGET_CLASS = 1;
 const int DEFAULT_CLASS = 2;
 const double E_RATE = 0.6;
@@ -87,7 +89,7 @@ int main(int argc, char **argv) {
 		       test_set_file,
 		       quantiles_file,
 		       "output.txt");
-	p.classify(&p.training_set_,"output.txt");
+	p.classify(&p.test_set_,"output.txt");
 
 	return 0;
 }

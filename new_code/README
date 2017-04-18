@@ -1,20 +1,20 @@
 Will Gantt
-Last Updated: 3/3/17
+Last Updated: 4/18/17
 
 
 To run, type "make", then:
 
-classify <training set file> <test set file>
+classify <training set file> <test set file> <quantiles file>
 
-Note: Both the training and test set files must be in .csv format
-and must have headers.
+Note: All files must be in CSV format, and the training and testing files
+      must have headers.
 
 ----------------------------------------------------------------------------
 
-You will also notice that there are two R scripts in this directory. A
-brief explanation of each:
+You will also notice that there is a directory ("r_scripts") containing
+three R scripts.
 
-shuffle_inputs.r: Given a csv file containing inputs, randomizes the order
+shuffle_inputs.r: Given a CSV file containing inputs, randomizes the order
 of those inputs. A lot of times, data will be organized by the class
 attribute, which isn't particularly helpful for generating rules. To run,
 simply type:
@@ -25,3 +25,8 @@ two_fold_split.r: This does the same thing as shuffle_inputs.r, except it
 splits the input file into a training set and a test set. To run, type:
 
 	Rscript two_fold_split.r <input file> <training set output file> <test set output file>
+
+make_quantiles.r: Creates a user-specified number of quantiles, based on
+a given data set and class attribute value. To run, type:
+
+	Rscript make_quantiles.r <data file> <output file> <number of quantiles> <class attribute value>
