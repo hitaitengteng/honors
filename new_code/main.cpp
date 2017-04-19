@@ -18,8 +18,8 @@ uniform_int_distribution<int> int_dist(1,10);
 // named constants for testing
 //
 // NOTE: E_RATE * POP_SIZE must be an integer value
-const int POP_SIZE = 30;
-const int NUM_ITERS = 100;
+const int POP_SIZE = 200;
+const int NUM_ITERS = 1000;
 const int TARGET_CLASS = 1;
 const int DEFAULT_CLASS = 2;
 const double E_RATE = 0.6;
