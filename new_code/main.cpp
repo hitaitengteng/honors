@@ -13,7 +13,6 @@ using namespace std;
 mt19937 rng;
 random_device rd;
 uniform_real_distribution<double> real_dist(0,1);
-uniform_int_distribution<int> int_dist(1,10);
 
 // named constants for testing
 //
@@ -36,26 +35,25 @@ const double DONT_CARE_PROB = 0.3;
  * 	2. the number of iterations to do
  * 	3. target class
  * 	4. elitism rate
- * 	6. mutation probability
- * 	7. "don't care" probability
- * 	8. training set
- * 	9. test set
+ * 	5. mutation probability
+ * 	6. "don't care" probability
+ * 	7. training set
+ * 	8. test set
  */
 int main(int argc, char **argv) {
    
 	// make sure the user enters the right number of arguments
-	if (argc < 2) {
+	if (argc < 5) {
 		cout << stderr << "Error: too few arguments" << endl;
+		exit(0);
 	}
 
-	// get the name of the input files for
-	// the training and test sets
+	// read in command line arguments
 	string training_set_file = argv[1];
 	string test_set_file = argv[2];
-	string quantiles_file;
-
-	if (argc > 2)
-		quantiles_file = argv[3];
+	string quantiles_file = argv[3];
+	string output_file = argv[4];
+	int target_class = atoi(argv[5]);
 
 	// seed the random number generator
 	rng.seed(rd());
@@ -65,10 +63,8 @@ int main(int argc, char **argv) {
 	training_set.readFromCSVFile(training_set_file);
 
 	// read in the quantiles
-	if (argc > 2) {
-		int num_quantiles = training_set.readQuantiles(quantiles_file);
-		training_set.setNumQuantiles(num_quantiles);
-	}
+	int num_quantiles = training_set.readQuantiles(quantiles_file);
+	training_set.setNumQuantiles(num_quantiles);
 
 	// read in the test set
 	Dataset test_set;
@@ -78,25 +74,29 @@ int main(int argc, char **argv) {
 	// The order of the arguments is given at the top of the file.
 	//
 	// NOTE: make sure the target class matches the class of the quantiles file being used.
-	
-
-	Population p = Population::random(POP_SIZE,NUM_ITERS,TARGET_CLASS, DEFAULT_CLASS,
+	Population p = Population::random(POP_SIZE,NUM_ITERS,target_class, DEFAULT_CLASS,
 			E_RATE,MUTATE_PROB,DONT_CARE_PROB,training_set,test_set);
 
 
+	// run the LCS for a fixed number of iterations
 	int num_iters = p.num_iters();
 	for (int i=0; i<num_iters; i++)
 		p.applyGA();
 
+	// do a final fitness evaluation after the last iteration
+	// (the LCS evaluates fitness at the beginning of an iteration)
 	p.evaluateFitness1();
 	p.evaluateFitness2();
 
+	// output data for the current run
 	p.writeRunData(training_set_file,
 		       test_set_file,
 		       quantiles_file,
-		       "output.txt");
-	p.classify(&p.test_set_,"output.txt");
+		       output_file);
 
+	// run the LCS on the test set (this will output
+	// additional information to the same file as above)
+	p.classify(&p.test_set_,output_file);
 
 	return 0;
 }
