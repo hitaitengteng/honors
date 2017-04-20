@@ -109,11 +109,8 @@ class Dataset {
 		// create a random data set
 		static Dataset random(int num_data_points);
 
-		// create a random data point
-		static std::vector<double> randomDataPoint(int num_attributes);
-
 		// create a rule from a data point
-		Rule createRuleFromDataPoint(int i, double range_scalar);
+		Rule createRuleFromExample(int i);
 
 		// getters
 		int num_attributes() const {return num_attributes_;}

@@ -17,13 +17,16 @@ uniform_int_distribution<int> int_dist(1,10);
 
 // named constants for testing
 //
-// NOTE: E_RATE * POP_SIZE must be an integer value
+// NOTE: E_RATE * POP_SIZE must be an integer value, and for
+// crossover to work properly, I think it has to be an *even*
+// integer value
+//
+// NOTE 2: Should add parameter for specify operator frequency
 const int POP_SIZE = 200;
 const int NUM_ITERS = 1000;
 const int TARGET_CLASS = 1;
 const int DEFAULT_CLASS = 2;
 const double E_RATE = 0.6;
-const double XOVER_PROB = 1.0;     /* Currently, this is not used */
 const double MUTATE_PROB = 0.25;
 const double DONT_CARE_PROB = 0.3;
 
@@ -33,7 +36,6 @@ const double DONT_CARE_PROB = 0.3;
  * 	2. the number of iterations to do
  * 	3. target class
  * 	4. elitism rate
- * 	5. crossover probability
  * 	6. mutation probability
  * 	7. "don't care" probability
  * 	8. training set
@@ -76,8 +78,9 @@ int main(int argc, char **argv) {
 	// The order of the arguments is given at the top of the file.
 	//
 	// NOTE: make sure the target class matches the class of the quantiles file being used.
+	
 	Population p = Population::random(POP_SIZE,NUM_ITERS,TARGET_CLASS, DEFAULT_CLASS,
-			E_RATE,XOVER_PROB,MUTATE_PROB,DONT_CARE_PROB,training_set,test_set);
+			E_RATE,MUTATE_PROB,DONT_CARE_PROB,training_set,test_set);
 	int num_iters = p.num_iters();
 	for (int i=0; i<num_iters; i++)
 		p.applyGA();
@@ -90,6 +93,7 @@ int main(int argc, char **argv) {
 		       quantiles_file,
 		       "output.txt");
 	p.classify(&p.test_set_,"output.txt");
+
 
 	return 0;
 }

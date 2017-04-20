@@ -288,61 +288,39 @@ void Dataset::printInfo() {
 } // end print
 
 /****************************************************************************
- * Inputs:      The index in the training set of the example to be used.
+ * Inputs:      i: The index in the training set of the example to be used.
  * Outputs;     A rule specified according to the values of the example.
  * Description: Generates a rule based on an example from the data set.
  ****************************************************************************/ 
-Rule Dataset::createRuleFromDataPoint(int i, double range_scalar) {
+Rule Dataset::createRuleFromExample(int i) {
 
-	/*
-	// get the input vector and the number of attributes it contains
-	vector<double> input = data_points_[i];
-	int num_attributes = input.size() - 1;
+	// get the example 
+	vector<double> example = data_points_[i];
 
 	// create the rule
-	Rule r = Rule(num_attributes);
+	Rule r = Rule(num_attributes_);
 
-	// set the rule's class to that of the input
-	r.setClass(input.back());
+	// set the rule's class to that of the example
+	r.setClass(example.back());
 	
+	printDataPoint(attribute_quantiles_[1]);
 	// generate values for the condition's attributes
-	double curr_att_range = 0;
-	double spread = 0;
-	for (int i=0; i<num_attributes; i++) {
+	for (int i=0; i<num_attributes_; i++) {
 
-		// get the possible range of values for the current attribute
-		curr_att_range = attribute_ranges_[i].second - attribute_ranges_[i].first;
-
-		// scale it by a factor range_scalar
-		spread = curr_att_range * range_scalar;
-
-		// set the values of the attribute
-		r.condition_[i].setCenter(input[i]);
+		// since we are specifying the rule according to an
+		// example, all of its "don't cares" should be false
 		r.condition_[i].setDontCare(false);
-		r.condition_[i].setSpread(spread);
+
+		// determine the quantile to which the current attribute
+		// belongs and set its upper and lower bounds accordingly
+		int j=0;
+		for (; (attribute_quantiles_[i][j] <= example[i]) && (j < num_quantiles_); j++);
+		r.condition_[i].setQuantile(j-1);
+		r.condition_[i].setLowerBound(attribute_quantiles_[i][j-1]);
+		r.condition_[i].setUpperBound(attribute_quantiles_[i][j]);
+
 	}
 
 	return r;
-*/
-} // end createRuleFromDataPoint
 
-/****************************************************************************
- * Inputs:
- * 		num_attributes: the number of attributes in the random
- * 		data point
- * Outputs:     a random data point with the number of attributes specified.
- * Description: generates a random data point
- ****************************************************************************/ 
-vector<double> Dataset::randomDataPoint(int num_attributes) {
-/*
-	// generate random values for the attributes
-	vector<double> data_point;
-	for (int i=0; i<num_attributes; i++) 
-		data_point.push_back(real_dist(rng));
- 
-	// add a random class
-	data_point.push_back(int_dist(rng) % NUM_CLASSES);
-
-	return data_point;
-*/
-} // end randomDataPoint
+} // end createRuleFromExample 

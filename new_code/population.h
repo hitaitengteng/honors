@@ -35,7 +35,6 @@ class Population {
 			fitness1_sum_ = 0;
 			fitness2_sum_ = 0;
 			elitism_rate_ = 0;
-			crossover_prob_ = 0;
 			mutate_prob_ = 0;
 			dont_care_prob_ = 0;
 		}
@@ -51,7 +50,6 @@ class Population {
 			fitness1_sum_ = 0;
 			fitness2_sum_ = 0;
 			elitism_rate_ = 0;
-			crossover_prob_ = 0;
 			mutate_prob_ = 0;
 			dont_care_prob_ = 0;
 		}
@@ -62,7 +60,6 @@ class Population {
 				int target_class,
 				int default_class,
 				double elitism_rate,
-				double crossover_prob,
 				double mutate_prob,
 				double dont_care_prob,
 				Dataset training_set, 
@@ -78,7 +75,6 @@ class Population {
 			target_class_ = target_class;
 			default_class_ = default_class;
 			elitism_rate_ = elitism_rate;
-			crossover_prob_ = crossover_prob;
 			mutate_prob_ = mutate_prob;
 			dont_care_prob_ = dont_care_prob;
 
@@ -153,7 +149,6 @@ class Population {
 						int target_class,
 						int default_class,
 						double elitism_rate,
-						double crossover_prob,
 						double mutate_prob,
 						double dont_care_prob,
 						Dataset training_set, 
@@ -211,7 +206,6 @@ class Population {
 		double fitness1_sum() const {return fitness1_sum_;}
 		double fitness2_sum() const {return fitness2_sum_;}
 		double mutate_prob() const {return mutate_prob_;}
-		double crossover_prob() const {return crossover_prob_;}
 		double elitism_rate() const {return elitism_rate_;}
 		double dont_care_prob() const {return dont_care_prob_;}
 
@@ -223,7 +217,6 @@ class Population {
 		void setFitness1Sum(double fitness1_sum) {fitness1_sum_ = fitness1_sum;}
 		void setFitness2Sum(double fitness2_sum) {fitness2_sum_ = fitness2_sum;}
 		void setMutateProb(double mutate_prob) {mutate_prob_ = mutate_prob;}
-		void setCrossoverProb(double crossover_prob) {crossover_prob_ = crossover_prob;}
 		void setElitismRate(double elitism_rate) {elitism_rate_ = elitism_rate;}
 		void setDontCareProb(double dont_care_prob) {dont_care_prob_ = dont_care_prob;}
 
@@ -235,7 +228,6 @@ class Population {
 		double fitness1_sum_;   
 		double fitness2_sum_;
 		double mutate_prob_;
-		double crossover_prob_;
 		double elitism_rate_;
 		double dont_care_prob_;
 };

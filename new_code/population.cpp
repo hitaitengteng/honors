@@ -388,7 +388,6 @@ Population Population::random(int pop_size,
 				int target_class,
 				int default_class,
 				double elitism_rate,
-				double crossover_prob,
 				double mutate_prob,
 				double dont_care_prob,
 				Dataset training_set, 
@@ -396,7 +395,7 @@ Population Population::random(int pop_size,
 
 	// initialize the population of rules
 	Population p = Population(pop_size, num_iters, target_class, default_class, elitism_rate, 
-			crossover_prob, mutate_prob, dont_care_prob, training_set, test_set);
+				  mutate_prob, dont_care_prob, training_set, test_set);
 
 	// a rule variable for generating random rules
 	Rule r;
