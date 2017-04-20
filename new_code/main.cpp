@@ -79,8 +79,11 @@ int main(int argc, char **argv) {
 	//
 	// NOTE: make sure the target class matches the class of the quantiles file being used.
 	
+
 	Population p = Population::random(POP_SIZE,NUM_ITERS,TARGET_CLASS, DEFAULT_CLASS,
 			E_RATE,MUTATE_PROB,DONT_CARE_PROB,training_set,test_set);
+
+
 	int num_iters = p.num_iters();
 	for (int i=0; i<num_iters; i++)
 		p.applyGA();

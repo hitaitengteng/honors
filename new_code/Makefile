@@ -3,6 +3,7 @@
 CXX = g++
 
 CPPFLAGS =  -g # Debugging
+CPPFLAGS =  -O3 # Optimization
 CPPFLAGS += -Wall # Show all warnings
 CPPFLAGS += -std=c++11 # Must use C++11
 

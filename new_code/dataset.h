@@ -75,10 +75,12 @@ class Dataset {
 			num_quantiles_ = d.num_quantiles();
 
 			examples_covered_ = new bool[num_data_points_];
+/*
 			if (d.examples_covered_) {
 				for (int i=0; i<num_data_points_; i++)
 					examples_covered_[i] = d.examples_covered_[i];
 			}
+*/
 		}
 
 		// destructor
