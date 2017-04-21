@@ -113,12 +113,15 @@ class Rule {
 		// computes fitness2 using odds ratio
 		void updateFitness2() {
 
-			fitness2_ = log((true_positives_ * true_negatives_) /
-					(false_positives_ * false_negatives_));
+			fitness2_ = (true_positives_ * true_negatives_) /
+					(false_positives_ * false_negatives_);
 
 			// for each "don't care" value that the rule has,
 			// it receives a slight fitness boost
 			fitness2_ += num_dont_care_ * FITNESS_BOOST;
+
+			// take the log
+			fitness2_ = log(fitness2_);
 		}
 
 

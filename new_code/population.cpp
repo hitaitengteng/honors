@@ -321,6 +321,33 @@ vector<Rule> Population::crossoverAndMutate(vector<int> selected) {
 } // end crossoverAndMutate
 
 /****************************************************************************
+ * Inputs:      num_to_specify: the number of rules to be specified
+ * Outputs:     a vector containing the specified rules
+ * Description: specifies a certain number of rules using examples from the
+ * 		training set.
+ ****************************************************************************/ 
+vector<Rule> Population::specifyFromDataset(int num_to_specify) {
+
+	// the rules to be created
+	vector<Rule> specified_rules;
+
+	// shuffle the examples in the target class
+	vector<vector<double> > examples = training_set_.target_examples_;
+	random_shuffle(examples.begin(),examples.end());
+
+	// select num_to_specify examples
+	examples.resize(num_to_specify);
+
+	// specify the rules
+	for (int i=0; i<num_to_specify; i++)
+		specified_rules.push_back(
+				training_set_.createRuleFromExample2(examples[i]));
+
+	return specified_rules;
+
+} // end specifyFromDataset
+
+/****************************************************************************
  * Inputs:      i,j: the indices in the general population of the rules
  * 		to be crossed.
  * Outputs:     A pair of offspring rules
@@ -390,6 +417,8 @@ Population Population::random(int pop_size,
 				int target_class,
 				int default_class,
 				double elitism_rate,
+				double specify_rate,
+				double specify_fraction,
 				double mutate_prob,
 				double dont_care_prob,
 				Dataset training_set, 
@@ -397,7 +426,8 @@ Population Population::random(int pop_size,
 
 	// initialize the population of rules
 	Population p = Population(pop_size, num_iters, target_class, default_class, elitism_rate, 
-				  mutate_prob, dont_care_prob, training_set, test_set);
+				  specify_rate, specify_fraction, mutate_prob, dont_care_prob, 
+				  training_set, test_set);
 
 	// a rule variable for generating random rules
 	Rule r;
@@ -609,7 +639,8 @@ void Population::writeRunData(std::string training_file,
 		file_stream << "Default Class:   " << default_class_ << endl;
 		file_stream << "Mutation Prob:   " << mutate_prob_ << endl;
 		file_stream << "Don't Care Prob: " << dont_care_prob_ << endl;
-		file_stream << "Elitism Rate:    " << elitism_rate_ << endl << endl << endl;
+		file_stream << "Elitism Rate:    " << elitism_rate_ << endl; 
+		file_stream << "Specify Rate:    " << specify_rate_ << endl << endl << endl;
 
 		// final population
 		file_stream << "Final Population" << endl;

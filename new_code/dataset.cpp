@@ -14,7 +14,7 @@ using namespace std;
  * Output:      the number of data points successfully read in
  * Description: reads in vectors of attributes from a text file
  ****************************************************************************/
-int Dataset::readFromCSVFile(string file_name) {
+int Dataset::readFromCSVFile(string file_name, int target_class) {
 
 	fstream file_stream;                 // the file stream
 	file_stream.open(file_name.c_str()); // try to open the file
@@ -135,9 +135,17 @@ int Dataset::readFromCSVFile(string file_name) {
 					num_classes_++;
 				}
 
-				// add the vector to the vector of data points, and then
-				// delete its contents so that it can be used again
+				// add the vector to the vector of data points
 				data_points_.push_back(curr_vect);
+
+				// if the class attribute value of the current example
+				// is the same as the target class, add this example to
+				// the vector of examples in the target class
+				if (curr_vect.back() == target_class)
+					target_examples_.push_back(curr_vect);
+
+				// delete the contents of curr_vect so that it can be
+				// used again
 				curr_vect.clear();
 
 				// update the number of data points
@@ -303,7 +311,40 @@ Rule Dataset::createRuleFromExample(int i) {
 	// set the rule's class to that of the example
 	r.setClass(example.back());
 	
-	printDataPoint(attribute_quantiles_[1]);
+	// generate values for the condition's attributes
+	for (int i=0; i<num_attributes_; i++) {
+
+		// since we are specifying the rule according to an
+		// example, all of its "don't cares" should be false
+		r.condition_[i].setDontCare(false);
+
+		// determine the quantile to which the current attribute
+		// belongs and set its upper and lower bounds accordingly
+		int j=0;
+		for (; (attribute_quantiles_[i][j] <= example[i]) && (j < num_quantiles_); j++);
+		r.condition_[i].setQuantile(j-1);
+		r.condition_[i].setLowerBound(attribute_quantiles_[i][j-1]);
+		r.condition_[i].setUpperBound(attribute_quantiles_[i][j]);
+
+	}
+
+	return r;
+
+} // end createRuleFromExample 
+
+/****************************************************************************
+ * Inputs:      the example to use
+ * Outputs;     A rule specified according to the values of the example.
+ * Description: Generates a rule based on an example from the data set.
+ ****************************************************************************/ 
+Rule Dataset::createRuleFromExample2(vector<double> example) {
+
+	// create the rule
+	Rule r = Rule(num_attributes_);
+
+	// set the rule's class to that of the example
+	r.setClass(example.back());
+	
 	// generate values for the condition's attributes
 	for (int i=0; i<num_attributes_; i++) {
 

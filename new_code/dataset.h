@@ -33,6 +33,9 @@ class Dataset {
 		// the set of all data points
 		std::vector<std::vector<double> > data_points_;
 
+		// the set of all examples in the target class
+		std::vector<std::vector<double> > target_examples_;
+
 		// keeps track of which data points have already been covered by
 		// a rule
 		bool *examples_covered_;
@@ -45,11 +48,13 @@ class Dataset {
 		// custom constructor
 		Dataset(std::vector<std::string> attribute_names, 
 				std::vector<std::string> class_names,
-				std::vector<std::vector<double> > data_points) {
+				std::vector<std::vector<double> > data_points,
+				std::vector<std::vector<double> > target_examples) {
 
 			attribute_names_ = attribute_names;
 			class_names_ = class_names;
 			data_points_ = data_points;
+			target_examples_ = target_examples;
 
 			num_attributes_ = attribute_names.size();
 			num_classes_ = class_names.size();
@@ -67,6 +72,7 @@ class Dataset {
 			attribute_names_ = d.attribute_names_;
 			class_names_ = d.class_names_;
 			data_points_ = d.data_points_;
+			target_examples_ = d.target_examples_;
 			attribute_quantiles_ = d.attribute_quantiles_;
 
 			num_attributes_ = d.num_attributes();
@@ -89,7 +95,7 @@ class Dataset {
 		}
 
 		// function for reading in data from a csv file
-		int readFromCSVFile(std::string file_name);
+		int readFromCSVFile(std::string file_name, int target_class);
 
 		// function for reading in quantile values
 		int readQuantiles(std::string file_name);
@@ -99,7 +105,7 @@ class Dataset {
 
 		// prints a single data point;;
 		static void printDataPoint(std::vector<double> data_point) {
-			int num_attributes = data_point.size() - 1;
+			int num_attributes = data_point.size();
 			for (int i=0; i<num_attributes; i++)
 				printf("%.3f ", data_point[i]);
 			printf("\n");
@@ -113,6 +119,7 @@ class Dataset {
 
 		// create a rule from a data point
 		Rule createRuleFromExample(int i);
+		Rule createRuleFromExample2(std::vector<double> example);
 
 		// getters
 		int num_attributes() const {return num_attributes_;}
@@ -130,7 +137,7 @@ class Dataset {
 
 		int num_attributes_;  // number of attributes in a data point
 		int num_classes_;     // number of classes
-		int num_data_points_; // total number of data points
+		int num_data_points_; // total number of examples
 		int num_quantiles_;   // the number of quantiles into which the data are divided
 };
 

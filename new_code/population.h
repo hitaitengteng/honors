@@ -35,6 +35,8 @@ class Population {
 			fitness1_sum_ = 0;
 			fitness2_sum_ = 0;
 			elitism_rate_ = 0;
+			specify_rate_ = 0;
+			specify_fraction_ = 0;
 			mutate_prob_ = 0;
 			dont_care_prob_ = 0;
 		}
@@ -50,6 +52,8 @@ class Population {
 			fitness1_sum_ = 0;
 			fitness2_sum_ = 0;
 			elitism_rate_ = 0;
+			specify_rate_ = 0;
+			specify_fraction_ = 0;
 			mutate_prob_ = 0;
 			dont_care_prob_ = 0;
 		}
@@ -60,6 +64,8 @@ class Population {
 				int target_class,
 				int default_class,
 				double elitism_rate,
+				double specify_rate,
+				double specify_fraction,
 				double mutate_prob,
 				double dont_care_prob,
 				Dataset training_set, 
@@ -75,6 +81,8 @@ class Population {
 			target_class_ = target_class;
 			default_class_ = default_class;
 			elitism_rate_ = elitism_rate;
+			specify_rate_ = specify_rate;
+			specify_fraction_ = specify_fraction;
 			mutate_prob_ = mutate_prob;
 			dont_care_prob_ = dont_care_prob;
 
@@ -140,6 +148,9 @@ class Population {
 		// applies both genetic operators
 		std::vector<Rule> crossoverAndMutate(std::vector<int> selected);
 
+		// create rules directly from examples in data set
+		std::vector<Rule> specifyFromDataset(int num_to_specify);
+
 		// executes a single run of the genetic algorithm
 		void applyGA();
 
@@ -149,6 +160,8 @@ class Population {
 						int target_class,
 						int default_class,
 						double elitism_rate,
+						double specify_rate,
+						double specify_fraction,
 						double mutate_prob,
 						double dont_care_prob,
 						Dataset training_set, 
@@ -207,6 +220,8 @@ class Population {
 		double fitness2_sum() const {return fitness2_sum_;}
 		double mutate_prob() const {return mutate_prob_;}
 		double elitism_rate() const {return elitism_rate_;}
+		double specify_rate() const {return specify_rate_;}
+		double specify_fraction() const {return specify_fraction_;}
 		double dont_care_prob() const {return dont_care_prob_;}
 
 		// setters
@@ -218,6 +233,8 @@ class Population {
 		void setFitness2Sum(double fitness2_sum) {fitness2_sum_ = fitness2_sum;}
 		void setMutateProb(double mutate_prob) {mutate_prob_ = mutate_prob;}
 		void setElitismRate(double elitism_rate) {elitism_rate_ = elitism_rate;}
+		void setSpecifyRate(double specify_rate) {specify_rate_ = specify_rate;}
+		void setSpecifyFraction(double specify_fraction) {specify_fraction_ = specify_fraction;}
 		void setDontCareProb(double dont_care_prob) {dont_care_prob_ = dont_care_prob;}
 
 	private:
@@ -229,6 +246,8 @@ class Population {
 		double fitness2_sum_;
 		double mutate_prob_;
 		double elitism_rate_;
+		double specify_rate_;
+		double specify_fraction_;
 		double dont_care_prob_;
 };
 

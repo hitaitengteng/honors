@@ -21,11 +21,12 @@ uniform_real_distribution<double> real_dist(0,1);
 // integer value
 //
 // NOTE 2: Should add parameter for specify operator frequency
-const int POP_SIZE = 200;
+const int POP_SIZE = 50;
 const int NUM_ITERS = 1000;
-const int TARGET_CLASS = 1;
-const int DEFAULT_CLASS = 2;
+const int DEFAULT_CLASS = -1;
 const double E_RATE = 0.6;
+const double SPEC_RATE = 0.05;
+const double SPEC_FRAC = 0.5;
 const double MUTATE_PROB = 0.25;
 const double DONT_CARE_PROB = 0.3;
 
@@ -34,11 +35,14 @@ const double DONT_CARE_PROB = 0.3;
  * 	1. max population size
  * 	2. the number of iterations to do
  * 	3. target class
- * 	4. elitism rate
- * 	5. mutation probability
- * 	6. "don't care" probability
- * 	7. training set
- * 	8. test set
+ * 	4. default class
+ * 	5. elitism rate
+ * 	6. specify rate
+ * 	7. specify fraction
+ * 	8. mutation probability
+ * 	9. "don't care" probability
+ * 	10. training set
+ * 	11. test set
  */
 int main(int argc, char **argv) {
    
@@ -60,7 +64,7 @@ int main(int argc, char **argv) {
 
 	// read in the training set
 	Dataset training_set;
-	training_set.readFromCSVFile(training_set_file);
+	training_set.readFromCSVFile(training_set_file, target_class);
 
 	// read in the quantiles
 	int num_quantiles = training_set.readQuantiles(quantiles_file);
@@ -68,19 +72,20 @@ int main(int argc, char **argv) {
 
 	// read in the test set
 	Dataset test_set;
-	test_set.readFromCSVFile(test_set_file);
+	test_set.readFromCSVFile(test_set_file, target_class);
 
 	// generate a random population using the training and testing sets.
 	// The order of the arguments is given at the top of the file.
 	//
 	// NOTE: make sure the target class matches the class of the quantiles file being used.
 	Population p = Population::random(POP_SIZE,NUM_ITERS,target_class, DEFAULT_CLASS,
-			E_RATE,MUTATE_PROB,DONT_CARE_PROB,training_set,test_set);
+			E_RATE,SPEC_RATE,SPEC_FRAC,MUTATE_PROB,DONT_CARE_PROB,training_set,test_set);
 
 
-	// run the LCS for a fixed number of iterations
+	/*
+	// run the LCS for a fixed number of generations 
 	int num_iters = p.num_iters();
-	for (int i=0; i<num_iters; i++)
+	for (p.curr_gen_=0; p.curr_gen_<num_iters; p.curr_gen_++)
 		p.applyGA();
 
 	// do a final fitness evaluation after the last iteration
@@ -97,6 +102,6 @@ int main(int argc, char **argv) {
 	// run the LCS on the test set (this will output
 	// additional information to the same file as above)
 	p.classify(&p.test_set_,output_file);
-
+*/	
 	return 0;
 }
