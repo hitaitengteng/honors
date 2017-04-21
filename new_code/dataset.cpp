@@ -344,6 +344,9 @@ Rule Dataset::createRuleFromExample2(vector<double> example) {
 
 	// set the rule's class to that of the example
 	r.setClass(example.back());
+
+	// no don't cares
+	r.setNumDontCare(0);
 	
 	// generate values for the condition's attributes
 	for (int i=0; i<num_attributes_; i++) {
@@ -364,4 +367,4 @@ Rule Dataset::createRuleFromExample2(vector<double> example) {
 
 	return r;
 
-} // end createRuleFromExample 
+} // end createRuleFromExample2

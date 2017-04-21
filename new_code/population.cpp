@@ -253,11 +253,21 @@ void Population::applyGA() {
 
 	// the number of rules from the previous generation that are
 	// to be preserved
-	int num_elites = round(max_size_ * elitism_rate_);
-	int rest_of_pop = max_size_ - num_elites;
+	int num_to_crossover = 0;
+
+	vector<Rule> specified_rules;
+	int num_to_specify = 0;
+	
+	if (curr_gen_ % gens_between_specifies_ == 0) {
+		num_to_crossover = (int) (max_size_ - num_elites_) * (1 - specify_fraction_);
+		num_to_specify = max_size_ - num_elites_ - num_to_crossover;
+		specified_rules = specifyFromDataset(num_to_specify);
+	} else {
+		num_to_crossover = max_size_ - num_elites_;
+	}
 
 	// select the rules to be used for crossover
-	vector<int> selected = sus(rest_of_pop);
+	vector<int> selected = sus(num_to_crossover);
 
 	// Perform Xover and mutation (note that this is being performed
 	// on the previous generation and NOT new_pop, which is as it should
@@ -267,12 +277,17 @@ void Population::applyGA() {
 	// select offspring at random to fill the remaining slots in the
 	// population
 	random_shuffle(offspring.begin(), offspring.end());
-	offspring.resize(rest_of_pop);
+	offspring.resize(num_to_crossover);
 
 	// copy the selected offspring into the new population
-	for (int i=0; i<rest_of_pop; i++) {
-		offspring[i].setID(rules_[num_elites + i].id());
-		rules_[num_elites + i] = offspring[i];
+	for (int i=0; i<num_to_crossover; i++) {
+		offspring[i].setID(rules_[num_elites_ + i].id());
+		rules_[num_elites_ + i] = offspring[i];
+	}
+
+	for (int i=0; i<num_to_specify; i++) {
+		specified_rules[i].setID(rules_[num_elites_ + num_to_crossover + i].id());
+		rules_[num_elites_ + num_to_crossover + i] = specified_rules[i];
 	}
 
 } // end select

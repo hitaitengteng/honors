@@ -39,6 +39,9 @@ class Population {
 			specify_fraction_ = 0;
 			mutate_prob_ = 0;
 			dont_care_prob_ = 0;
+
+			num_elites_ = 0;
+			gens_between_specifies_ = 0;
 		}
 
 		// custom constructor
@@ -56,6 +59,10 @@ class Population {
 			specify_fraction_ = 0;
 			mutate_prob_ = 0;
 			dont_care_prob_ = 0;
+
+			num_elites_ = 0;
+			gens_between_specifies_ = 0;
+
 		}
 
 		// custom constructor
@@ -88,6 +95,10 @@ class Population {
 
 		       	training_set_ = training_set;
 		       	test_set_ = test_set;
+
+			num_elites_ = round(max_size_ * elitism_rate_);
+			gens_between_specifies_ = round((1-specify_rate_) * 100);
+
 
 		}
 
@@ -223,6 +234,8 @@ class Population {
 		double specify_rate() const {return specify_rate_;}
 		double specify_fraction() const {return specify_fraction_;}
 		double dont_care_prob() const {return dont_care_prob_;}
+		int num_elites() const {return num_elites_;}
+		int gens_between_specifies() const {return gens_between_specifies_;}
 
 		// setters
 		void setMaxSize(int max_size) {max_size_ = max_size;}
@@ -236,6 +249,10 @@ class Population {
 		void setSpecifyRate(double specify_rate) {specify_rate_ = specify_rate;}
 		void setSpecifyFraction(double specify_fraction) {specify_fraction_ = specify_fraction;}
 		void setDontCareProb(double dont_care_prob) {dont_care_prob_ = dont_care_prob;}
+		void setNumElites(int num_elites) {num_elites_ = num_elites;}
+		void setGensBetweenSpecifies(int gens_between_specifies) {
+			gens_between_specifies_ = gens_between_specifies;
+		}
 
 	private:
 		int max_size_;         		
@@ -249,6 +266,9 @@ class Population {
 		double specify_rate_;
 		double specify_fraction_;
 		double dont_care_prob_;
+
+		int num_elites_;
+		int gens_between_specifies_;
 };
 
 #endif

@@ -14,14 +14,14 @@ mt19937 rng;
 random_device rd;
 uniform_real_distribution<double> real_dist(0,1);
 
-// named constants for testing
-//
-// NOTE: E_RATE * POP_SIZE must be an integer value, and for
-// crossover to work properly, I think it has to be an *even*
-// integer value
-//
-// NOTE 2: Should add parameter for specify operator frequency
-const int POP_SIZE = 50;
+/* named constants for testing
+ *
+ * NOTE: make sure that the following values are integers:
+ * 	1. NUM_ITERS * SPEC_RATE
+ * 	2. POP_SIZE * SPEC_FRAC * (1 - E_RATE)
+ * 	3. E_RATE * POP_SIZE (this must be an *even* integer)
+ */
+const int POP_SIZE = 200;
 const int NUM_ITERS = 1000;
 const int DEFAULT_CLASS = -1;
 const double E_RATE = 0.6;
@@ -81,12 +81,12 @@ int main(int argc, char **argv) {
 	Population p = Population::random(POP_SIZE,NUM_ITERS,target_class, DEFAULT_CLASS,
 			E_RATE,SPEC_RATE,SPEC_FRAC,MUTATE_PROB,DONT_CARE_PROB,training_set,test_set);
 
-
-	/*
+	
 	// run the LCS for a fixed number of generations 
 	int num_iters = p.num_iters();
-	for (p.curr_gen_=0; p.curr_gen_<num_iters; p.curr_gen_++)
+	for (p.curr_gen_=0; p.curr_gen_<num_iters; p.curr_gen_++) {
 		p.applyGA();
+	}
 
 	// do a final fitness evaluation after the last iteration
 	// (the LCS evaluates fitness at the beginning of an iteration)
@@ -101,7 +101,7 @@ int main(int argc, char **argv) {
 
 	// run the LCS on the test set (this will output
 	// additional information to the same file as above)
-	p.classify(&p.test_set_,output_file);
-*/	
+	p.classify(&p.training_set_,output_file);
+
 	return 0;
 }
