@@ -21,12 +21,12 @@ uniform_real_distribution<double> real_dist(0,1);
  * 	2. POP_SIZE * SPEC_FRAC * (1 - E_RATE)
  * 	3. E_RATE * POP_SIZE (this must be an *even* integer)
  */
-const int POP_SIZE = 200;
+const int POP_SIZE = 60;
 const int NUM_ITERS = 1000;
 const int DEFAULT_CLASS = -1;
-const double E_RATE = 0.6;
+const double E_RATE = 0.5;
 const double SPEC_RATE = 0.05;
-const double SPEC_FRAC = 0.5;
+const double SPEC_FRAC = 0.4;
 const double MUTATE_PROB = 0.25;
 const double DONT_CARE_PROB = 0.3;
 
@@ -101,7 +101,7 @@ int main(int argc, char **argv) {
 
 	// run the LCS on the test set (this will output
 	// additional information to the same file as above)
-	p.classify(&p.training_set_,output_file);
+	p.classify(&p.test_set_,output_file);
 
 	return 0;
 }
