@@ -31,7 +31,7 @@ bool Rule::operator==(const Rule &rule) const {
 
 	// check the conditions
 	int condition_length = condition_.size();
-	for (size_t i=0; i<condition_length; i++) {
+	for (int i=0; i<condition_length; i++) {
 
 		// if one of the rules has the "don't care" variable set for
 		// the current attribute and the other doesn't, the rules
@@ -134,7 +134,7 @@ void Rule::mutate(double p_mutate, double p_dont_care,
 
 	// iterate over all attributes in the condition
 	int condition_length = condition_.size();
-	for (size_t i=0; i<condition_length; i++) {
+	for (int i=0; i<condition_length; i++) {
 
 		// get a random value between 0 and 1
 		result1 = real_dist(rng);
@@ -205,7 +205,7 @@ bool Rule::matches(vector<double> input) {
 
 	// iterate over the attributes of the rule's condition
 	int condition_length = condition_.size();
-	for (size_t i=0; i<condition_length; i++) {
+	for (int i=0; i<condition_length; i++) {
 
 		// evaluate only if the current attribute is not set to
 		// "don't care" in the condition
@@ -285,31 +285,31 @@ void Rule::print() {
 	printf("\nRule %d\n--------\n", id_);
 	printf("\nAttribute:       ");
 	int condition_length = condition_.size();
-	for (size_t i=0; i<condition_length; i++)
+	for (int i=0; i<condition_length; i++)
 		printf("%-7d", (int) i);
 	printf("\nDon't Care:      ");
-	for (size_t i=0; i<condition_length; i++) {
+	for (int i=0; i<condition_length; i++) {
 		if (condition_[i].dont_care())
 			printf("%-7s",dc);
 		else
 			printf("%-7s", space);
 	}
 	printf("\nLower Bound:     ");
-	for (size_t i=0; i<condition_length; i++) {
+	for (int i=0; i<condition_length; i++) {
 		if (!condition_[i].dont_care())
 			printf("%-7.3f", condition_[i].l_bound()); 
 		else 
 			printf("%-7s", space);
 	}
 	printf("\nUpper Bound:     ");
-	for (size_t i=0; i<condition_length; i++) {
+	for (int i=0; i<condition_length; i++) {
 		if (!condition_[i].dont_care())
 			printf("%-7.3f", condition_[i].u_bound()); 
 		else 
 			printf("%-7s", space);
 	}
 	printf("\nQuantile:        ");
-	for (size_t i=0; i<condition_length; i++) {
+	for (int i=0; i<condition_length; i++) {
 		if (!condition_[i].dont_care())
 			printf("%-7d", condition_[i].quantile());
 		else
@@ -336,31 +336,31 @@ void Rule::printVerbose() {
 	printf("\nRule %d\n--------\n", id_);
 	printf("\nAttribute:        ");
 	int condition_length = condition_.size();
-	for (size_t i=0; i<condition_length; i++)
+	for (int i=0; i<condition_length; i++)
 		printf("%-7d", (int) i);
 	printf("\nDon't Care:      ");
-	for (size_t i=0; i<condition_length; i++) {
+	for (int i=0; i<condition_length; i++) {
 		if (condition_[i].dont_care())
 			printf("%-7s",dc);
 		else
 			printf("%-7s", space);
 	}
 	printf("\nLower Bound:     ");
-	for (size_t i=0; i<condition_length; i++) {
+	for (int i=0; i<condition_length; i++) {
 		if (!condition_[i].dont_care())
 			printf("%-7.3f", condition_[i].l_bound()); 
 		else 
 			printf("%-7s", space);
 	}
 	printf("\nUpper Bound:     ");
-	for (size_t i=0; i<condition_length; i++) {
+	for (int i=0; i<condition_length; i++) {
 		if (!condition_[i].dont_care())
 			printf("%-7.3f", condition_[i].u_bound()); 
 		else 
 			printf("%-7s", space);
 	}
 	printf("\nQuantile:        ");
-	for (size_t i=0; i<condition_length; i++) {
+	for (int i=0; i<condition_length; i++) {
 		if (!condition_[i].dont_care())
 			printf("%-7d", condition_[i].quantile());
 		else

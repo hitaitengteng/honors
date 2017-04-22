@@ -167,7 +167,7 @@ class Population {
 		// prints all the rules in the population
 		void print() {
 			int num_rules = rules_.size();
-			for (size_t i=0; i<num_rules; i++) {
+			for (int i=0; i<num_rules; i++) {
 				rules_[i].print();	
 			}
 		}
@@ -175,7 +175,7 @@ class Population {
 		// prints all the rules in the population with additional details
 		void printVerbose() {
 			int num_rules = rules_.size();
-			for (size_t i=0; i<num_rules; i++) {
+			for (int i=0; i<num_rules; i++) {
 				rules_[i].printVerbose();	
 			}
 		}

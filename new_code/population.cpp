@@ -17,7 +17,8 @@ using namespace std;
 void Population::add(Rule r) {
 
 	// do not add the rule if the population limit has been reached
-	if (rules_.size() == max_size_) {
+	int num_rules = rules_.size();
+	if (num_rules == max_size_) {
 		cout << "Unable to add rule: population limit reached." << endl;
 		return;
 	}
@@ -354,7 +355,8 @@ pair<Rule,Rule> Population::crossover(int i, int j) {
 	}
 
 	// copy parent conditions into offspring (after crossover point)
-	for (int i=cross_point; i<p1.condition_.size(); i++) {
+	int cond_length = p1.condition_.size();
+	for (int i=cross_point; i<cond_length; i++) {
 
 		off1.condition_.push_back(p2.condition_[i]);
 		off2.condition_.push_back(p1.condition_[i]);
@@ -568,6 +570,7 @@ double Population::classify(Dataset* d, string output_file = "") {
 	}
 
 	// print some statistics to stdout for immediate viewing
+	printf("----------------------------------------------\n");
 	printf("target class: %d\n", target_class_);
 	printf("target class size: %d\n", target_class_size);
 	printf("num elites: %d\n", num_elites);
@@ -575,6 +578,7 @@ double Population::classify(Dataset* d, string output_file = "") {
 	printf("TN: %.3f\n", tn);
 	printf("FP: %.3f\n", fp);
 	printf("FN: %.3f\n", fn);
+	printf("----------------------------------------------\n");
 
 	return accuracy;
 

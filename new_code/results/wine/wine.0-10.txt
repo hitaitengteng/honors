@@ -1,0 +1,763 @@
+Population Parameters
+---------------------
+
+Size:            40
+Iterations:      2000
+Target Class:    0
+Default Class:   -1
+Mutation Prob:   0.25
+Don't Care Prob: 0.3
+Elitism Rate:    0.6
+
+
+Final Population
+----------------
+
+Rule 25
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                                                         1.09e+03
+Upper Bound:                                                                                         1.28e+03
+Quantile:                                                                                                  2
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    74
+Fitness 2:    3.76
+True Pos:     7.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    23.5
+
+
+Rule 35
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                                                         1.28e+03
+Upper Bound:                                                                                         1.68e+03
+Quantile:                                                                                                  3
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    68.9
+Fitness 2:    3.61
+True Pos:     6.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    23.5
+
+
+Rule 23
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]          [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                        0.257                                981
+Upper Bound:                                                        0.285                            1.09e+03
+Quantile:                                                               2                                  3
+
+Class:        0
+# Don't Care: 11
+Fitness 1:    61.2
+Fitness 2:    3.56
+True Pos:     6.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    24.5
+
+
+Rule 38
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]          [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                     114                                                     520
+Upper Bound:                                     132                                                     981
+Quantile:                                          2                                                       0
+
+Class:        0
+# Don't Care: 11
+Fitness 1:    61.2
+Fitness 2:    3.56
+True Pos:     6.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    24.5
+
+
+Rule 26
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]          [DC]   [DC]          [DC]   [DC]
+Lower Bound:                                                        0.257                    1              
+Upper Bound:                                                        0.285                 1.07              
+Quantile:                                                               2                    3              
+
+Class:        0
+# Don't Care: 11
+Fitness 1:    41.6
+Fitness 2:    2.61
+True Pos:     2.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    24.5
+
+
+Rule 10
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]          [DC]   [DC]   [DC]          [DC]   [DC]   [DC]
+Lower Bound:                                              3                         5.4                     
+Upper Bound:                                           3.88                        6.21                     
+Quantile:                                                 3                           3                     
+
+Class:        0
+# Don't Care: 11
+Fitness 1:    36.8
+Fitness 2:    2.1
+True Pos:     1.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    24.5
+
+
+Rule 1
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]          [DC]   [DC]   [DC]   [DC]          [DC]   [DC]   [DC]   [DC]   [DC]   [DC]
+Lower Bound:               1.76                               2.68                                          
+Upper Bound:               1.93                               2.97                                          
+Quantile:                     2                                  1                                          
+
+Class:        0
+# Don't Care: 11
+Fitness 1:    30.6
+Fitness 2:    2.06
+True Pos:     1.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    25.5
+
+
+Rule 32
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]                 [DC]
+Lower Bound:                                                                                 1   3.41       
+Upper Bound:                                                                              1.07      4       
+Quantile:                                                                                    3      3       
+
+Class:        0
+# Don't Care: 11
+Fitness 1:    30.6
+Fitness 2:    2.06
+True Pos:     1.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    25.5
+
+
+Rule 21
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                                                         1.28e+03
+Upper Bound:                                                                                         1.68e+03
+Quantile:                                                                                                  3
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    38.3
+Fitness 2:    1.05
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    23.5
+
+
+Rule 24
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                                                         1.28e+03
+Upper Bound:                                                                                         1.68e+03
+Quantile:                                                                                                  3
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    38.1
+Fitness 2:    1.05
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    23.5
+
+
+Rule 6
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                                                         1.28e+03
+Upper Bound:                                                                                         1.68e+03
+Quantile:                                                                                                  3
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    38.1
+Fitness 2:    1.05
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    23.5
+
+
+Rule 17
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                                                         1.28e+03
+Upper Bound:                                                                                         1.68e+03
+Quantile:                                                                                                  3
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    38.3
+Fitness 2:    1.05
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    23.5
+
+
+Rule 27
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                                                         1.09e+03
+Upper Bound:                                                                                         1.28e+03
+Quantile:                                                                                                  2
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    38.3
+Fitness 2:    1.05
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    23.5
+
+
+Rule 39
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                                                         1.09e+03
+Upper Bound:                                                                                         1.28e+03
+Quantile:                                                                                                  2
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    38.3
+Fitness 2:    1.05
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    23.5
+
+
+Rule 9
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                                                         1.28e+03
+Upper Bound:                                                                                         1.68e+03
+Quantile:                                                                                                  3
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    38.3
+Fitness 2:    1.05
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    23.5
+
+
+Rule 3
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                                                         1.09e+03
+Upper Bound:                                                                                         1.28e+03
+Quantile:                                                                                                  3
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    38.3
+Fitness 2:    1.05
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    23.5
+
+
+Rule 12
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                                                         1.09e+03
+Upper Bound:                                                                                         1.28e+03
+Quantile:                                                                                                  2
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    38.3
+Fitness 2:    1.05
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    23.5
+
+
+Rule 18
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                                                         1.28e+03
+Upper Bound:                                                                                         1.68e+03
+Quantile:                                                                                                  3
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    38.3
+Fitness 2:    1.05
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    23.5
+
+
+Rule 4
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                                                         1.09e+03
+Upper Bound:                                                                                         1.28e+03
+Quantile:                                                                                                  2
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    38.3
+Fitness 2:    1.05
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    23.5
+
+
+Rule 5
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                                                         1.09e+03
+Upper Bound:                                                                                         1.28e+03
+Quantile:                                                                                                  2
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    38.3
+Fitness 2:    1.05
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    23.5
+
+
+Rule 7
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                                                         1.09e+03
+Upper Bound:                                                                                         1.28e+03
+Quantile:                                                                                                  2
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    38.3
+Fitness 2:    1.05
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    23.5
+
+
+Rule 14
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                                                         1.09e+03
+Upper Bound:                                                                                         1.28e+03
+Quantile:                                                                                                  2
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    38.3
+Fitness 2:    1.05
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    23.5
+
+
+Rule 22
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                                                         1.09e+03
+Upper Bound:                                                                                         1.28e+03
+Quantile:                                                                                                  2
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    38.3
+Fitness 2:    1.05
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    23.5
+
+
+Rule 11
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                                                         1.09e+03
+Upper Bound:                                                                                         1.28e+03
+Quantile:                                                                                                  2
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    38.3
+Fitness 2:    1.05
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    23.5
+
+
+Rule 33
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                                                         1.28e+03
+Upper Bound:                                                                                         1.68e+03
+Quantile:                                                                                                  3
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    38.3
+Fitness 2:    1.05
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    23.5
+
+
+Rule 2
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                                                         1.09e+03
+Upper Bound:                                                                                         1.28e+03
+Quantile:                                                                                                  2
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    38.3
+Fitness 2:    1.05
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    23.5
+
+
+Rule 31
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]          [DC]   [DC]   [DC]       
+Lower Bound:                                                                2.09                         981
+Upper Bound:                                                                2.96                     1.09e+03
+Quantile:                                                                      3                           3
+
+Class:        0
+# Don't Care: 11
+Fitness 1:    10.5
+Fitness 2:    0.846
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    28.5
+
+
+Rule 29
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]          [DC]   [DC]       
+Lower Bound:                                                                        4.5              1.09e+03
+Upper Bound:                                                                        5.4              1.28e+03
+Quantile:                                                                             2                    2
+
+Class:        0
+# Don't Care: 11
+Fitness 1:    10.5
+Fitness 2:    0.846
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    28.5
+
+
+Rule 36
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]          [DC]   [DC]   [DC]       
+Lower Bound:                                                                2.09                         981
+Upper Bound:                                                                2.96                     1.09e+03
+Quantile:                                                                      3                           1
+
+Class:        0
+# Don't Care: 11
+Fitness 1:    10.5
+Fitness 2:    0.846
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    28.5
+
+
+Rule 0
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]          [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]                 [DC]
+Lower Bound:               1.76                                                              1   3.41       
+Upper Bound:               1.93                                                           1.07      4       
+Quantile:                     2                                                              3      3       
+
+Class:        0
+# Don't Care: 10
+Fitness 1:    10.5
+Fitness 2:    0.836
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    28.5
+
+
+Rule 28
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]          [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                             18.6                                                        1.09e+03
+Upper Bound:                               25                                                        1.28e+03
+Quantile:                                   3                                                              2
+
+Class:        0
+# Don't Care: 11
+Fitness 1:    6.16
+Fitness 2:    0.812
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    29.5
+
+
+Rule 16
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]          [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                                        0.257                            1.09e+03
+Upper Bound:                                                        0.285                            1.28e+03
+Quantile:                                                               2                                  2
+
+Class:        0
+# Don't Care: 11
+Fitness 1:    6.16
+Fitness 2:    0.812
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    29.5
+
+
+Rule 13
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]          [DC]   [DC]          [DC]       
+Lower Bound:                                                        0.257                 1.07       1.09e+03
+Upper Bound:                                                        0.285                 1.13       1.28e+03
+Quantile:                                                               2                    0             2
+
+Class:        0
+# Don't Care: 10
+Fitness 1:    2.05
+Fitness 2:    0.768
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    30.5
+
+
+Rule 19
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]          [DC]   [DC]          [DC]   [DC]   [DC]   [DC]       
+Lower Bound:                                     114                 0.32                            1.09e+03
+Upper Bound:                                     132                  0.5                            1.28e+03
+Quantile:                                          2                    1                                  2
+
+Class:        0
+# Don't Care: 10
+Fitness 1:    2.05
+Fitness 2:    0.768
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    30.5
+
+
+Rule 37
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]          [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]              
+Lower Bound:               1.66                                                                  3.411.09e+03
+Upper Bound:               1.76                                                                     41.28e+03
+Quantile:                     1                                                                     3      2
+
+Class:        0
+# Don't Care: 10
+Fitness 1:    2.05
+Fitness 2:    0.768
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    30.5
+
+
+Rule 34
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]          [DC]   [DC]   [DC]   [DC]                 [DC]          [DC]   [DC]   [DC]
+Lower Bound:               1.76                               3.24  0.257           5.4                     
+Upper Bound:               1.93                               3.93  0.285          6.21                     
+Quantile:                     3                                  0      2             3                     
+
+Class:        0
+# Don't Care: 9
+Fitness 1:    2.04
+Fitness 2:    0.758
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    30.5
+
+
+Rule 30
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]                               [DC]   [DC]   [DC]       
+Lower Bound:                                            2.8   2.68   0.32   1.61                     1.09e+03
+Upper Bound:                                              3   2.97    0.5   1.87                     1.28e+03
+Quantile:                                                 1      1      2      1                           0
+
+Class:        0
+# Don't Care: 8
+Fitness 1:    2.03
+Fitness 2:    0.748
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    30.5
+
+
+Rule 20
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]                                   
+Lower Bound:                                                                0.42   1.95   0.82   1.82    981
+Upper Bound:                                                                1.61    4.5      1   2.871.09e+03
+Quantile:                                                                      3      3      0      2      1
+
+Class:        0
+# Don't Care: 8
+Fitness 1:    2.03
+Fitness 2:    0.748
+True Pos:     0.5
+True Neg:     59.5
+False Pos:    0.5
+False Neg:    30.5
+
+
+Rule 15
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]          [DC]   [DC]
+Lower Bound:                                                                                 1              
+Upper Bound:                                                                              1.07              
+Quantile:                                                                                    3              
+
+Class:        0
+# Don't Care: 12
+Fitness 1:    8.39
+Fitness 2:    0.13
+True Pos:     0.5
+True Neg:     56.5
+False Pos:    3.5
+False Neg:    20.5
+
+
+Rule 8
+-------
+Attribute:           0      1      2      3      4      5      6      7      8      9     10     11     12
+Don't Care:        [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]   [DC]              
+Lower Bound:                                                                                     3.13    520
+Upper Bound:                                                                                     3.41    981
+Quantile:                                                                                           2      0
+
+Class:        0
+# Don't Care: 11
+Fitness 1:    5.07
+Fitness 2:    0.12
+True Pos:     0.5
+True Neg:     58.5
+False Pos:    1.5
+False Neg:    27.5
+
+
+Training and Testing Data
+-------------------------
+
+Training File:  test_data/wine/wine_training2.csv
+Testing File:   test_data/wine/wine_training2.csv
+Quantiles File: test_data/wine/wine_quartiles_class_0.csv
+
+
+Target Class Size: 30
+True Positives:    30
+True Negatives:    59
+False Positives:   0
+False Negatives:   0
+
+Rules used for classification: 1, 10, 23, 25, 26, 32, 35, 38
+Accuracy:          1
+Odds Ratio:        90
+
+
+Target Class Size: 30
+True Positives:    30
+True Negatives:    59
+False Positives:   0
+False Negatives:   0
+
+Rules used for classification: 1, 10, 23, 25, 26, 32, 35, 38
+Accuracy:          1
+Odds Ratio:        90

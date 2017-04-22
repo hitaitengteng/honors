@@ -22,8 +22,8 @@ uniform_int_distribution<int> int_dist(1,10);
 // integer value
 //
 // NOTE 2: Should add parameter for specify operator frequency
-const int POP_SIZE = 40;
-const int NUM_ITERS = 2000;
+const int POP_SIZE = 300;
+const int NUM_ITERS = 2500;
 const int DEFAULT_CLASS = -1;
 const double E_RATE = 0.6;
 const double MUTATE_PROB = 0.25;
