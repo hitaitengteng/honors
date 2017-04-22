@@ -290,6 +290,8 @@ void Population::applyGA() {
 		rules_[num_elites_ + num_to_crossover + i] = specified_rules[i];
 	}
 
+	
+
 } // end select
 
 /****************************************************************************
