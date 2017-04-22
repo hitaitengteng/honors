@@ -116,6 +116,12 @@ class Rule {
 			fitness2_ = log((true_positives_ * true_negatives_) /
 					(false_positives_ * false_negatives_));
 
+			// if the fitness is negative (which is possible, since
+			// we're taking the log of the odds ratio), adjust it to
+			// a very low positive value
+			if (fitness2_ <= 0)
+				fitness2_ = FITNESS_BOOST;
+
 			// for each "don't care" value that the rule has,
 			// it receives a slight fitness boost
 			fitness2_ += num_dont_care_ * FITNESS_BOOST;

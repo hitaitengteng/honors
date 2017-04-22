@@ -22,10 +22,9 @@ uniform_int_distribution<int> int_dist(1,10);
 // integer value
 //
 // NOTE 2: Should add parameter for specify operator frequency
-const int POP_SIZE = 200;
-const int NUM_ITERS = 1000;
-const int TARGET_CLASS = 1;
-const int DEFAULT_CLASS = 2;
+const int POP_SIZE = 40;
+const int NUM_ITERS = 2000;
+const int DEFAULT_CLASS = -1;
 const double E_RATE = 0.6;
 const double MUTATE_PROB = 0.25;
 const double DONT_CARE_PROB = 0.3;
@@ -44,7 +43,7 @@ const double DONT_CARE_PROB = 0.3;
 int main(int argc, char **argv) {
    
 	// make sure the user enters the right number of arguments
-	if (argc < 2) {
+	if (argc < 5) {
 		cout << stderr << "Error: too few arguments" << endl;
 	}
 
@@ -52,10 +51,9 @@ int main(int argc, char **argv) {
 	// the training and test sets
 	string training_set_file = argv[1];
 	string test_set_file = argv[2];
-	string quantiles_file;
-
-	if (argc > 2)
-		quantiles_file = argv[3];
+	string quantiles_file = argv[3];
+	string output_file = argv[4];
+	int target_class = atoi(argv[5]);
 
 	// seed the random number generator
 	rng.seed(rd());
@@ -65,10 +63,8 @@ int main(int argc, char **argv) {
 	training_set.readFromCSVFile(training_set_file);
 
 	// read in the quantiles
-	if (argc > 2) {
-		int num_quantiles = training_set.readQuantiles(quantiles_file);
-		training_set.setNumQuantiles(num_quantiles);
-	}
+	int num_quantiles = training_set.readQuantiles(quantiles_file);
+	training_set.setNumQuantiles(num_quantiles);
 
 	// read in the test set
 	Dataset test_set;
@@ -79,7 +75,7 @@ int main(int argc, char **argv) {
 	//
 	// NOTE: make sure the target class matches the class of the quantiles file being used.
 	
-	Population p = Population::random(POP_SIZE,NUM_ITERS,TARGET_CLASS, DEFAULT_CLASS,
+	Population p = Population::random(POP_SIZE,NUM_ITERS,target_class, DEFAULT_CLASS,
 			E_RATE,MUTATE_PROB,DONT_CARE_PROB,training_set,test_set);
 	int num_iters = p.num_iters();
 	for (int i=0; i<num_iters; i++)
@@ -91,8 +87,9 @@ int main(int argc, char **argv) {
 	p.writeRunData(training_set_file,
 		       test_set_file,
 		       quantiles_file,
-		       "output.txt");
-	p.classify(&p.test_set_,"output.txt");
+		       output_file);
+	p.classify(&p.training_set_,output_file);
+	p.classify(&p.test_set_,output_file);
 
 
 	return 0;
