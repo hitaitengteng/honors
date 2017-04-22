@@ -1,8 +1,0 @@
-Will Gantt
-
-TODO
-----
-
-1. Update README
-2. Add a field to Population class for the *number* of elites.
-3. Reorder population for output
