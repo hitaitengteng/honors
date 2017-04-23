@@ -314,9 +314,50 @@ The system takes the following arguments:
 \item \textit{test\_set:} another object of the Dataset class containing all of the examples in the test set and other relevant information.
 \end{description}
 
-\section{Experimental Setup}
-\section{Results and Discussion}
+\section{Experiment and Results}
+
+\subsection{Preliminary Evaluation on Small Data Sets}
+
+% As a benchmark test, ran on the Iris and Wine data sets from the UCI Machine Learning repository
+
+% Tables of the Iris and Wine data set features
+
+% Each run of the LCS attemppts to characterize a single class (the ``target class''). Quartiles are computed for each non-class attribute based on the range of values for that attribute across examples in the target class.
+
+% Each data set has three classes. 10 runs were done per class for each data set using the following parameters [list parameters].
+
+% Table of results
+
+\subsection{Experiments on Yield Data}
+
+% Describe how the data sets were broken up:
+%	1. with year, without year
+%	2. tropics, temperate, together
+%	3. Mg/ha, Mkcal/ha
+
+%	Class attribute is discretized into tertiles. The 		tertiles used were the same as those used in 			Nelson and Congdon's experiment.
+
+%	Non-class attributes were discretized into 				quartiles using the same method as described above
+
+% 	Describe size of data sets.
+
+% 	10 runs per combination of {year, without year}, 			{tropics, temperate, together}, {Mg/ha, Mkcal/ha}, 	and class. A different training and test set were			used for each run.
+
+%	Desirable parameter settings were determined 			empirically. The same settings were used across 			all tests. [list parameter settings]
+
+% 	Table of results
+
 \section{Future Work and Conclusion}
+
+% Limitations of the Experiment
+
+% Accuracy considerations
+%	- Plainly, accuracy could be improved. How?
+
+% Efficiency considerations
+%	- LCSs, and GBML more broadly, are known for their
+%	  high run times. Part of this is unavoidable, but
+%	  certain optimizations could 
 
 \bibliography{Thesis}
 \bibliographystyle{ieeetr}
