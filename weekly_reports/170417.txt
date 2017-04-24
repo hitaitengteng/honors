@@ -1,0 +1,39 @@
+Week of 4/10/17
+Will Gantt
+
+This week:
+
+I made some final changes to the code and began testing. In our meeting,
+we discussed a few possible improvements:
+
+	1. Use the *log* of the odds ratio when computing the fitness
+	   in order to avoid having rules with excessively high fitnesses.
+	2. Use rank-based fitness for the same purpose.
+	3. Implement an operator that periodically creates new rules
+	   directly from training examples.
+
+I experimented with all three of these. Using the log of the odds ratio
+provided a significant improvement, but rank-based fitness actually
+diminished the system's performance, and the new operator made no
+difference. Thus, in the final version of the code, the only one of
+these changes that is implemented is the first.
+
+I have now done tests on all of Erik's data, as well as the Iris and
+Wine data sets (just for a performance benchmark), using the HPC.
+Specifically, I have run two kinds of test: 1) a simple holdout
+method that splits a data into one training and one test set, and
+2) a ten-fold cross validation (but only on Erik's data). I would have
+expected the ten-fold cross validation to yield better results, but
+it was in the holdout that the system performed the best (and by a
+considerable margin). I don't know what to make of this. I have,
+of course, also taken data on the system's performance on the
+training sets, where it does quite well in both cases.
+
+I have just today begun writing up my findings.
+
+(side note: I also made some good improvements to runtime.)
+
+Next week:
+
+I will finish writing up the results and submit a complete draft
+to you for revision.
