@@ -318,32 +318,82 @@ The system takes the following arguments:
 
 \subsection{Preliminary Evaluation on Small Data Sets}
 
-% As a benchmark test, ran on the Iris and Wine data sets from the UCI Machine Learning repository
+As a benchmark test of performance, I ran the system on the Iris and Wine data sets from the UC-Irvine Machine Learning Repository [citation]. Details of the data sets are shown in tables \ref{iris_info} and \ref{wine_info}. For both sets, I used parameter values of \textit{pop\_size} = 40, \textit{num\_iters} = 1000, \textit{elitism\_rate} = 0.6, \textit{p\_mutate} = 0.25, and \textit{p\_dont\_care} = 0.3. Ten experiments were run per class on each set using a simple holdout method with training and test sets of approximately equal size. Tables [\#] and [\#] show the mean accuracy, odds ratio, and numbers of true positives, true negatives, false positives, and false negatives for Iris and Wine, respectively.
 
-% Tables of the Iris and Wine data set features
+Each run of the LCS attempts to characterize a single class (the ``target class''). Quartiles are computed for each non-class attribute based on the range of values for that attribute across all examples in the target class.
 
-% Each run of the LCS attemppts to characterize a single class (the ``target class''). Quartiles are computed for each non-class attribute based on the range of values for that attribute across examples in the target class.
+\begin{table}
+\begin{tabularx}{\textwidth}{ll}
+\toprule
+\textbf{Iris} & \\
+\midrule
+Number of Examples: & 150 \\
+Classes: & Iris-Setosa, Iris-Versicolour, \\
+& Iris-Virginica \\
+Number of Non-Class Attributes: & 4 \\
+Non-Class Attribute Value Types: & Real \\
+Non-Class Attributes: & sepal length, sepal width, \\
+& petal length, petal width \\
+\bottomrule
+\end{tabularx}
+\caption{The Iris dataset from the UCI Machine Learning Repository.}
+\label{iris_info}
+\end{table}
 
-% Each data set has three classes. 10 runs were done per class for each data set using the following parameters [list parameters].
+\begin{table}
+\begin{tabularx}{\textwidth}{ll}
+\toprule
+\textbf{Wine} & \\
+\midrule
+Number of Examples: & 178 \\
+Classes: & class 1, class 2, class 3 \\
+Number of Non-Class Attributes: & 13 \\
+Non-Class Attribute Value Types: & Integer, Real \\
+Non-Class Attributes: & Alcohol, Malic Acid, Ash \\ & Alcalinity of Ash, Magnesium, \\
+& Total phenols, Flavanoids, \\
+& Nonflavanoid phenols, \\
+& Proanthocyanins, \\
+& Color intensity, Hue, \\
+& OD280/OD315 of diluted wines, \\
+& Proline \\
+\bottomrule
+\end{tabularx}
+\caption{The Wine dataset from the UCI Machine Learning Repository. The names for the class attribute values are not specified.}
+\label{wine_info}
+\end{table}
 
-% Table of results
+\begin{table}
+\centering
+\begin{tabular}{lllllllll}
+\toprule
+Set & Class & Class Size & Accuracy & Odds Ratio & TP & TN & FP & FN \\
+\midrule
+\bottomrule
+\end{tabular}
+\label{iris_results}
+\end{table}
 
 \subsection{Experiments on Yield Data}
 
-% Describe how the data sets were broken up:
-%	1. with year, without year
-%	2. tropics, temperate, together
-%	3. Mg/ha, Mkcal/ha
+For the yield data, I employed two kinds of test: the holdout method (used on the Iris and Wine data sets) and a ten-fold cross validation. In total, I used twelve data sets --- the same as were used in Nelson and Congdon's experiments. All twelve are derived from the same original set, but each represents a unique combination of the following variables:
+\begin{enumerate}
+\item \textit{Year.} Indicates whether or not the year is included as an attribute of the examples.
+\item \textit{Region.} Indicates whether the data set aggregates country-level data from countries in the tropics, countries in the temperate regions, or both (global).
+\item \textit{Yield Units.} Indicates whether the change in yield is expressed as Mg/ha or Mkcal/ha.
+\end{enumerate}
+Thus, two possibilities  each for the \textit{year} and \textit{yield unit} variables, and three possibilities for the \textit{region} variable gives twelve data sets. The change in yield, the class attribute, was discretized to tertiles (``high'' (H), ``medium'' (M), and ``low'' (L) change) as it was in Nelson and Congdon's work. The non-class attributes, however, were discretized into quartiles, after some preliminary tests showed them to be preferable to tertiles, quintiles, and sextiles.
 
-%	Class attribute is discretized into tertiles. The 		tertiles used were the same as those used in 			Nelson and Congdon's experiment.
+I determined good parameter values for the LCS both by experimenting and by consulting the literature. I maintained the values of \textit{elitism\_rate} (0.6), \textit{p\_mutate} (0.25), and \textit{p\_dont\_care} (0.3) used on the Iris and Wine sets, but increased \textit{pop\_size} to 300 and \textit{num\_iters} to 2500.
 
-%	Non-class attributes were discretized into 				quartiles using the same method as described above
+\subsubsection{Holdout Method}
+
+In the holdout tests, the data sets were split into one training and one test set of approximately equal size. Ten tests were run per data set per class. The mean and variance of the accuracy, the odds ratio, and the number of rules used in the classification, for both the training and the test sets, are recorded in table [\#].
+
+\subsubsection{Ten-Fold Cross Validation}
+
+In a ten-fold cross validation, the data are divided into ten sets. In a single run, the LCS is trained on nine of the sets and then tested on the tenth. The process is repeated for all ten sets. Tables [\#] through [\#] show the results of these experiments.
 
 % 	Describe size of data sets.
-
-% 	10 runs per combination of {year, without year}, 			{tropics, temperate, together}, {Mg/ha, Mkcal/ha}, 	and class. A different training and test set were			used for each run.
-
-%	Desirable parameter settings were determined 			empirically. The same settings were used across 			all tests. [list parameter settings]
 
 % 	Table of results
 
@@ -361,4 +411,5 @@ The system takes the following arguments:
 
 \bibliography{Thesis}
 \bibliographystyle{ieeetr}
+
 \end{document}
