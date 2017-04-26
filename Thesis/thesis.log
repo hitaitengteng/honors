@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  25 APR 2017 15:25
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  26 APR 2017 14:36
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -302,17 +302,33 @@ File: images/sus.png Graphic file (type png)
  <use images/sus.png>
 Package pdftex.def Info: images/sus.png used on input line 275.
 (pdftex.def)             Requested size: 251.74243pt x 92.14494pt.
- [16 <./images/sus.png>] [17]
-Underfull \hbox (badness 10000) in alignment at lines 338--338
+ [16 <./images/sus.png>] [17] [18] [19] [20]
+Overfull \hbox (6.89134pt too wide) in paragraph at lines 358--360
+\OT1/cmr/m/n/10.95 greater ac-cu-racy. Given that the at-tributes of Nel-son's 
+data are all continuous-
+ []
+
+
+Overfull \hbox (5.2449pt too wide) in alignment at lines 384--384
 [][] 
  []
 
 
-Underfull \hbox (badness 10000) in alignment at lines 360--360
+Overfull \hbox (82.29552pt too wide) in paragraph at lines 391--405
+ [][] 
+ []
+
+
+Underfull \hbox (badness 10000) in alignment at lines 427--427
 [][] 
  []
 
-[18] [19] [20] (./thesis.bbl
+
+Overfull \hbox (54.31216pt too wide) in paragraph at lines 435--449
+ [][] 
+ []
+
+(./thesis.bbl [21] [22]
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 7.
 
 (/usr/local/texlive/2015/texmf-dist/tex/latex/base/omscmr.fd
@@ -322,21 +338,21 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 7.
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no ¤ in font cmr10!
+ [23]
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no   in font cmr10!
- [21]
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no ³ in font cmr10!
- [22]
+ [24]
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no ³ in font cmr10!
 )
-[23] (./thesis.aux) ) 
+[25] (./thesis.aux) ) 
 Here is how much of TeX's memory you used:
- 3245 strings out of 493089
- 43965 string characters out of 6134842
- 110521 words of memory out of 5000000
- 6658 multiletter control sequences out of 15000+600000
+ 3246 strings out of 493089
+ 43979 string characters out of 6134842
+ 114528 words of memory out of 5000000
+ 6659 multiletter control sequences out of 15000+600000
  15155 words of font info for 57 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  38i,13n,26p,1349b,286s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -355,10 +371,10 @@ fb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb>
 </usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><
 /usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></
 usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb>
-Output written on thesis.pdf (23 pages, 248090 bytes).
+Output written on thesis.pdf (25 pages, 254702 bytes).
 PDF statistics:
- 139 PDF objects out of 1000 (max. 8388607)
- 97 compressed objects within 1 object stream
+ 147 PDF objects out of 1000 (max. 8388607)
+ 102 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

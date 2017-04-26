@@ -318,18 +318,64 @@ The system takes the following arguments:
 
 \subsection{Preliminary Evaluation on Small Data Sets}
 
-As a benchmark test of performance, I ran the system on the Iris and Wine data sets from the UC-Irvine Machine Learning Repository [citation]. Details of the data sets are shown in tables \ref{iris_info} and \ref{wine_info}. For both sets, I used parameter values of \textit{pop\_size} = 40, \textit{num\_iters} = 1000, \textit{elitism\_rate} = 0.6, \textit{p\_mutate} = 0.25, and \textit{p\_dont\_care} = 0.3. Ten experiments were run per class on each set using a simple holdout method with training and test sets of approximately equal size. Tables [\#] and [\#] show the mean accuracy, odds ratio, and numbers of true positives, true negatives, false positives, and false negatives for Iris and Wine, respectively.
+As a benchmark test of performance, I ran the system on the Iris and Wine data sets from the UC-Irvine Machine Learning Repository [citation]. Each run of the LCS attempts to characterize a single class (the ``target class''). Quartiles are computed for each non-class attribute based on the range of values for that attribute across all examples in the target class. The population is then initialized with \textit{pop\_size} rules whose attributes are assigned random quartile values.
 
-Each run of the LCS attempts to characterize a single class (the ``target class''). Quartiles are computed for each non-class attribute based on the range of values for that attribute across all examples in the target class.
+Details of the data sets are shown in tables (\ref{iris_info}) and (\ref{wine_info}) in section (6)\footnote{All tables mentioned hereafter can be found in section (6).}. For both sets, I used parameter values of \textit{pop\_size} = 40, \textit{num\_iters} = 1000, \textit{elitism\_rate} = 0.6, \textit{p\_mutate} = 0.25, and \textit{p\_dont\_care} = 0.3. Ten experiments were run per class on each set using a simple holdout method with training and test sets of approximately equal size. Tables (\ref{iris_results}) and (\ref{wine_results}) show the mean accuracy, odds ratio, true positives, true negatives, false positives, false negatives, and number of rules used for classification for Iris and Wine, respectively. 
 
+The LCS performed well on these simpler sets.
+
+\subsection{Experiments on Yield Data}
+
+For the yield data, I employed two kinds of test: the holdout method (used on the Iris and Wine data sets) and a ten-fold cross validation. In total, I used twelve data sets --- the same as were used in Nelson and Congdon's experiments. All twelve are derived from the same original set, but each represents a unique combination of the following variables:
+\begin{enumerate}
+\item \textit{Year.} Indicates whether or not the year is included as an attribute of the examples. The purpose of splitting the data in this way is to evaluate the effect that time exhibits on yield changes, independent of the other variables. This variable essentially comprises all other factors that influence yield that are not considered as attributes of the data.
+\item \textit{Region.} Indicates whether the data set aggregates country-level data from countries in the tropics, countries in the temperate regions, or both (global). Looking at the data by region may reveal differences in which attributes have the most significant influence on yield.
+\item \textit{Yield Units.} Indicates whether the change in yield is expressed as Mg/ha or Mkcal/ha. Framing the data in terms of both mass and energy simply offers different ways of understanding the yield.
+\end{enumerate}
+Thus, two possibilities  each for the \textit{year} and \textit{yield unit} variables, and three possibilities for the \textit{region} variable gives twelve data sets. The change in yield, the class attribute, was discretized to tertiles (``high'' (H), ``medium'' (M), and ``low'' (L) change) as it was in Nelson and Congdon's work. The non-class attributes, however, were discretized into quartiles, after some preliminary tests showed them to be preferable to tertiles, quintiles, and sextiles.
+
+I determined good parameter values for the LCS both by experimenting and by consulting the literature. I maintained the values of \textit{elitism\_rate} (0.6), \textit{p\_mutate} (0.25), and \textit{p\_dont\_care} (0.3) used on the Iris and Wine sets, but increased \textit{pop\_size} to 300 and \textit{num\_iters} to 2500.
+
+\subsubsection{Holdout Method}
+
+In the holdout tests, the data sets were split into one training and one test set of approximately equal size. Ten tests were run per data set per class. The mean and variance of the accuracy, the odds ratio, and the number of rules used in the classification, for both the training and the test sets, are recorded in table [\#].
+
+\subsubsection{Ten-Fold Cross Validation}
+
+In a ten-fold cross validation, the data are divided into ten sets. In a single run, the LCS is trained on nine of the sets and then tested on the tenth. The process is repeated for all ten sets. Tables [\#] through [\#] show the results of these experiments.
+
+\section{Future Work and Conclusion}
+
+In this paper, I presented a Michigan-style, real-valued LCS designed to establish a relationship between the change in various country-level agricultural inputs and the change in overall agricultural yield. Specifically, I investigated data collected by Erik Nelson, previously analyzed in a 2016 paper by Nelson and Congdon. In section (2), I offered some background on the GBML paradigm, on LCSs in general, and on several milestones in the research on LCSs for supervised learning. In section (3), I outlined the design of my own LCS, and in section (4) I reported on the performance of the LCS both on sample data sets from the UCI Machine Learning Repository and on Nelson's agricultural data. In the remainder of this final section, I discuss directions directions for future work.
+
+\subsection{Accuracy}
+The results of this project reveal many potential avenues for improvement and further experimentation. Plainly, the performance of the system on the ten-fold cross validations indicates that changes must be made to improve accuracy. Several possibilities suggest themselves. 
+
+For one, it is conceivable that the system could be enhanced by using a different fitness function. Although the log of the odds ratio makes a good deal of intuitive sense, performance can nonetheless be hindered when the best rules in the population have fitnesses that far exceed those of the less effective rules, as the top few rules will tend to dominate and result in premature convergence. Rank-based fitness, in which individuals are assigned a fixed fitness value based on their rank in the population --- could provide a solution to this problem. Initial tests using a naive rank-based fitness algorithm produced mixed results, but it is conceivable that more sophisticated algorithms would yield significant gains in accuracy.
+
+The system may further benefit from additional genetic operators. An operator like Pier Lanzi's \emph{specify}, which periodically generates rules directly from examples, could help to counteract premature convergence and to encourage greater coverage of the training set \cite{lanzi_study_1997}.
+
+Lastly, an alternative attribute representation could also contribute to greater accuracy. Given that the attributes of Nelson's data are all continuous-valued, a fuzzy representation such as the one proposed in 
+Valenzuela-Rend\'on's FCS could allow for more flexible rules, as well as a more descriptive characterization of the change in yield \cite{manuel_valenzuela-rendon_fuzzy_1991}.
+
+\subsection{Data}
+
+In addition to accuracy improvements, the project would also benefit from more and different kinds of data. Nelson's data covers the years from 1975 to 2007 and comprises many variables that clearly have a significant impact on output. But examining data that covers a greater time range and that includes metrics for other relevant factors (e.g. GDP, population, presence of plant disease) would allow for a better understanding of broader agricultural trends.
+
+\section{Figures and Tables}
+
+All of the tables containing results are ordered primarily by set type (training or testing) and secondarily by class. All entries in the tables apart from the set type and the class are averages across ten tests. ``Class Size'' is the average number of examples in the target class; ``lnOR'' is the average of the log of the odds ratio; ``TP,'' ``TN,'' ``FP,'' and ``FN,'' are the average numbers of true positives, true negatives, false positives, and false negatives. ``\# Rules'' indicates the average number of rules actually used to classify the examples.
+
+\subsection{Iris and Wine}
+% iris info
 \begin{table}
 \begin{tabularx}{\textwidth}{ll}
 \toprule
 \textbf{Iris} & \\
 \midrule
 Number of Examples: & 150 \\
-Classes: & Iris-Setosa, Iris-Versicolour, \\
-& Iris-Virginica \\
+Classes: & Iris-Setosa (50), Iris-Versicolour (50), \\
+& Iris-Virginica (50) \\
 Number of Non-Class Attributes: & 4 \\
 Non-Class Attribute Value Types: & Real \\
 Non-Class Attributes: & sepal length, sepal width, \\
@@ -339,7 +385,28 @@ Non-Class Attributes: & sepal length, sepal width, \\
 \caption{The Iris dataset from the UCI Machine Learning Repository.}
 \label{iris_info}
 \end{table}
+% iris results
+\begin{table}
+\centering
+\begin{tabular}{llllllllll}
+\toprule
+\textbf{Iris} & & & & & & & & & \\
+\midrule
+Set Type & Class & Class Size & Accuracy & lnOR & TP & TN & FP & FN & \# Rules \\
+\midrule
+Training & Setosa & 26.3 & 1 & 4.50 & 26.3 & 61.8 & 0 & 1.9 & 8.2 \\
+& Versicolour & 32.8 & 1 & 4.50 & 32.8 & 0 & 0 & 0 & 5.7 \\
+& Virginica & 24.7 & 1 & 4.50 & 24.7 & 0 & 0 & 0 & 5.9 \\
+Testing & Setosa & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 8.2 \\
+& Versicolour & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 5.7 \\
+& Virginica & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 5.9 \\
+\bottomrule
+\end{tabular}
+\caption{Averages of 10 holdout tests for each class in the Iris data set.}
+\label{iris_results}
+\end{table}
 
+% wine info
 \begin{table}
 \begin{tabularx}{\textwidth}{ll}
 \toprule
@@ -362,53 +429,28 @@ Non-Class Attributes: & Alcohol, Malic Acid, Ash \\ & Alcalinity of Ash, Magnesi
 \label{wine_info}
 \end{table}
 
+% wine results
 \begin{table}
 \centering
-\begin{tabular}{lllllllll}
+\begin{tabular}{llllllllll}
 \toprule
-Set & Class & Class Size & Accuracy & Odds Ratio & TP & TN & FP & FN \\
+\textbf{Wine} & & & & & & & & & \\
 \midrule
+Set Type & Class & Class Size & Accuracy & lnOR & TP & TN & FP & FN & \# Rules \\
+\midrule
+Training & 1 & 26.3 & 1 & 4.50 & 26.3 & 61.8 & 0 & 1.9 & 8.2 \\
+& 2 & 32.8 & 1 & 5.40 & 32.8 & 55.2 & 0 & 2.0 & 8.6 \\
+& 3 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\
+Testing & 1 & 0 & 0.942 & 2.40 & 0 & 0 & 0 & 0 & 8.2 \\
+& 2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 8.6 \\
+& 3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\
 \bottomrule
 \end{tabular}
-\label{iris_results}
+\caption{Averages of 10 holdout tests for each class in the Wine data set.}
+\label{wine_results}
 \end{table}
 
-\subsection{Experiments on Yield Data}
-
-For the yield data, I employed two kinds of test: the holdout method (used on the Iris and Wine data sets) and a ten-fold cross validation. In total, I used twelve data sets --- the same as were used in Nelson and Congdon's experiments. All twelve are derived from the same original set, but each represents a unique combination of the following variables:
-\begin{enumerate}
-\item \textit{Year.} Indicates whether or not the year is included as an attribute of the examples.
-\item \textit{Region.} Indicates whether the data set aggregates country-level data from countries in the tropics, countries in the temperate regions, or both (global).
-\item \textit{Yield Units.} Indicates whether the change in yield is expressed as Mg/ha or Mkcal/ha.
-\end{enumerate}
-Thus, two possibilities  each for the \textit{year} and \textit{yield unit} variables, and three possibilities for the \textit{region} variable gives twelve data sets. The change in yield, the class attribute, was discretized to tertiles (``high'' (H), ``medium'' (M), and ``low'' (L) change) as it was in Nelson and Congdon's work. The non-class attributes, however, were discretized into quartiles, after some preliminary tests showed them to be preferable to tertiles, quintiles, and sextiles.
-
-I determined good parameter values for the LCS both by experimenting and by consulting the literature. I maintained the values of \textit{elitism\_rate} (0.6), \textit{p\_mutate} (0.25), and \textit{p\_dont\_care} (0.3) used on the Iris and Wine sets, but increased \textit{pop\_size} to 300 and \textit{num\_iters} to 2500.
-
-\subsubsection{Holdout Method}
-
-In the holdout tests, the data sets were split into one training and one test set of approximately equal size. Ten tests were run per data set per class. The mean and variance of the accuracy, the odds ratio, and the number of rules used in the classification, for both the training and the test sets, are recorded in table [\#].
-
-\subsubsection{Ten-Fold Cross Validation}
-
-In a ten-fold cross validation, the data are divided into ten sets. In a single run, the LCS is trained on nine of the sets and then tested on the tenth. The process is repeated for all ten sets. Tables [\#] through [\#] show the results of these experiments.
-
-% 	Describe size of data sets.
-
-% 	Table of results
-
-\section{Future Work and Conclusion}
-
-% Limitations of the Experiment
-
-% Accuracy considerations
-%	- Plainly, accuracy could be improved. How?
-
-% Efficiency considerations
-%	- LCSs, and GBML more broadly, are known for their
-%	  high run times. Part of this is unavoidable, but
-%	  certain optimizations could 
-
+\subsection{Crop Yields}
 \bibliography{Thesis}
 \bibliographystyle{ieeetr}
 
