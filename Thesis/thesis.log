@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  26 APR 2017 14:36
+This is pdfTeX, Version 3.14159265-2.6-1.40.16 (TeX Live 2015) (preloaded format=pdflatex 2015.5.24)  30 APR 2017 14:43
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -285,96 +285,155 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 16.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ) [1
 
-{/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3]
- [4] [5]
-[6] [7]
-Overfull \hbox (8.5603pt too wide) in alignment at lines 128--128
+{/usr/local/texlive/2015/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2
+
+] [3] [4] [5]
+[6] [7] [8]
+Overfull \hbox (8.5603pt too wide) in alignment at lines 132--132
 [][] 
  []
 
-[8] [9] [10]
-Missing character: There is no â in font cmr10!
-Missing character: There is no € in font cmr10!
-Missing character: There is no ™ in font cmr10!
- [11] [12] [13] [14] [15]
-<images/sus.png, id=65, 419.5675pt x 153.57375pt>
+[9] [10] [11] [12] [13] [14] <images/sus.png, id=61, 419.5675pt x 153.57375pt>
 File: images/sus.png Graphic file (type png)
- <use images/sus.png>
-Package pdftex.def Info: images/sus.png used on input line 275.
+
+<use images/sus.png>
+Package pdftex.def Info: images/sus.png used on input line 279.
 (pdftex.def)             Requested size: 251.74243pt x 92.14494pt.
- [16 <./images/sus.png>] [17] [18] [19] [20]
-Overfull \hbox (6.89134pt too wide) in paragraph at lines 358--360
+ [15] [16] [17 <./images/sus.png>] [18] [19] [20]
+Overfull \hbox (13.98227pt too wide) in paragraph at lines 343--344
+\OT1/cmr/m/n/10.95 con-sul-ta-tion of the lit-er-a-ture. Ul-ti-mately, I main-t
+ained the val-ues of \OT1/cmr/m/it/10.95 elitism[]rate
+ []
+
+[21]
+Overfull \hbox (6.89134pt too wide) in paragraph at lines 365--367
 \OT1/cmr/m/n/10.95 greater ac-cu-racy. Given that the at-tributes of Nel-son's 
 data are all continuous-
  []
 
-
-Overfull \hbox (5.2449pt too wide) in alignment at lines 384--384
+[22]
+Overfull \hbox (5.2449pt too wide) in alignment at lines 394--394
 [][] 
  []
 
 
-Overfull \hbox (82.29552pt too wide) in paragraph at lines 391--405
+Overfull \hbox (31.68213pt too wide) in paragraph at lines 402--416
  [][] 
  []
 
 
-Underfull \hbox (badness 10000) in alignment at lines 427--427
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+Overfull \hbox (3.41989pt too wide) in alignment at lines 438--438
 [][] 
  []
 
 
-Overfull \hbox (54.31216pt too wide) in paragraph at lines 435--449
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+Overfull \hbox (3.69878pt too wide) in paragraph at lines 446--460
  [][] 
  []
 
-(./thesis.bbl [21] [22]
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 7.
 
-(/usr/local/texlive/2015/texmf-dist/tex/latex/base/omscmr.fd
-File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
-)
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 7.
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[23] [24]
+Overfull \hbox (27.10655pt too wide) in paragraph at lines 470--501
+ [][] 
+ []
+
+[25
+
+]
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[26]
+
+LaTeX Warning: Text page 27 contains only floats.
+
+[27]
+
+LaTeX Warning: Text page 28 contains only floats.
+
+[28]
+
+LaTeX Warning: Text page 29 contains only floats.
+
+[29] [30] (./thesis.bbl
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no ¤ in font cmr10!
- [23]
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no   in font cmr10!
+ [31
+
+]
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no ³ in font cmr10!
- [24]
+ [32]
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no ³ in font cmr10!
-)
-[25] (./thesis.aux) ) 
+) [33] (./thesis.aux) ) 
 Here is how much of TeX's memory you used:
- 3246 strings out of 493089
- 43979 string characters out of 6134842
- 114528 words of memory out of 5000000
- 6659 multiletter control sequences out of 15000+600000
+ 3244 strings out of 493089
+ 43958 string characters out of 6134842
+ 142662 words of memory out of 5000000
+ 6660 multiletter control sequences out of 15000+600000
  15155 words of font info for 57 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  38i,13n,26p,1349b,286s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2015/texmf-dist/fonts/type1/public/ams
-fonts/cm/cmbx10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmbx12.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmcsc10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmex10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfon
-ts/cm/cmmi10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfont
-s/cm/cmmi8.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/
-cm/cmr10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm
-/cmr12.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/c
-mr17.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr
-6.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.p
-fb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb>
-</usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb><
-/usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></
-usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb>
-Output written on thesis.pdf (25 pages, 254702 bytes).
+</usr/local/texlive/2015/texmf-dist/fonts/type1/public/a
+msfonts/cm/cmbx10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/am
+sfonts/cm/cmbx12.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmcsc10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/ams
+fonts/cm/cmex10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsf
+onts/cm/cmmi10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfo
+nts/cm/cmmi8.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmr10.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmr12.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm
+/cmr17.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/c
+mr6.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8
+.pfb></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pf
+b></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb
+></usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb>
+</usr/local/texlive/2015/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb>
+Output written on thesis.pdf (33 pages, 268758 bytes).
 PDF statistics:
- 147 PDF objects out of 1000 (max. 8388607)
- 102 compressed objects within 2 object streams
+ 172 PDF objects out of 1000 (max. 8388607)
+ 119 compressed objects within 2 object streams
  0 named destinations out of 1000 (max. 500000)
  6 words of extra memory for PDF output out of 10000 (max. 10000000)
 

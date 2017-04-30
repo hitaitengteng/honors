@@ -1,44 +1,40 @@
 This is BibTeX, Version 0.99d (TeX Live 2015)
 Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: thesis.aux
-White space in argument---line 74 of file thesis.aux
- : \citation{noauthor_file:computational.science.genetic.algorithm.crossover.one.po
- :                                                                                  int.svg_nodate}
-I'm skipping whatever remains of this command
 The style file: ieeetr.bst
 Database file #1: Thesis.bib
 Warning--empty school in c._j._c._h._learning_1989
 Warning--empty booktitle in manuel_valenzuela-rendon_fuzzy_1991
-You've used 26 entries,
+You've used 28 entries,
             1876 wiz_defined-function locations,
-            640 strings with 8973 characters,
-and the built_in function-call counts, 7089 in all, are:
-= -- 726
-> -- 220
+            645 strings with 8973 characters,
+and the built_in function-call counts, 7315 in all, are:
+= -- 742
+> -- 229
 < -- 2
-+ -- 84
-- -- 58
-* -- 507
-:= -- 969
++ -- 88
+- -- 60
+* -- 514
+:= -- 994
 add.period$ -- 32
-call.type$ -- 26
-change.case$ -- 24
+call.type$ -- 28
+change.case$ -- 26
 chr.to.int$ -- 0
-cite$ -- 28
-duplicate$ -- 369
-empty$ -- 715
-format.name$ -- 58
-if$ -- 1740
+cite$ -- 30
+duplicate$ -- 377
+empty$ -- 751
+format.name$ -- 60
+if$ -- 1800
 int.to.chr$ -- 0
-int.to.str$ -- 26
+int.to.str$ -- 28
 missing$ -- 21
-newline$ -- 87
-num.names$ -- 31
-pop$ -- 92
+newline$ -- 93
+num.names$ -- 32
+pop$ -- 103
 preamble$ -- 1
 purify$ -- 0
 quote$ -- 0
-skip$ -- 261
+skip$ -- 278
 stack$ -- 0
 substring$ -- 491
 swap$ -- 144
@@ -47,7 +43,7 @@ text.prefix$ -- 0
 top$ -- 0
 type$ -- 0
 warning$ -- 2
-while$ -- 79
-width$ -- 28
-write$ -- 266
-(There was 1 error message)
+while$ -- 80
+width$ -- 30
+write$ -- 277
+(There were 2 warnings)

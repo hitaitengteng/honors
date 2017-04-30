@@ -1,12 +1,11 @@
 \begin{thebibliography}{10}
 
 \bibitem{us_epa_climate_2017}
-O.~US~EPA, ``Climate {Impacts} on {Agriculture} and {Food} {Supply},'' 2017.
+EPA, ``Climate {Impacts} on {Agriculture} and {Food} {Supply},'' 2017.
 
 \bibitem{noauthor_world_2015}
-``World population projected to reach 9.7 billion by 2050 {\textbar} {UN}
-  {DESA} {\textbar} {United} {Nations} {Department} of {Economic} and {Social}
-  {Affairs},'' July 2015.
+U.~N.~D. of~{Economic} and S.~{Affairs}, ``World population projected to reach
+  9.7 billion by 2050,'' July 2015.
 
 \bibitem{nelson_measuring_2016}
 E.~Nelson and C.~B. Congdon, ``Measuring the {Relative} {Importance} of
@@ -37,7 +36,7 @@ J.~H. Holland, ``Properties of the {Bucket} {Brigade},'' in {\em Proceedings of
   NJ, USA), pp.~1--7, L. Erlbaum Associates Inc., 1985.
 
 \bibitem{c._j._c._h._learning_1989}
-W.~C.~J. C.~H., {\em Learning from {Delayed} {Rewards}}.
+C.~J. C.~H. Watkins, {\em Learning from {Delayed} {Rewards}}.
 \newblock PhD thesis, 1989.
 
 \bibitem{orriols-puig_fuzzy-ucs:_2009}
@@ -141,7 +140,12 @@ B.~J, ``Reducing {Bias} and {Inefficiency} in the {Selection} {Algorithm},'' in
 
 \bibitem{assumed_diagram_2007}
 S.~Hatthon, ``A diagram illustrating the {Stochastic} {Universal} {Sampling}
-  operation. {In} this illustration 4 individuals are being selected ({N}=4),
-  resulting in the selection of {A}, {B}, {C} and {F}.,'' Jan. 2007.
+  operation.,'' Jan. 2007.
+
+\bibitem{noauthor_uci_nodate-1}
+``{UCI} {Machine} {Learning} {Repository}: {Iris} {Data} {Set}.''
+
+\bibitem{noauthor_uci_nodate}
+``{UCI} {Machine} {Learning} {Repository}: {Wine} {Data} {Set}.''
 
 \end{thebibliography}
