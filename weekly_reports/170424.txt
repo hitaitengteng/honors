@@ -1,0 +1,26 @@
+Week of 4/24/17
+Will Gantt
+
+This week:
+
+I figured out why I obtained different results using the holdout method
+than with the ten-fold cross validation. It turned out that the way I was
+doing the holdout method was not resulting in a perfect partition of the
+data, and so some of the same examples ended up in both training and test
+sets, which yielded artificially high accuracy on the latter. Consequently,
+I have omitted the results of the holdout tests from my thesis. However,
+I performed enough cross validations to feel confident about what I have.
+
+The remainder of the week I have devoted to writing and editing the last
+two sections of my thesis (which describe the experimental setup and the
+results). There is so much to say. I had originally hoped to get you a
+complete draft today, but was unable to despite my best efforts. I will
+get it to you either by tomorrow or Wednesday. I either was never informed 
+or else completely forgot that theses are due to the department a week before 
+presentations. My plan had been to submit a full draft to you a week before it 
+was due to the department, but clearly that is no longer possible. I'm sorry.
+
+Next week:
+
+I will finish writing, submit my draft first to you, and then to the
+department. I will also prepare for my defense on Thursday of next week.
