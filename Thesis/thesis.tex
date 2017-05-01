@@ -7,6 +7,7 @@
 \usepackage{algpseudocode}
 \usepackage{booktabs}
 \usepackage{tabularx}
+\usepackage[margin = 1.0in]{geometry}
 
 \begin{document}
 
@@ -44,11 +45,11 @@ The precise relationships between various GBML-related terms and concepts have c
 
 Introduced by John Holland in 1975, LCSs are GBML algorithms that evolve a population of rules\footnote{Rules are also frequently referred to as ``classifiers.'' To maintain a clear distinction between individual \emph{classifiers} and the \emph{classifier systems} that comprise them, I use the term ``rule'' exclusively throughout to denote the former, and ``LCS'' to denote the latter.} \cite{holland_adaptation_1975}. Each rule consists of a condition that indicates when the rule applies, as well as an action to take if the condition's criteria are met. As LCSs have applications to a variety of learning problems, the function of the rules depends largely on the task. With supervised learning problems, rules attempt to categorize a set of training examples by mapping the features of those examples to particular classes. In these cases, a rule's condition describes the features of the examples to which it applies, and the action specifies the class to be assigned to examples matching the condition. Problems in reinforcement learning, by contrast, often involve determining the best action for an agent to take in response to certain inputs or stimuli from the environment. Here, a rule's condition describes a set of inputs and its action determines how the agent should react given those inputs.
 
-Regardless of the types of problems to which they are applied, all LCSs share certain basic structures and mechanisms. Holmes et al. have identified four such components  \cite{holmes_learning_2002}. However, their model is more characteristic of LCSs used in reinforcement learning than those used in supervised learning. I suggest a slight modification of that model that covers both:
+Regardless of the types of problems to which they are applied, all LCSs share certain basic structures and mechanisms. Holmes et al. have identified four such components  \cite{holmes_learning_2002}, but their model is more characteristic of LCSs used in reinforcement learning than those used in supervised learning. I suggest a slight modification of that model that covers both:
 \begin{enumerate}
 \item \emph{Population.} All LCSs have a population of rules. Although some systems allow for the growth or reduction of the population, there is typically a limit on the maximum number of rules it may contain.
 \item \emph{Learning.} An LCS must have a means of coercing its population toward rules that generate good actions or accurate classifications. Numerous methods have been used for this purpose and they tend to vary based on the kind of learning. Many early LCSs designed for reinforcement learning used the bucket brigade algorithm \cite{holland_properties_1985}, while more contemporary systems often rely on Q-learning \cite{c._j._c._h._learning_1989, orriols-puig_fuzzy-ucs:_2009} or Q-learning-inspired algorithms. For supervised learning tasks, other systems have used genetic algorithms exclusively \cite{llora_towards_2007}. Still others have used different approaches, including ensemble learning \cite{gao_learning_2005} and bayesian methods \cite{hai_h._dam_bcs:_2006}.
-\item \emph{Discovery.} An LCS must also have mechanisms for generating new rules. For that purpose, a vast majority of systems employ genetic algorithms (GAs), which provide two useful operations: crossover and mutation. Crossover produces two ``offspring'' rules from two existing ``parent'' rules, and mutation alters some of the attribute values of the offspring. However, many LCSs employ additional operators. The \emph{covering} operator, for example, which creates a new rule when there are none that match the current input, has been widely used \cite{orriols-puig_fuzzy-ucs:_2009, wilson_classifier_1995, bernado-mansilla_accuracy-based_2003}. \emph{Specify}, a second popular operator, proposed by Pier Lanzi,  attempts to counteract the over-generalization of rules by specifying the attribute values of a rule according to a particular input \cite{lanzi_study_1997}. 
+\item \emph{Discovery.} An LCS must also have mechanisms for generating new rules. For that purpose, a vast majority of systems employ genetic algorithms (GAs), which provide two useful operations: crossover and mutation. Crossover produces two ``offspring'' rules from two existing ``parent'' rules, and mutation alters some of the attribute values of the offspring. But many LCSs employ additional operators. The \emph{covering} operator, for example, which creates a new rule when there are none that match the current input, has been widely used \cite{orriols-puig_fuzzy-ucs:_2009, wilson_classifier_1995, bernado-mansilla_accuracy-based_2003}. \emph{Specify}, a second popular operator, proposed by Pier Lanzi,  attempts to counteract the over-generalization of rules by specifying the attribute values of a rule according to a particular input \cite{lanzi_study_1997}. 
 \item \emph{Classification or Action Selection.} Finally, an LCS must have some procedure for deciding what action to take or how to classify a particular example. In the typical case, the action or classification is selected based on the actions recommended by the rules in the \emph{match set}---the set of rules matching a particular input. One possibility is simply to choose the action of the fittest rule in the match set. Another is to conduct a weighted vote of all the rules in the set, where each rule casts a ``vote'' for its action, weighted by its fitness. The selected action, then, is the one receiving the greatest number of points. Some systems have also incorporated random action selection alongside one of the first two methods \cite{wilson_classifier_1995}.
 \end{enumerate}
 
@@ -177,7 +178,7 @@ Rules are represented as objects with the following member variables:
 \item \textit{condition}: A vector of Attribute objects that describes the attribute values an example must have to be matched by the rule.
 \end{description}
 
-As mentioned in section 2.2.2, much of LCS research has concerned itself with the classification of examples with binary-valued attributes that simply indicate the presence or absence of some feature in the example. The conditions of rules used in LCSs of this sort may therefore be represented as strings of characters from the ternary alphabet $\{0,1,\#\}$. When dealing with real values, however, determining how best to represent the condition is more difficult. With real values, not only does the search space expand to a theoretically infinite size, but the genetic operators (crossover and mutation) have to be adapted as well. Thus, the condition must be constructed in a manner that (a) reduces the search space to a reasonable size, and (b) does not hinder or over-complicate the functioning of the genetic operators.
+As mentioned in section 2.2.2, much of LCS research has concerned itself with the classification of examples with binary-valued attributes that simply indicate the presence or absence of some feature in the example. The conditions of rules used in LCSs of this sort may therefore be represented as strings of characters from the ternary alphabet $\{0,1,\#\}$. But when dealing with real values, determining how best to represent the condition is more difficult. With real values, not only does the search space expand to a theoretically infinite size, but the genetic operators (crossover and mutation) have to be adapted as well. Thus, the condition must be constructed in a manner that (a) reduces the search space to a reasonable size, and (b) does not hinder or over-complicate the functioning of the genetic operators.
 
 The success of fuzzy LCSs like FCS \cite{manuel_valenzuela-rendon_fuzzy_1991} and Fuzzy-UCS \cite{orriols-puig_fuzzy-ucs:_2009} (a fuzzy update of the original UCS) suggests one promising approach. Given the complexity of these sytems, though, and time limitations, I chose the simpler, but nonetheless well-supported method of discretizing all attributes into some number of quantiles. Each attribute in the rule's condition not marked as irrelevant covers a range of values specified by one of the quantiles. Note that a condition constructed in this way meets both of the criteria given in the preceding paragraph: It radically restricts the search space (since each attribute will have a small number of quantiles) and it does not inhibit or fundamentally alter the behavior of the genetic operators (as will be shown in more detail further on in this section). The number of quantiles used is the same across all condition attributes and is specified by the user. The condition is represented as a vector of Attribute objects, each of which has a name, a quantile number, an upper and lower bound describing the range of that quantile, and a boolean ``don't care'' value indicating whether the attribute is relevant for the rule to which it belongs.
 
@@ -327,7 +328,7 @@ The system takes the following arguments:
 
 As a benchmark test of performance, I ran the system on the Iris and Wine data sets from the UC-Irvine Machine Learning Repository \cite{noauthor_uci_nodate-1,noauthor_uci_nodate}. Details of the data sets are shown in tables \ref{iris_info} and \ref{wine_info} in section 6.\footnote{All tables mentioned hereafter can be found in section 6.} For both sets, quartiles were computed for each non-class attribute based on the range of values for that attribute across all examples in the target class. The population was then initialized with \textit{pop\_size} rules whose attributes are assigned random quartile values. Trial runs revealed that parameter values of \textit{pop\_size} = 40, \textit{num\_iters} = 1000, \textit{elitism\_rate} = 0.6, \textit{p\_mutate} = 0.25, and \textit{p\_dont\_care} = 0.3 work well. Ten experiments were run per class on each set using a simple holdout method with training and test sets of approximately equal size. Tables \ref{iris_results} and \ref{wine_results} show the mean accuracy, odds ratio, true positives, true negatives, false positives, false negatives, and number of rules used for classification for Iris and Wine, respectively. 
 
-The LCS performed fairly on these simpler sets, achieving a weighted mean accuracy of 94.1\% for the Iris test sets and 89.9\% for the Wine sets. In both cases, the number of rules used for classification was reasonably compact (about 5.1 per class on Iris and 8.4 per class on Wine). Although a discrepancy in performance is to be expected between training and testing sets in most supervised learning tasks, the accuracy difference between those sets in both cases hinted at potential problems with overfitting. This would be somewhat surprising considering the selection pressure  for more general rules (via the fitness bonus for those rules with more ``don't care'' attributes). To make any confident statements on this point, however, required results from tests on the yield data.
+The LCS performed fairly on these simpler sets, achieving a weighted mean accuracy of 94.1\% for the Iris test sets and 89.9\% for the Wine sets. In both cases, the number of rules used for classification was reasonably compact (about 5.1 per class on Iris and 8.4 per class on Wine). Although a discrepancy in performance is to be expected between training and testing sets in most supervised learning tasks, the accuracy difference between those sets in both cases hinted at potential problems with overfitting. This would be somewhat surprising considering the selection pressure  for more general rules (via the fitness bonus for those rules with more ``don't care'' attributes). But to make any confident statements on this point required results from tests on the yield data.
 
 \subsection{Experiments on Yield Data}
 
@@ -338,11 +339,11 @@ For the yield data, I conducted five ten-fold cross validations per data set per
 \item \textit{Region.} Indicates whether the data set includes data from countries in the tropics, countries in the temperate regions, or both (global). Looking at the data by region may reveal differences in which attributes have the most significant influence on yield.
 \item \textit{Yield Units.} Indicates whether the change in yield is expressed as Mg/ha or Mkcal/ha. Framing the data in terms of both mass and energy simply offers different ways of understanding the yield.
 \end{enumerate}
-Thus, two possibilities  each for the \textit{year} and \textit{yield units} variables, and three possibilities for the \textit{region} variable gives twelve data sets. The class attribute, change in yield, was discretized to tertiles (``high'' (H), ``medium'' (M), and ``low'' (L) change) as it was in Nelson and Congdon's work. The non-class attributes, however, were discretized into quartiles, after some preliminary tests showed them to be preferable to tertiles, quintiles, and sextiles.
+Thus, two possibilities  each for the \textit{year} and \textit{yield units} variables, and three possibilities for the \textit{region} variable gives twelve data sets. The class attribute, change in yield, was discretized to tertiles (``high'' (H), ``medium'' (M), and ``low'' (L) change) as it was in Nelson and Congdon's work. The non-class attributes were discretized into quartiles, after some preliminary tests showed them to be preferable to tertiles, quintiles, and sextiles.
 
 Good parameter values were determined through experimentation and consultation of the literature. Ultimately, I maintained the values of \textit{elitism\_rate} (0.6), \textit{p\_mutate} (0.25), and \textit{p\_dont\_care} (0.3) used on the Iris and Wine sets, but increased \textit{pop\_size} to 300 and \textit{num\_iters} to 2500.
 
-\subsubsection{Discussion}
+\subsubsection{Performance}
 
 Tables \ref{k.wy.temp_results} through \ref{t.ny.wt_results} show averages of the results of the five ten-fold cross validations. A quick survey of the data reveals several interesting patterns.
 
@@ -351,6 +352,17 @@ First, the system exhibits a reasonably high degree of accuracy on the training 
 Second, performance declined substantially on the test sets. The mean accuracy was 0.664 on the temperate data, 0.594 on the tropical, and 0.666 on the global. These observations, in conjunction with the relatively strong performance on the training set, seem to reinforce the conclusion that the system struggles with overfitting --- a conclusion supported by the experiments on the Wine and Iris data sets, albeit to a lesser extent.
 
 One could potentially mitigate overfitting by allowing more rules with more false positive examples in the training set. But the requirement that rules used for classification have a greater number of true positives than false positives appears to be a reasonable one. 
+
+\subsubsection{Predictive Factors}
+
+To determine the relative impacts on yield of the different factors, I considered the number of true positives identified in each of the twelve data sets. For each rule $R$ used in the classification of a given data set, I found all of the attributes not marked as ``don't cares.'' Suppose that rule $R$ has $N$ such attributes and covers $|TP|_R$ true positive examples. Then each of the $N$ attributes is awarded $\frac{|TP|_R}{N}$ points for its part in ``explaining'' the $|TP|_R$ true positive examples. By repeating this procedure for every rule used in the classification, tallying the number of points for each attribute in the data set, and finally dividing the tallies by the total number of true positives, I obtained percentages of the number of true positives explained by each of the attributes. Tables \ref{k.wy.temp_percentages} through \ref{t.ny.wt_percentages} present the results of this analysis. 
+
+These results support several of the findings in \cite{nelson_measuring_2016}. For one, they reinforce Nelson and Congdon's conclusion that crop mix exerted a greater influence on the change in overall yield than any other factor, regardless of the magnitude of change. In over half of all cases, crop mix accounted for more than 50\% of true positive examples. Furthermore, within the crop mix vector, sugarcane covered the greatest number of examples in the temperate and global data sets, which confirms what the authors found in their decision tree analysis.
+Yet, apart from the case of sugarcane, the crops show a remarkable degree of uniformity in their relative impacts, and most noticeably in the tropics. Across all four tropical data sets, no single attribute accounted for less than 3.5\% (sugarcane and total cropped hectarage) or more than 8.6\% (roots and tubers) of the true positive examples, and percentages for the other attributes exhibit a fairly even distribution within that range. 
+
+Additionally, the results corroborate the authors' finding that investment in land and machinery represents a lesser fraction of examples when compared with crop mix and climate. Collectively, these two variables were responsible for an average of about 11.1\% of true positives, while crop mix and climate covered averages of about 50.7\% and 15.9\%, respectively. Soil quality and cropland footprint had even less of an effect than land and machinery investment (an observation that Nelson and Congdon also made), with average coverage of roughly 4.4\% and 4.9\% percent of examples.
+
+Yet, despite the similarities between the findings in \cite{nelson_measuring_2016} and my own, there are also some important points of divergence. Some amount of discrepancy...
 
 \section{Future Work and Conclusion}
 
@@ -465,7 +477,7 @@ Testing & 1 & 29.7 & 0.841 & 3.333 & 24.8 & 50.0 & 9.2 & 4.9 & 9.7 \\
 \clearpage
 \subsection{Crop Yields}
 \subsubsection{Attributes}
-Table \ref{crop_attributes} shows the attributes of the yield data. All but four of the attributes (``year,'' ``tropical,'' ``Mkcal/ha,'' ``Mg/ha'') are present in all of the data sets.
+Table \ref{crop_attributes} shows the attributes of the yield data. All but four of the attributes (``year,'' ``tropical,'' ``Mkcal/ha,'' ``Mg/ha'') are present in all of the data sets. Recall that half of the data sets express change in yield in Mkcal/ha, while the other half express it in Mg/ha. Also recall that half of the data sets include the year, and half do not. Only the four global data sets use the ``tropical'' attribute, which simply indicates whether a given example comes from a tropical country or a temperate one. Except for ``year'' and ``tropical,'' each of the attributes in the table should be interpreted as the annual \emph{change} in the metric described --- not as an absolute quantity. 
 \begin{table}[h!]
 \centering
 \begin{tabular}{ll}
@@ -502,10 +514,11 @@ Mg/ha* & Total crop yield in millions of kilocalories per hectare. \\
 \caption{Attributes of the crop yield data. Attribute names followed by a ``*'' indicate that the attribute is not used in all data sets. Descriptions were taken with some modification from \cite{nelson_measuring_2016}.}
 \label{crop_attributes}
 \end{table}
-Recall that half of the data sets express change in yield in Mkcal/ha, while the other half express it in Mg/ha. Also recall that half of the data sets include the year, and half do not. Only the four global data sets use the ``tropical'' attribute, which simply indicates whether a given example comes from a tropical country or a temperate one. Except for ``year'' and ``tropical,'' each of the attributes in the table should be interpreted as the annual \emph{change} in the metric described --- not as an absolute quantity. 
 
 \subsubsection{Results}
 The results for each class in tables \ref{k.wy.temp_results} through \ref{t.ny.wt_results} reflect averages across five ten-fold cross validations. Tables \ref{k.wy.temp_results} through \ref{t.ny.temp_results} show results for temperate countries, tables \ref{k.wy.trop_results} through \ref{t.ny.trop_results} for tropical countries, and \ref{k.wy.wt_results} through \ref{t.ny.wt_results} for all countries. In all experiments, the LCS used the maximum number of rules allowed given the parameters ($pop\_size = 300, elitism\_rate = 0.6 \longrightarrow 180$ rules). Consequently, the ``\# Rules'' column has been omitted. The number of examples in each set is shown in parentheses in the ``Type'' column.
+
+Tables \ref{k.wy.temp_percentages} through \ref{t.ny.wt_percentages} indicate the relative importance of the different attributes in classifying examples from the twelve data sets. The values in the tables are average percentages of the total true positives identified in the training set that are ``explained'' by each attribute. Section 4.2.3 gives a more detailed account of how these percentages were calculated.
 
 % 1. temperate, with year, Mkcal/ha
 \begin{table}[h!]
@@ -757,6 +770,453 @@ Testing & H & 131.2 & 0.672 & 0.99 & 45.3 & 219.2 & 43.4 & 85.9 \\
 \end{tabular}
 \caption{Performance on examples from all countries, with the year attribute \emph{excluded}, and with yield expressed in Mkcal/ha.}
 \label{t.ny.wt_results}
+\end{table}
+
+%%%%%%%%%%%%%%% ATTRIBUTE PERCENTAGES %%%%%%%%%%%%%%%%
+
+% 13. temperate, with year, Mkcal/ha
+\begin{table}[h!]
+\parbox{.45\linewidth} {
+\centering
+\begin{tabular}{llll}
+\toprule
+\multicolumn{4}{c}{\textbf{temperate, with year, Mkcal/ha}} \\
+\midrule
+Attribute & High & Medium & Low \\
+\midrule
+year & 2.9 & 5.5 & 4.2 \\
+tropical & 6.5 & 5.5 & 5.5 \\
+soil & 4.7 & 3.2 & 4.9 \\
+ha & 5.7 & 5.3 & 4.6 \\
+rice & 5.2 & 5.4 & 4.9 \\
+wheat & 4.7 & 5.0 & 5.1 \\
+sugar & 15.6 & 12.6 & 15.9 \\
+grains & 5.8 & 5.0 & 6.5 \\
+oil & 3.7 & 5.2 & 4.4 \\
+fruits & 5.1 & 5.2 & 4.2 \\
+roots & 6.5 & 4.6 & 4.2 \\
+other & 4.8 & 4.8 & 5.3 \\
+davg & 5.8 & 4.3 & 5.5 \\
+navg & 2.9 & 3.9 & 4.5 \\
+pavg & 5.4 & 4.6 & 4.9 \\
+irr & 4.1 & 7.5 & 3.9 \\
+land & 4.3 & 5.2 & 6.6 \\
+eqp & 6.3 & 7.3 & 4.9 \\
+\midrule
+crop mix & 51.4 & 47.8 & 50.5 \\
+climate & 14.1 & 12.8 & 14.9 \\
+land/eqp & 10.6 & 12.5 & 11.5 \\
+\bottomrule
+\end{tabular}
+\caption{ }
+\label{k.wy.temp_percentages}
+}
+% 14. temperate, with year, Mg/ha
+\parbox{.45\linewidth} {
+\centering
+\begin{tabular}{llll}
+\toprule
+\multicolumn{4}{c}{\textbf{temperate, with year, Mg/ha}} \\
+\midrule
+Attribute & High & Medium & Low \\
+\midrule
+year & 5.1 & 4.9 & 2.7 \\
+tropical & 5.9 & 5.5 & 6.1 \\
+soil & 3.5 & 3.7 & 3.2 \\
+ha & 5.6 & 4.5 & 4.9 \\
+rice & 4.4 & 5.1 & 4.6 \\
+wheat & 4.9 & 7.3 & 6.3 \\
+sugar & 13.7 & 10.6 & 12.9 \\
+grains & 5.0 & 5.1 & 4.3 \\
+oil & 3.7 & 4.8 & 5.4 \\
+fruits & 6.3 & 6.2 & 5.6 \\
+roots & 5.6 & 6.7 & 7.2 \\
+other & 5.2 & 4.8 & 6.4 \\
+davg & 5.2 & 4.1 & 5.6 \\
+navg & 4.1 & 3.7 & 4.3 \\
+pavg & 5.6 & 4.3 & 4.3 \\
+irr & 5.7 & 5.4 & 5.5 \\
+land & 4.7 & 5.5 & 6.5 \\
+eqp & 6.0 & 7.9 & 4.1 \\
+\midrule
+crop mix & 48.8 & 50.6 & 52.7 \\
+climate & 14.9 & 12.1 & 14.2 \\
+land/eqp & 10.7 & 13.4 & 10.6 \\
+\bottomrule
+\end{tabular}
+\caption{ }
+\label{t.wy.temp_percentages}
+}
+\end{table}
+
+% 15. temperate, no year, Mkcal/ha
+\begin{table}
+\parbox{.45\linewidth} {
+\centering
+\begin{tabular}{llll}
+\toprule
+\multicolumn{4}{c}{\textbf{temperate, no year, Mkcal/ha}} \\
+\midrule
+Attribute & High & Medium & Low \\
+\midrule
+tropical & 6.5 & 5.2 & 4.8 \\
+soil & 4.4 & 4.4 & 5.4 \\
+ha & 5.8 & 5.5 & 4.6 \\
+rice & 5.9 & 6.3 & 4.6 \\
+wheat & 5.0 & 5.2 & 6.3 \\
+sugar & 15.6 & 12.5 & 16.0 \\
+grains & 5.7 & 5.1 & 6.3 \\
+oil & 4.1 & 4.6 & 5.1 \\
+fruits & 5.9 & 5.4 & 3.9 \\
+roots & 6.4 & 4.3 & 4.9 \\
+other & 4.3 & 6.3 & 6.0 \\
+davg & 5.6 & 4.3 & 6.0 \\
+navg & 3.8 & 4.9 & 4.8 \\
+pavg & 5.8 & 4.9 & 5.4 \\
+irr & 4.0 & 8.0 & 4.4 \\
+land & 4.5 & 5.1 & 6.7 \\
+eqp & 6.6  & 8.0 & 4.8 \\
+\midrule
+crop mix & 52.9 & 49.7 & 53.1 \\
+climate & 15.2 & 14.1 & 16.2 \\
+land/eqp & 11.1 & 13.1 & 11.5 \\
+\bottomrule
+\end{tabular}
+\caption{ }
+\label{k.ny.temp_percents}
+}
+% 16. temperate, no year, Mg/ha
+\parbox{.45\linewidth} {
+\centering
+\begin{tabular}{llll}
+\toprule
+\multicolumn{4}{c}{\textbf{temperate, no year, Mg/ha}} \\
+\midrule
+Attribute & High & Medium & Low \\
+\midrule
+tropical & 6.8 & 5.1 & 4.8 \\
+soil & 4.1 & 3.8 & 3.9 \\
+ha & 5.5 & 5.5 & 4.2 \\
+rice & 5.8 & 5.0 & 5.0 \\
+wheat & 4.5 & 7.0 & 6.6 \\
+sugar & 13.2 & 10.1 & 13.4 \\
+grains & 5.1 & 5.5 & 5.1 \\
+oil & 4.3 & 4.8 & 6.3 \\
+fruits & 7.4 & 6.7 & 5.6 \\
+roots & 6.3 & 7.4 & 7.4 \\
+other & 5.7 & 5.4 & 6.4 \\
+davg & 5.7 & 4.5 & 5.7 \\
+navg & 4.7 & 4.6 & 4.4 \\
+pavg & 5.2 & 4.6 & 4.4 \\
+irr & 5.7 & 6.3 & 5.4 \\
+land & 4.2 & 6.1 & 6.9 \\
+eqp & 5.8 & 7.4 & 4.7 \\
+\midrule
+crop mix & 52.3 & 51.9 & 55.8 \\
+climate & 15.6 & 13.7 & 14.5 \\
+land/eqp & 10.0 & 13.5 & 11.6 \\
+\bottomrule
+\end{tabular}
+\caption{ }
+\label{t.ny.temp_percentages}
+}
+\end{table}
+
+% 17. tropics, with year, Mkcal/ha
+\begin{table}[h!]
+\parbox{.45\linewidth} {
+\centering
+\begin{tabular}{llll}
+\toprule
+\multicolumn{4}{c}{\textbf{tropics, with year, Mkcal/ha}} \\
+\midrule
+Attribute & High & Medium & Low \\
+\midrule
+year & 5.8 & 5.2 & 5.9 \\
+tropical & 4.2 & 4.1 & 3.9 \\
+soil & 4.0 & 5.2 & 4.5 \\
+ha & 5.1 & 4.7 & 5.2 \\
+rice & 5.9 & 5.1 & 4.8 \\
+wheat & 6.1 & 6.2 & 6.7 \\
+sugar & 4.9 & 4.5 & 6.2 \\
+grains & 6.8 & 6.6 & 4.8 \\
+oil & 7.9 & 5.6 & 6.9 \\
+fruits & 5.9 & 5.9 & 6.2 \\
+roots & 6.4 & 8.0 & 7.2 \\
+other & 5.7 & 5.5 & 6.4 \\
+davg & 5.6 & 6.3 & 6.6 \\
+navg & 5.9 & 5.2 & 5.6 \\
+pavg & 7.1 & 5.9 & 6.6 \\
+irr & 3.7 & 4.8 & 3.6 \\
+land & 4.3 & 5.1 & 4.9 \\
+eqp & 4.9 & 6.2 & 4.1 \\
+\midrule
+crop mix & 49.6 & 47.4 & 49.2 \\
+climate & 18.6 & 17.4 & 18.8 \\
+land/eqp & 9.2 & 11.3 & 9.0 \\
+\bottomrule
+\end{tabular}
+\caption{ }
+\label{k.wy.trop_percentages}
+}
+% 19. tropics, with year Mg/ha
+\parbox{.45\linewidth} {
+\centering
+\begin{tabular}{llll}
+\toprule
+\multicolumn{4}{c}{\textbf{tropics, with year, Mg/ha}} \\
+\midrule
+Attribute & High & Medium & Low \\
+\midrule
+year & 5.4 & 5.6 & 5.0 \\
+tropical & 4.5 & 4.4 & 4.6 \\
+soil & 5.6 & 4.1 & 4.3 \\
+ha & 3.6 & 4.0 & 5.1 \\
+rice & 5.6 & 5.1 & 5.9 \\
+wheat & 6.7 & 7.0 & 5.6 \\
+sugar & 5.6 & 3.5 & 5.9 \\
+grains & 3.7 & 7.0 & 6.6 \\
+oil & 6.9 & 7.0 & 5.6 \\
+fruits & 5.2 & 5.5 & 6.6 \\
+roots & 6.4 & 6.4 & 7.4 \\
+other & 8.1 & 5.5 & 6.6 \\
+davg & 4.8 & 6.9 & 7.6 \\
+navg & 7.1 & 5.9 & 4.8 \\
+pavg & 6.7 & 5.9 & 6.2 \\
+irr & 4.8 & 4.8 & 3.7 \\
+land & 4.2 & 4.0 & 4.5 \\
+eqp & 5.4 & 7.5 & 4.0 \\
+\midrule
+crop mix & 48.2 & 47.0 & 50.2 \\
+climate & 18.7 & 18.6 & 18.7 \\
+land/eqp & 9.6 & 11.5 & 8.5 \\
+\bottomrule
+\end{tabular}
+\caption{ }
+\label{t.wy.trop_percentages}
+}
+\end{table}
+
+% 18. tropics, no year, Mkcal/ha'
+\begin{table}[h!]
+\parbox{.45\linewidth} {
+\centering
+\begin{tabular}{llll}
+\toprule
+\multicolumn{4}{c}{\textbf{tropics, no year, Mkcal/ha}} \\
+\midrule
+Attribute & High & Medium & Low \\
+\midrule
+tropical & 4.0 & 4.0 & 4.2 \\
+soil & 5.2 & 5.1 & 4.7 \\
+ha & 5.5 & 4.7 & 5.9 \\
+rice & 5.9 & 5.9 & 5.1 \\
+wheat & 7.6 & 6.1 & 6.0 \\
+sugar & 5.4 & 3.8 & 6.2 \\
+grains & 6.1 & 7.5 & 6.1 \\
+oil & 8.5 & 5.6 & 7.7 \\
+fruits & 5.7 & 7.1 & 6.2 \\
+roots & 6.6 & 8.6 & 6.5 \\
+other & 6.0 & 5.6 & 6.7 \\
+davg & 6.5 & 6.9 & 6.3 \\
+navg & 5.5 & 5.5 & 5.6 \\
+pavg & 6.3 & 5.2 & 7.8 \\
+irr & 5.0 & 5.2 & 4.0 \\
+land & 4.6 & 5.5 & 5.4 \\
+eqp & 5.6 & 8.0 & 5.8 \\
+\midrule
+crop mix & 51.8 & 50.2 & 50.5 \\
+climate & 18.3 & 17.6 & 19.7 \\
+land/eqp & 10.2 & 13.5 & 11.2 \\
+\bottomrule
+\end{tabular}
+\caption{ }
+\label{k.ny.trop_percentages}
+}
+% 20. tropics, no year, Mg/ha
+\parbox{.45\linewidth} {
+\centering
+\begin{tabular}{llll}
+\toprule
+\multicolumn{4}{c}{\textbf{tropics, no year, Mg/ha}} \\
+\midrule
+Attribute & High & Medium & Low \\
+\midrule
+tropical & 4.6  & 5.5 & 4.6 \\
+soil & 6.3 & 4.3 & 4.2 \\
+ha & 3.9 & 3.5 & 5.9 \\
+rice & 5.6 & 5.5 & 6.7 \\
+wheat & 7.0 & 7.0 & 5.9 \\
+sugar & 5.5 & 3.7 & 5.8 \\
+grains & 4.2 & 7.6 & 6.5 \\
+oil & 7.3 & 6.7 & 6.2 \\
+fruits & 5.5 & 7.0 & 6.5 \\
+roots & 6.7 & 6.3 & 7.2 \\
+other & 8.4 & 6.1 & 7.9 \\
+davg & 5.7 & 6.9 & 6.7 \\
+navg & 7.3 & 6.4 & 5.6 \\
+pavg & 6.8 & 6.1 & 6.0 \\
+irr & 4.9 & 4.9 & 4.9 \\
+land & 4.9 & 4.7 & 4.6 \\
+eqp & 5.5 & 8.0 & 4.8 \\
+\midrule
+crop mix & 50.2 & 49.9 & 52.7 \\
+climate & 19.8 & 19.4 & 18.3 \\
+land/eqp & 10.4 & 12.7 & 9.4 \\
+\bottomrule
+\end{tabular}
+\caption{ }
+\label{t.ny.trop_percentages}
+}
+\end{table}
+
+% 21. global, with year, Mkcal/ha
+\begin{table}[h!]
+\parbox{.45\linewidth} {
+\centering
+\begin{tabular}{llll}
+\toprule
+\multicolumn{4}{c}{\textbf{global, with year, Mkcal/ha}} \\
+\midrule
+Attribute & High & Medium & Low \\
+\midrule
+year & 3.1 & 4.6 & 5.7 \\
+tropical & 6.5 & 7.9 & 5.1 \\
+soil & 4.5 & 4.3 & 4.1 \\
+ha & 5.6 & 4.2 & 5.2 \\
+rice & 6.2 & 4.5 & 4.1 \\
+wheat & 3.8 & 5.0 & 5.9 \\
+sugar & 13.3 & 8.8 & 13.1 \\
+grains & 6.1 & 6.7 & 6.6 \\
+oil & 5.1 & 5.5 & 5.2 \\
+fruits & 5.6 & 5.7 & 5.0 \\
+roots & 7.3 & 5.6 & 4.8 \\
+other & 4.6 & 4.0 & 5.2 \\
+davg & 4.7 & 3.8 & 6.1 \\
+navg & 4.0 & 4.2 & 6.5 \\
+pavg & 4.2 & 5.0 & 4.3 \\
+irr & 5.6 & 5.8 & 3.7 \\
+land & 4.2 & 4.2 & 3.9 \\
+eqp & 5.6 & 10.1 & 5.6 \\
+\midrule
+crop mix & 52.0 & 45.8 & 49.9 \\
+climate & 12.9 & 13.0 & 16.9 \\
+land/eqp & 9.8 & 14.3 & 9.5 \\
+\bottomrule
+\end{tabular}
+\caption{ }
+\label{k.wy.wt_percentages}
+}
+% global, with year, Mg/ha
+\parbox{.45\linewidth} {
+\centering
+\begin{tabular}{llll}
+\toprule
+\multicolumn{4}{c}{\textbf{global, with year, Mg/ha}} \\
+\midrule
+Attribute & High & Medium & Low \\
+\midrule
+year & 4.8 & 4.0 & 4.9 \\
+tropical & 5.4 & 9.9 & 5.3 \\
+soil & 4.5 & 3.1 & 4.6 \\
+ha & 4.3 & 5.2 & 4.4 \\
+rice & 4.6 & 6.1 & 4.2 \\
+wheat & 4.5 & 6.1 & 5.8 \\
+sugar & 12.3 & 7.6 & 12.5 \\
+grains & 5.5 & 5.0 & 6.4 \\
+oil & 5.6 & 5.4 & 6.0 \\
+fruits & 6.4 & 7.3 & 7.0 \\
+roots & 7.0 & 5.3 & 6.1 \\
+other & 5.6 & 4.1 & 4.0 \\
+davg & 5.0 & 3.5 & 6.1 \\
+navg & 5.3 & 4.3 & 5.7 \\
+pavg & 4.7 & 4.8 & 4.2 \\
+irr & 4.7 & 5.3 & 4.4 \\
+land & 4.5 & 4.1 & 4.3 \\
+eqp & 5.2 & 8.9 & 4.0 \\
+\midrule
+crop mix & 51.5 & 46.9 & 52.0 \\
+climate & 15.0 & 12.6 & 16.0 \\
+land/eqp & 9.7 & 13.0 & 8.3 \\
+\bottomrule
+\end{tabular}
+\caption{ }
+\label{t.wy.wt_percentages}
+}
+\end{table}
+
+
+% 23. global, no year, Mkcal/ha
+\begin{table}[h!]
+\parbox{.45\linewidth} {
+\centering
+\begin{tabular}{llll}
+\toprule
+\multicolumn{4}{c}{\textbf{global, no year, Mkcal/ha}} \\
+\midrule
+Attribute & High & Medium & Low \\
+\midrule
+tropical & 5.1 & 8.6 & 5.2 \\
+soil & 5.1 & 4.4 & 4.5 \\
+ha & 4.5 & 5.6 & 5.0 \\
+rice & 5.9 & 5.0 & 4.1 \\
+wheat & 4.4 & 4.1 & 5.3 \\
+sugar & 13.0 & 9.1 & 13.6 \\
+grains & 6.8 & 6.8 & 7.2 \\
+oil & 5.7 & 4.8 & 6.7 \\
+fruits & 6.8 & 6.3 & 4.7 \\
+roots & 7.3 & 5.8 & 5.5 \\
+other & 5.7 & 5.1 & 5.8 \\
+davg & 4.5 & 4.5 & 6.0 \\
+navg & 4.7 & 3.9 & 6.2 \\
+pavg & 4.6 & 5.4 & 4.7 \\
+irr & 5.5 & 7.0 & 4.6 \\
+land & 5.1 & 4.6 & 5.0 \\
+eqp & 5.2 & 8.8 & 5.9 \\
+\midrule
+crop mix & 55.6 & 47.0 & 52.9 \\
+climate & 13.8 & 13.8 & 16.9 \\
+land/eqp & 10.3 & 13.4 & 10.9 \\
+\bottomrule
+\end{tabular}
+\caption{ }
+\label{k.ny.wt_percentages}
+}
+% 24. global, no year, Mg/ha
+\parbox{.45\linewidth} {
+\centering
+\begin{tabular}{llll}
+\toprule
+\multicolumn{4}{c}{\textbf{global, no year, Mg/ha}} \\
+\midrule
+Attribute & High & Medium & Low \\
+\midrule
+tropical & 6.1 & 8.6 & 5.5 \\
+soil & 4.7 & 3.9 & 4.4 \\
+ha & 4.3 & 5.5 & 4.9 \\
+rice & 5.8 & 5.9 & 5.0 \\
+wheat & 4.1 & 5.7 & 5.8 \\
+sugar & 12.3 & 7.6 & 12.0 \\
+grains & 5.4 & 5.6 & 7.1 \\
+oil & 6.1 & 5.6 & 7.6 \\
+fruits & 5.9 & 7.8 & 7.9 \\
+roots & 7.7 & 5.0 & 6.1 \\
+other & 5.2 & 4.2 & 4.5 \\
+davg & 4.6 & 4.4 & 6.3 \\
+navg & 6.2 & 4.7 & 4.9 \\
+pavg & 6.1 & 5.2 & 4.5 \\
+irr & 5.1 & 6.9 & 4.9 \\
+land & 4.4 & 4.2 & 4.9 \\
+eqp & 5.8 & 9.2 & 3.8 \\
+\midrule
+crop mix & 52.5 & 47.4 & 56.0 \\
+climate & 16.9 & 14.3 & 15.7 \\
+land/eqp & 10.2 & 13.4 & 8.7 \\
+\bottomrule
+\end{tabular}
+\caption{ }
+\label{t.ny.wt_percentages}
+}
 \end{table}
 
 \clearpage
