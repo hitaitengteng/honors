@@ -1,0 +1,40 @@
+\contentsline {section}{\numberline {1}Introduction}{4}
+\contentsline {section}{\numberline {2}Background}{4}
+\contentsline {subsection}{\numberline {2.1}Genetics-Based Machine Learning}{4}
+\contentsline {subsection}{\numberline {2.2}What is a Learning Classifier System?}{5}
+\contentsline {subsubsection}{\numberline {2.2.1}Structure}{5}
+\contentsline {subsubsection}{\numberline {2.2.2}Genetic Algorithms}{7}
+\contentsline {subsubsection}{\numberline {2.2.3}Pittsburgh and Michigan Styles}{8}
+\contentsline {subsection}{\numberline {2.3}Developments in LCS Research}{8}
+\contentsline {subsubsection}{\numberline {2.3.1}LS-2}{8}
+\contentsline {subsubsection}{\numberline {2.3.2}FCS}{9}
+\contentsline {subsubsection}{\numberline {2.3.3}XCS}{9}
+\contentsline {subsubsection}{\numberline {2.3.4}UCS}{10}
+\contentsline {subsection}{\numberline {2.4}Global Crop Yields}{10}
+\contentsline {subsubsection}{\numberline {2.4.1}Fixed Effects Modeling}{11}
+\contentsline {subsubsection}{\numberline {2.4.2}Decision Trees}{12}
+\contentsline {subsubsection}{\numberline {2.4.3}Results}{12}
+\contentsline {section}{\numberline {3}System Design}{13}
+\contentsline {subsection}{\numberline {3.1}Rule Representation}{13}
+\contentsline {subsection}{\numberline {3.2}Rule Discovery and Learning}{15}
+\contentsline {subsubsection}{\numberline {3.2.1}Overview}{15}
+\contentsline {subsubsection}{\numberline {3.2.2}Fitness Update}{15}
+\contentsline {subsubsection}{\numberline {3.2.3}Selection}{17}
+\contentsline {subsubsection}{\numberline {3.2.4}Genetic Operators and Replacement}{19}
+\contentsline {subsection}{\numberline {3.3}Classification of Examples}{19}
+\contentsline {subsection}{\numberline {3.4}Parameters}{20}
+\contentsline {section}{\numberline {4}Experiment and Results}{21}
+\contentsline {subsection}{\numberline {4.1}Preliminary Evaluation on Small Data Sets}{21}
+\contentsline {subsection}{\numberline {4.2}Experiments on Yield Data}{22}
+\contentsline {subsubsection}{\numberline {4.2.1}Setup}{22}
+\contentsline {subsubsection}{\numberline {4.2.2}Performance}{23}
+\contentsline {subsubsection}{\numberline {4.2.3}Predictive Factors}{23}
+\contentsline {section}{\numberline {5}Future Work and Conclusion}{24}
+\contentsline {subsection}{\numberline {5.1}Accuracy}{25}
+\contentsline {subsection}{\numberline {5.2}Data}{26}
+\contentsline {section}{Appendices}{26}
+\contentsline {section}{\numberline {A}Iris and Wine}{27}
+\contentsline {section}{\numberline {B}Crop Yields}{29}
+\contentsline {subsection}{\numberline {B.1}Attributes}{29}
+\contentsline {subsection}{\numberline {B.2}Performance}{29}
+\contentsline {subsection}{\numberline {B.3}Impacts of Different Inputs}{29}
